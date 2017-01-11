@@ -1,4 +1,5 @@
-## Welcome to GitHub Pages
+## Welcome to GitHub Pages 
+### it is very cool, and i can try out my docs..
 
 You can use the [editor on GitHub](https://github.com/stephenykk/coolfe/edit/master/README.md) to maintain and preview the content for your website in Markdown files.
 

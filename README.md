@@ -1,7 +1,7 @@
 ## Welcome to GitHub Pages 
 ### it is very cool, and i can try out my docs..
 
-You can use the [editor on GitHub](https://github.com/stephenykk/coolfe/edit/master/README.md) to maintain and preview the content for your website in Markdown files.
+if,  You can use the [editor on GitHub](https://github.com/stephenykk/coolfe/edit/master/README.md) to maintain and preview the content for your website in Markdown files.
 ### change the readme, check will Jekyll run automatic..
 
 Whenever you commit to this repository, GitHub Pages will run [Jekyll](https://jekyllrb.com/) to rebuild the pages in your site, from the content in your Markdown files.

@@ -20,6 +20,7 @@ git remote
     git remote add origin repo_url
     git remote rm origin
     git remote rename origin newOrigin
+    git remote show origin # 显示origin仓库的详细信息
 
 git fetch
 -------------
@@ -47,17 +48,23 @@ git pull
     git pull <远程主机名> <远程分支>:<本地分支>
     git pull origin next:master //比如，取回origin主机的next分支，与本地的master分支合并
 
-    git pull origin next //取回origin/next分支，再与当前分支合并。
+    git pull origin next //取回origin/next分支，再与当前分支合并(注意是和当前分支合并，不是和本地的next分支)。
     //等价于
     git fetch origin next
     git merge origin/next
+
+    git remote show origin # 可查看本地分支和远程分支的追踪关系
+    # 若当前分支是master, 且 git remote show origin 
+    # 查看存在与远程分支的追踪关系，则不用指定分支名
+    git pull origin  # 等价于 git pull origin master
 
 
 在某些场合，Git会自动在本地分支与远程分支之间，建立一种追踪关系（tracking）。比如，在git clone的时候，所有本地分支默认与远程主机的同名分支，建立追踪关系，也就是说，本地的master分支自动"追踪"origin/master分支。
 
 Git也允许手动建立追踪关系。
 
-    git branch --set-upstream master origin/next  //指定master分支追踪origin/next分支。
+    git branch --set-upstream master origin/next  //指定master分支追踪origin/next分支。 --set-upstream 将废弃，新的选项为 --track  或  --set-upstream-to
+    git push -u origin master:next // 同上 推送时，建立追踪关系
 
 如果当前分支与远程分支存在追踪关系，git pull就可以省略远程分支名。
 

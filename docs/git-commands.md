@@ -141,6 +141,7 @@ git log
     git log -- folder/ 
     git log -3 dev #查看dev分支最近3次的提交日志
     git log v1.0.. #查看v1.0后的提交日志
+    git log --author=stephenykk #查看某人提交的记录
 
     git log <file> # 查看该文件每次提交记录
 

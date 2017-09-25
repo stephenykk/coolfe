@@ -2,5 +2,4 @@
 =======
 
 <!-- links -->
-+ aaa 
-+ bbb
++ [git 常用命令](./docs/file),+ [git教程](./docs/file)

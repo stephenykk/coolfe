@@ -1,6 +1,33 @@
 小程序文档
 ==========
 
+体验
+---
+apis
+
+    wx.getStorageSync('logs');
+    wx.setStorageSync('logs', logs);
+    wx.login({success: cb});
+    wx.getStetting({success: cb});
+    wx.getUserInfo({success: cb});
+    wx.navigateTo({url: '../logs/index'});
+
+    getApp();
+    getCurrentPages();
+    App(opts);
+    Page(opts);
+    this.setData(data);
+
+    app的事件：{onLaunch, onShow, onHide, onError}
+    page的事件和生命周期： {onLoad, onReady, onShow, onHide, onUnload, onPullDownRefresh, onReachBottom, onShareAppMessage, onPageScroll}
+    
+    wx.navigateTo({url, success, fail, complete});
+    <navigator open-type="navigateTo" url=".." />
+    wx.redirectTo({url, success, fail, complete});
+    wx.navigateBack(n);
+    wx.switchTab({url});
+    wx.reLaunch({url});
+
 框架
 ---
 + 视图层 `wxml` `wxss`
@@ -99,92 +126,93 @@ longpress
 capture-bind:xx
 capture-catch:xx
 
-BaseEvent:
+*BaseEvent:*
 type
 timestamp
 target: {id, tagName, dataset}
 currentTarget
 
-CustomEvent extends BaseEvent:
+*CustomEvent extends BaseEvent:*
 detail 自定义事件所带的数据
 
 
-TouchEvent extends BaseEvent:
+*TouchEvent extends BaseEvent:*
 touches: [{identifier, pageX, pageY, clientX, clientY}, canvasTouch = {identifier, x, y}]
 changedTouches: [{...}]
 
 canvas no bubble stage event
 
-----
+---
 
-import include
+*import and include*
 
-item.wxml:
-<template name="itemTpl">
-    <text>{{text}}</text>
-</template>
+    
+    item.wxml:
+    <template name="itemTpl">
+        <text>{{text}}</text>
+    </template>
 
-index.wxml:
-<import src="item.wxml" />
-<template is="itemTpl" data={{text: 'hello'}} />
-
-
-index.wxml:
-<include src="header.wxml" />
-<view>body</view>
-<include src="footer.wxml" />
-
-header.wxml:
-    <view> i am header</view>
-footer.wxml:
-    <view>this is footer</view>
+    index.wxml:
+    <import src="item.wxml" />
+    <template is="itemTpl" data={{text: 'hello'}} />
 
 
-<wxs module="m1">
-    var msg = 'hello world';
-    module.exports.message = msg;
-</wxs>
-<view>{{m1.message}}</view>
+    index.wxml:
+    <include src="header.wxml" />
+    <view>body</view>
+    <include src="footer.wxml" />
 
-<wxs module="m1">
-    var getMax = function(array) {
-        var max = undefined;
-        for(var i = 0; i < array.length; i++) {
-            max = max === undefined ? array[i] : (max >= array[i] ? max: array[i]);
+    header.wxml:
+        <view> i am header</view>
+    footer.wxml:
+        <view>this is footer</view>
+
+
+    <wxs module="m1">
+        var msg = 'hello world';
+        module.exports.message = msg;
+    </wxs>
+    <view>{{m1.message}}</view>
+
+    <wxs module="m1">
+        var getMax = function(array) {
+            var max = undefined;
+            for(var i = 0; i < array.length; i++) {
+                max = max === undefined ? array[i] : (max >= array[i] ? max: array[i]);
+            }
+            return max;
         }
-        return max;
+
+        module.exports.getMax = getMax;
+    </wxs>
+
+    <view>{{m1.getMax(array)}}</view>
+
+    common.wxs:
+    function sum(a, b) {
+        return a + b;
     }
 
-    module.exports.getMax = getMax;
-</wxs>
+    function prod(a, b) {
+        return a * b;
+    }
+    module.exports = {
+        sum: sum,
+        prod: prod
+    }
 
-<view>{{m1.getMax(array)}}</view>
-
-common.wxs:
-function sum(a, b) {
-    return a + b;
-}
-
-function prod(a, b) {
-    return a * b;
-}
-module.exports = {
-    sum: sum,
-    prod: prod
-}
-
-a.wxs:
-var ma = require('./common.wxs');
-ma.sum(2, 3);
+    a.wxs:
+    var ma = require('./common.wxs');
+    ma.sum(2, 3);
 
 
-*.wxs 可以被 *.wxml 文件或 *.wxs 文件引用
+    // *.wxs 可以被 *.wxml 文件或 *.wxs 文件引用
 
-b.wxs
-var a = require('./a.wxs');
+    b.wxs
+    var a = require('./a.wxs');
 
-c.wxml
-    <wxs src="./a.wxs" module="a"></wxs>
+    c.wxml
+        <wxs src="./a.wxs" module="a"></wxs>
 
 
 
@@ -322,11 +350,11 @@ Number.POSITIVE_INFINITY
 Global
 ---
 NaN
-Infinity
+isNaN()
 undefined
 parseInt()
 parseFloat()
-isNaN()
+Infinity
 isFinite()
 decodeURI() / encodeURI()
 decodeURIComponent() / encodeURIComponent()

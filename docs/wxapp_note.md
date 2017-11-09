@@ -109,6 +109,28 @@ apis
 逻辑层
 ---
 
+### 注册程序
+App()函数用于注册程序, 如:
+
+    App({
+        onLaunch: function(options) {
+            // 只触发一次
+        },
+        onShow: function(options) {
+            // options = {path, query, scence, shareTicket, referrerInfo}
+            // 前台到后台
+        },
+        onHide: function() {
+
+        },
+        onError: function() {
+
+        },
+        globalData: {},
+        otherData: {},
+        otherMethod: function() {}
+    });
+
 bindxx catchxx
 bindtap catchtouchstart
 bind:tap catch:touchstart
@@ -219,25 +241,25 @@ canvas no bubble stage event
 Number
 ------
 n.toString()
-n.valueOf()
 n.toLocaleString()
-n.toFixed(n)
+n.valueOf()
 n.toExponential()
-n.toPresision(n)
+n.toFixed(n)
+n.toPrecision(n)
 
 String
 -----
-s.toString()
 s.valueOf()
+s.localCompare(str)
+s.toString()
 s.charAt(n)
 s.charCodeAt(n)
 s.concat(str)
+s.search(reOrStr)
 s.indexOf(str)
 s.lastIndexOf(str)
-s.localCompare(str)
 s.match(re)
 s.replace(reOrStr)
-s.search(reOrStr)
 s.split(sep)
 s.slice(start, end)
 s.substring(start, end)
@@ -274,8 +296,8 @@ dt = getDate('150000303')
 dt = getDate('2017-7-12')
 dt = getDate(2017,5,12, 20, 33, 22);
 dt.parse()
-dt.UTC()
 dt.now()
+dt.UTC()
 dt.toString()
 dt.toDateString()
 dt.toTimeString()
@@ -361,7 +383,7 @@ decodeURIComponent() / encodeURIComponent()
 
 
 wxss的扩展特性:
-- 尺寸单位 `rpx`
+- 尺寸单位 `rpx` // 屏幕宽度1/750作为1个单位大小 和 vw单位无异
 - 样式导入 `@import 'common.wxss';`
 
 组件的样式:
@@ -369,8 +391,9 @@ wxss的扩展特性:
 - class 设静态的样式 `<view class="normal" />`
 
 支持的选择器:
+**基本上支持大多数的选择器，可以放心使用**
 - .class
-- #id
+- \#id
 - element
 - element, element
 - ::after  / ::before

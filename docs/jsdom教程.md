@@ -60,23 +60,6 @@ jsdom使用指南
       beforeParse(window){..}
     });
 
-###jsdom.runVMScript(script)
-
-    const dom = new JSDOM('', {runScripts: 'outside-only'});
-    var vm = require('vm'); // vm为nodejs原生模块
-    const {Script} = vm;
-    var s = new Script(`
-        if (!this.ran) {
-            this.ran = 0;
-        }
-        ++this.ran;
-    `);
-    dom.runVMScript(s);
-    dom.runVMScript(s);
-    console.log(dom.window.ran);
-    // 执行脚本的其他方式
-    // window.eval(..)  window.document.createElement('script');
-
 ###JSDOM.fromURL(url, option? = {referrer, userAgent})
 
     
@@ -97,6 +80,23 @@ jsdom使用指南
     frag.childeNodes.length === 2
     frag.querySelector('p').textContent = 'hihi';
 
+
+###jsdom.runVMScript(script)
+
+    const dom = new JSDOM('', {runScripts: 'outside-only'});
+    var vm = require('vm'); // vm为nodejs原生模块
+    const {Script} = vm;
+    var s = new Script(`
+        if (!this.ran) {
+            this.ran = 0;
+        }
+        ++this.ran;
+    `);
+    dom.runVMScript(s);
+    dom.runVMScript(s);
+    console.log(dom.window.ran);
+    // 执行脚本的其他方式
+    // window.eval(..)  window.document.createElement('script');
 
 ###jsdom.VirtualConsole
 虚拟console

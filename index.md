@@ -6,6 +6,7 @@
 + [git 常用命令](./docs/git-commands.md)
 + [git教程](./docs/git-teaching.md)
 + [jade入门教程](./docs/jade教程.md)
++ [jsdom使用指南](./docs/jsdom教程.md)
 + [linux命令行](./docs/linux命令行.md)
 + [Linux下用户组、文件权限详解](./docs/linux文件权限详解.md)
 + [python基础教程 (from 廖雪峰)](./docs/python_note.md)

@@ -60,22 +60,6 @@ jsdom使用指南
       beforeParse(window){..}
     });
 
-
-
-###dom.serialize()
-
-    const dom = new JSDOM('<!doctype html>hello');
-    console.log(dom.serialize());
-    // 同上
-    console.log(dom.window.document.documentElement.outerHTML);
-
-###dom.nodeLocation(node)
-
-    const dom = new JSDOM('<p>hello <img src="foo.jpg"/></p>', {includeNodeLocations: true});
-
-    var p = dom.window.document.querySelector('p');
-    console.log(dom.nodeLocation(p));
-
 ###jsdom.runVMScript(script)
 
     const dom = new JSDOM('', {runScripts: 'outside-only'});
@@ -119,6 +103,21 @@ jsdom使用指南
 
 ###jsdom.CookieJar
 cookie
+
+
+###dom.serialize()
+
+    const dom = new JSDOM('<!doctype html>hello');
+    console.log(dom.serialize());
+    // 同上
+    console.log(dom.window.document.documentElement.outerHTML);
+
+###dom.nodeLocation(node)
+
+    const dom = new JSDOM('<p>hello <img src="foo.jpg"/></p>', {includeNodeLocations: true});
+
+    var p = dom.window.document.querySelector('p');
+    console.log(dom.nodeLocation(p));
 
 ###dom.reconfigure(setting)
 

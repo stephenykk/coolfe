@@ -10,5 +10,6 @@
 + [linux命令行](./docs/linux命令行.md)
 + [Linux下用户组、文件权限详解](./docs/linux文件权限详解.md)
 + [python基础教程 (from 廖雪峰)](./docs/python_note.md)
++ [window常用的"开始-运行"命令](./docs/window开始运行命令.md)
 + [小程序文档](./docs/wxapp_note.md)
 + [phantomjs教程](./docs/不错的phantomjs教程.md)

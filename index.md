@@ -18,7 +18,7 @@
 + [[转]seajs详解](./docs/seajs.md)
 + [underscore](./docs/underscore.md)
 + [vue-resource](./docs/vueResource_note.md)
-+ [vue-router](./docs/vueRouter_note.md)
++ [vue-router2.x](./docs/vueRouter_note.md)
 + [vuex](./docs/vuex_note.md)
 + [dom和数据绑定 保持同步](./docs/vue_draft.md)
 + [webpack notes](./docs/webpack_note.md)

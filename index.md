@@ -19,7 +19,7 @@
 + [underscore](./docs/underscore.md)
 + [vue-resource](./docs/vueResource_note.md)
 + [vue-router2.x](./docs/vueRouter_note.md)
-+ [vuex](./docs/vuex_note.md)
++ [vuex2.x](./docs/vuex_note.md)
 + [dom和数据绑定 保持同步](./docs/vue_draft.md)
 + [webpack notes](./docs/webpack_note.md)
 + [window常用的"开始-运行"命令](./docs/window开始运行命令.md)

@@ -7,12 +7,12 @@ apis
 
     wx.getStorageSync('logs');
     wx.setStorageSync('logs', logs);
-    wx.login({success: cb});
-    wx.getStetting({success: cb});
-    wx.getUserInfo({success: cb});
-    wx.navigateTo({url: '../logs/index'});
+    wx.login({success: cb}); // 返回 session_key
+    wx.getSetting({success: cb}); // 返回授权设置  authSetting: {'scope.userInfo', 'scope.userLocation'}
+    wx.getUserInfo({success: cb}); // 返回 avatarUrl nickName...
+    wx.navigateTo({url: '../logs/index'}); //方法基本都是异步，都传入options
 
-    getApp();
+    getApp(); // 全局方法
     getCurrentPages();
     App(opts);
     Page(opts);
@@ -163,6 +163,14 @@ touches: [{identifier, pageX, pageY, clientX, clientY}, canvasTouch = {identifie
 changedTouches: [{...}]
 
 canvas no bubble stage event
+
+触发事件，并传递参数
+
+    <view bind:tap="choose" data-role="lufy"></view>
+    // pagex.js
+    choose(ev) {
+        console.log(ev.currentTarget.dataset.role); // lufy
+    }
 
 ---
 

@@ -13,7 +13,7 @@ window常用cmd命令
 + timedate.cpl
 + powercfg.cpl
 + inetcpl.cpl
-+ nusrmgr.cpl
++ nusrmgr.cpl # win7 无这个面板ont
 + devmgmt.msc
 + compmgmt.msc
 + lusrmgr.msc

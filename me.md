@@ -1,6 +1,6 @@
 wxapp
-126mail
-weixin
-fnym
+126m
+wxfnym
 openplat
-163mail
+163m
+weixinfnym

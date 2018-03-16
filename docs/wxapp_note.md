@@ -20,6 +20,33 @@ apis
 
     app的事件：{onLaunch, onShow, onHide, onError}
     page的事件和生命周期： {onLoad, onReady, onShow, onHide, onUnload, onPullDownRefresh, onReachBottom, onShareAppMessage, onPageScroll}
+
+    onLoad(query) {
+        // query 获取路径后面的参数
+    }
+
+    onPullDownRefresh() {
+        fetchData(() => {
+            wx.stopPullDownRefresh(); // 需要停止页面的下拉刷新状态 ...
+        });
+    }
+
+    onReachBotton() {
+        // 触底距离 在 app.json / page.json 中设置 onReachBottomDistance
+    }
+
+    onPageScroll({scrollTop}) {
+        // 页面滚动的回调 高频事件
+    }
+
+    onShareAppMessage() {
+        // 定义了这个回调，右上角才有转发选项
+        // 需返回 object, 定义转发内容
+        return {
+            title: '转发标题',
+            path: '/pages/index/index?id=123' // 跳转页面
+        }
+    }
     
     wx.navigateTo({url, success, fail, complete});
     <navigator open-type="navigateTo" url=".." />
@@ -458,3 +485,76 @@ wxss的扩展特性:
 性能
 ---
 提供性能分析工具和优化建议
+
+page对象
+---
+`Page.prototype.route` (page.route) 可以获得当前页面的路径  
+`Page.prorotype.setData(data, [callback])` , 更新数据，把数据发送到视图层，是异步操作。  
+页面的数据对象较大时，属性访问路径会很深，所以setData方法做了些友好的处理，如：  
+    this.setData({'a.b.c.d': {foo: 'good'}});
+    this.setData({'friends[1].name', 'coco'});
+    this.data.msg = 'hello'; // 这样并不能更新数据
+    this.setData({msg: this.data.msg+'!!'}); // 应该类似这样去更新
+
+page生命周期
+---
+视图层 和 逻辑层 各自初始化，逻辑层初始化后，触发onLoad, onShow, 并等待视图层通知(视图层初始化完啦)，收到通知后，发送初始数据到视图层，视图层进行首次渲染, 逻辑层等待视图层通知(视图层渲染完啦),  收到通知后，触发onReady(表示初次渲染完成，可与视图层进行交互), 然后等待用户交互事件， 收到事件通知执行setData, 触发视图层重新渲染; 页面切换时，可能触发 onHide, onShow, onUnload.
+
+
+页面栈
+---
+小程序框架管理页面路由，应时刻关注页面栈的变化，`getCurrentPages()` , 栈顶的为当前页. 
+
++ `wx.redirectTo({url:..})` 替换当前页面，页面栈元素不增加
++ `wx.switchTab({url: ..})` tab切换时，清空页面栈，栈中只有当前页面
++ `wx.reLaunch({url: ..})` 重启小程序，清空，只保留指定的新页面
++ `wx.navigateTo({url: ..})` push新页面到栈中
+
+
+模块化
+---
+采用类 cmd 模块方案，不过不会自动从 `node_modules` 查找模块，**只支持相对路径**。
+
+    // util/common.js
+    function sayHello(name) {
+      console.log(`Hello ${name} !`)
+    }
+    function sayGoodbye(name) {
+      console.log(`Goodbye ${name} !`)
+    }
+    module.exports = {
+        sayHello,
+        sayGoodbye
+    }
+
+    // pageA.js
+    var common = require('./util/common.js');
+
+视图层
+---
+
+    <!-- 数据绑定 -->
+    <view> {{message}} </view>
+    <view class="{{open ? 'open' : ''}}"> {{message}} </view>
+
+    <!-- 列表渲染 -->
+    <view wx:for="{{array}}" wx:for-item="item" wx:for-index="index" wx:key="index"> {{item}} </view>
+
+    <!-- 条件渲染 -->
+    <view wx:if="{{view == 'WEBVIEW'}}"> WEBVIEW </view>
+    <view wx:elif="{{view == 'APP'}}"> APP </view>
+    <view wx:else="{{view == 'MINA'}}"> MINA </view>
+
+### 模板
+
+    <!--wxml-->
+    <template name="staffName">
+      <view>
+        FirstName: {{firstName}}, LastName: {{lastName}}
+      </view>
+    </template>
+
+    <template is="staffName" data="{{...staffA}}"></template>
+    <template is="staffName" data="{{...staffB}}"></template>
+    <template is="staffName" data="{{...staffC}}"></template>
+

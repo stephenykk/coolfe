@@ -202,7 +202,9 @@ canvas no bubble stage event
 ---
 
 *import and include*
+import 有作用域的概念，即只会 import 目标文件中定义的 template，而不会 import 目标文件 import 的 template。   
 
+include 可以将目标文件除了 `<template/>`  `<wxs/> `外的整个代码引入
     
     item.wxml:
     <template name="itemTpl">
@@ -225,6 +227,7 @@ canvas no bubble stage event
         <view>this is footer</view>
 
 
+    // wxs可以定义一些用于模板的函数，做类似过滤器和计算属性的事情
     <wxs module="m1">
         var msg = 'hello world';
         module.exports.message = msg;
@@ -536,6 +539,15 @@ page生命周期
     <!-- 数据绑定 -->
     <view> {{message}} </view>
     <view class="{{open ? 'open' : ''}}"> {{message}} </view>
+    <view> {{a + b}} + {{c}} + d </view>
+    <view>{{object.key}} {{array[0]}}</view>
+    <view>{{"hello" + name}}</view>
+    <view wx:if="{{length > 5}}"> </view>
+    <view wx:for="{{[zero, 1, 2, 3, 4]}}"> {{item}} </view>
+    <template is="footer" data="{{for: a, bar: b}}"></template>
+    <template is="footer" data="{{...obj1, ...obj2, e: 5}}"></template>
+    <template is="objectCombine" data="{{foo, bar}}"></template>
+
 
     <!-- 列表渲染 -->
     <view wx:for="{{array}}" wx:for-item="item" wx:for-index="index" wx:key="index"> {{item}} </view>
@@ -544,8 +556,15 @@ page生命周期
     <view wx:if="{{view == 'WEBVIEW'}}"> WEBVIEW </view>
     <view wx:elif="{{view == 'APP'}}"> APP </view>
     <view wx:else="{{view == 'MINA'}}"> MINA </view>
+    <!-- 类似 block wx:if，也可以将 wx:for -->
+    <block wx:for="{{[1, 2, 3]}}">
+      <view> {{index}}: </view>
+      <view> {{item}} </view>
+    </block>
 
 ### 模板
+WXML提供模板（template），可以在模板中定义代码片段，然后在不同的地方调用。  
+模板拥有自己的作用域，只能使用 data 传入的数据以及模版定义文件中定义的 `<wxs />` 模块。
 
     <!--wxml-->
     <template name="staffName">
@@ -556,5 +575,475 @@ page生命周期
 
     <template is="staffName" data="{{...staffA}}"></template>
     <template is="staffName" data="{{...staffB}}"></template>
-    <template is="staffName" data="{{...staffC}}"></template>
+    <template is="{{friendName}}" data="{{...friendData}}"></template>
 
+### 事件
+事件是视图层到逻辑层的通讯方式。事件对象可以携带额外信息，如 id, dataset, touches。   
+
+    <view id="tapTest" data-hi="wechat" bindtap="tapName"> Click me! </view>
+
+    Page({
+      tapName: function(event) {
+        console.log(event.target.dataset.hi) // wechat
+        event.detail //自定义事件所携带的数据
+        event.touches, event.changedTouches
+      }
+    })
+
+事件分为冒泡事件和非冒泡事件  
+
+冒泡事件: 
+
++ touchstart touchmove touchend touchcancel 
++ tap longtap longpress
++ transitionend 
++ animationstart animationend animationiteration
++ touchforcechange
+
+非冒泡事件:
+
++ submit
++ input
++ scroll
+
+bind事件绑定不会阻止事件向上冒泡，catch事件绑定可以阻止冒泡事件向上冒泡。
+冒泡阶段事件绑定: bind  catch(不再向上冒泡);  
+捕获阶段事件绑定: capture-bind, capture-catch(不再向下传递)
+
+    <view bind:tap="handler1">hello</view>
+    <view catch:tap="handler2">world</view>
+    <view capture-bind:tap="handler3">today</view>
+    <view capture-catch:tap="handler4">tommorrow</view>
+
+    <view data-alpha-beta="1" data-alphaBeta="2" bindtap="bindViewTap"> DataSet Test </view>
+    Page({
+      bindViewTap:function(event){
+        event.currentTarget.dataset.alphaBeta === 1 // - 会转为驼峰写法
+        event.currentTarget.dataset.alphabeta === 2 // 大写会转为小写
+      }
+    })
+
+自定义组件
+---
+基础版本库1.6.3+, 支持组件化开发  
+类似于页面，一个自定义组件由 json wxml wxss js 4个文件组成。  
+
+    // acom.json
+    {
+        "component": true
+    }
+
+    // acom.wxml
+    <view class="inner">
+      {{innerText}}
+    </view>
+    <slot></slot>  // 支持内容分发 和 多个内容分发
+
+    // acom.js
+    Component({
+      properties: {
+        // 这里定义了innerText属性，属性值可以在组件使用时指定
+        innerText: {
+          type: String,
+          value: 'default value',
+        }
+      },
+      data: {
+        // 这里是一些组件内部数据
+        someData: {}
+      },
+      methods: {
+        // 这里是一个自定义方法
+        customMethod: function(){}
+      }
+    })
+
+使用自定义组件
+
+    // apage.json
+    {
+      "usingComponents": {
+        "component-tag-name": "path/to/the/custom/component"
+      }
+    }
+
+    // apage.wxml
+    <view>
+      <!-- 以下是对一个自定义组件的引用 自定义组件标签名 只能是小写字母、中划线和下划线的组合-->
+      <component-tag-name inner-text="Some text"></component-tag-name>
+    </view>
+
+### 组件样式
+组件样式的支持有限，需要注意以下问题:
+
++ 组件和引用组件的页面不能使用id选择器（#a）、属性选择器（[a]）和标签名选择器，请改用class选择器。
++ 继承样式，如 font 、 color ，会从组件外继承到组件内。 *继承样式能穿透到组件内，其他样式无效*
++ 除继承样式外， app.wxss 中的样式、组件所在页面的的样式对自定义组件无效。
+
+### 外部样式类
+
+
+    /* 组件 custom-component.js */
+    Component({
+      externalClasses: ['my-class']
+    })
+
+    <!-- 组件 custom-component.wxml -->
+    <custom-component class="my-class">这段文本的颜色由组件外的 class 决定</custom-component>
+
+### Component构造器
+
+    Component({
+        properties: {
+            {type, value, observer},
+            ...
+        },
+        data: {
+            foo: foolish
+        },
+        methods: {
+            hello() {
+                //todo
+            }
+        },
+        behaviors: [] // 类似mixin 组件间代码复用，
+        created() {
+            // 组件实例进入页面节点树时执行，注意此时不能调用 setData
+        },
+        attached() {
+            // 组件实例已进入页面节点树时执行
+        },
+        ready() {
+            // 在组件布局完成后执行，此时可以获取节点信息（使用 SelectorQuery ）
+        },
+        moved() {
+            // 组件实例被移动到节点树另一个位置时执行
+        },
+        detached() {
+            // 组件实例被从页面节点树移除时执行
+        },
+        relations: {},
+        externalClasses: [],
+        options: {}
+    })
+
+示例：
+
+    Component({
+      options: {
+        multipleSlots: true
+      },
+      relations: {}
+
+      behaviors: [],
+
+      properties: {
+        myProperty: { // 属性名
+          type: String, // 类型（必填），目前接受的类型包括：String, Number, Boolean, Object, Array, null（表示任意类型）
+          value: '', // 属性初始值（可选），如果未指定则会根据类型选择一个
+          observer: function(newVal, oldVal){} // 属性被改变时执行的函数（可选），也可以写成在methods段中定义的方法名字符串, 如：'_propertyChange'
+        },
+        myProperty2: String // 简化的定义方式
+      },
+      data: {}, // 私有数据，可用于模版渲染
+
+      // 生命周期函数，可以为函数，或一个在methods段中定义的方法名
+      created() {},
+      attached: function(){},
+      ready() {},
+      moved: function(){},
+      detached: function(){},
+
+      methods: {
+        onMyButtonTap: function(){
+          this.setData({
+            // 更新属性和数据的方法与更新页面数据的方法类似
+          })
+        },
+        _myPrivateMethod: function(){
+          // 更新组件数据 this.replaceDataOnPath(), this.applyDataUpdates(); 等价于 this.setData(obj)
+
+          // 内部方法建议以下划线开头
+          this.replaceDataOnPath(['A', 0, 'B'], 'myPrivateData') // 这里将 data.A[0].B 设为 'myPrivateData'
+          this.applyDataUpdates()
+        },
+        _propertyChange: function(newVal, oldVal) {
+
+        }
+      }
+
+    })    
+
+component实例的属性：
+
++ this.is // 组件的文件路径
++ this.id //节点id
++ this.dataset // 节点dataset
++ this.data // 包括内部数据和属性值
+
+component实例的属性：
+
++ this.setData() 
++ this.hasBehavior()
++ this.triggerEvent()
++ this.createSelectorQuery()
++ this.selectComponent()
++ this.selectAllComponents()
++ this.getRelationNodes()
+
+组件事件
+
+事件系统是组件间交互的主要形式。自定义组件可以触发任意的事件，引用组件的页面可以监听这些事件
+
+    <!-- 当自定义组件触发“myevent”事件时，调用“onMyEvent”方法 -->
+    <component-tag-name bind:myevent="onMyEvent" />
+
+    Page({
+      onMyEvent: function(e){
+        e.detail // 自定义组件触发事件时提供的detail对象
+      }
+    })
+
+
+触发事件
+
+    Component({
+      properties: {}
+      methods: {
+        onTap: function(){
+          var myEventDetail = {} // detail对象，提供给事件监听函数
+          var myEventOption = {bubbles: false, composed: false, capturePhase: false} // 触发事件的选项
+          this.triggerEvent('myevent', myEventDetail, myEventOption)
+        }
+      }
+    })    
+
+
+behavior  
+类似mixin, 组件间代码复用的方式
+
+    Behavior({
+        behaviors: [],
+        properties: {}, // merge cmp-first
+        data: {}, // merge cmp-first
+        attached() {}, //life-circle hook, called both
+        methods: {} // merge cmp-first
+    })
+
+内置的behaviors
+
+    Component({
+        behaviors: ['wx://form-field']
+    })
+
+组件间关系  
+
+    <custom-ul>
+      <custom-li> item 1 </custom-li>
+      <custom-li> item 2 </custom-li>
+    </custom-ul>
+
+    // path/to/custom-ul.js
+    Component({
+      relations: {
+        './custom-li': {
+          type: 'child', // 关联的目标节点应为子节点
+          linked: function(target) {
+            // 每次有custom-li被插入时执行，target是该节点实例对象，触发在该节点attached生命周期之后
+          },
+          linkChanged: function(target) {
+            // 每次有custom-li被移动后执行，target是该节点实例对象，触发在该节点moved生命周期之后
+          },
+          unlinked: function(target) {
+            // 每次有custom-li被移除时执行，target是该节点实例对象，触发在该节点detached生命周期之后
+          }
+        }
+      },
+      methods: {
+        _getAllLi: function(){
+          // 使用getRelationNodes可以获得nodes数组，包含所有已关联的custom-li，且是有序的
+          var nodes = this.getRelationNodes('path/to/custom-li')
+        }
+      },
+      ready: function(){
+        this._getAllLi()
+      }
+    })
+
+    // path/to/custom-li.js
+    Component({
+      relations: {
+        './custom-ul': {
+          type: 'parent', // 关联的目标节点应为父节点
+          linked: function(target) {
+            // 每次被插入到custom-ul时执行，target是custom-ul节点实例对象，触发在attached生命周期之后
+          },
+          linkChanged: function(target) {
+            // 每次被移动后执行，target是custom-ul节点实例对象，触发在moved生命周期之后
+          },
+          unlinked: function(target) {
+            // 每次被移除时执行，target是custom-ul节点实例对象，触发在detached生命周期之后
+          }
+        }
+      }
+    })
+
+> 注意：必须在两个组件定义中都加入relations定义，否则不会生效。
+
+
+抽象节点  
+实现动态组件
+
+    {
+        "usingComponents": {
+            "my-radio": "components/my-radio"
+        },
+        "componentGenerics": {
+            // "selectable": true,
+            "selectable": {
+                "default": "components/def-select"
+            }
+        }
+    }
+
+    <!-- selectable-group.wxml -->
+    <view wx:for="{{labels}}">
+      <label>
+        <selectable disabled="{{false}}"></selectable>
+        {{item}}
+      </label>
+    </view>
+    <selectable-group generic:selectable="my-radio" />
+
+
+插件
+---
+新建插件项目， 包含目录 `plugin` , `miniprogram`
+
+    + miniprogram
+       + pages
+       - app.js
+       - app.json
+    + plugin
+        + components
+        - index.js
+        - plugin.json
+
+
+配置文件 plugin.json
+
+    {
+      "publicComponents": {
+        "hello-component": "components/hello-component"
+      },
+      "main": "index.js"
+    }
+
+插件对外接口  
+插件可以对外提供 JS方法 和 组件
+
+    // pageA.js
+    var WS = require('wsplugin');
+    WS.dateFormat();
+    // pageA.json
+    {
+        "usingComponents": {
+            "itemgroup": "plugin://wsplugin/itemgroup"
+        }
+    }
+
+
+上传和发布  
+插件需要像小程序一样预览和上传, 没有体验版，但可以多个版本在线
+
+插件请求签名  
+插件在使用`wx.request`等网络api时，需加请求头 `X-WECHAT-HOSTSIGN`, 用于验证请求来源于小程序插件
+
+    X-WECHAT-HOSTSIGN: {noncestr, timestamp, signature}
+    // appid 小程序的appid, token 插件的token 都可在设置中找到
+    signature = sha1(APPID + noncestr + timestamp + token);
+
+
+分包
+---
+对小程序进行分包，可以优化小程序首次启动的下载时间，以及在多团队共同开发时可以更好的解耦协作.
+
+分包/主包 都不能大于2M，所有包加起来不能大于4M
+
+`subPackages`字段声明分包, 首页必须在主包内。 分包之间资源互相独立，不能引用。
+
+    {
+      "pages":[
+        "pages/index",
+        "pages/logs"
+      ],
+      "subPackages": [
+        {
+          "root": "packageA",
+          "pages": [
+            "pages/cat",
+            "pages/dog"
+          ]
+        }, {
+          "root": "packageB",
+          "pages": [
+            "pages/apple",
+            "pages/banana"
+          ]
+        }
+      ]
+    }
+
+多线程
+---
+worker线程和主线程通过`worker.postMessage()`, `worker.onmessage`通信，worker线程运行于独立的全局上下文，参考 web worker.
+
+    // app.json
+    {
+        "worker": "workers" // 指定worker文件的存放目录
+    }
+
+    // workers/workerA.js
+    var utils = require('./utils'); // 只能require workers下的文件
+    // worker线程的全局环境有 worker对象
+    worker.onMessage(res => console.log(res));
+    worker.postMessage(result);
+
+    // pageA.js
+    var worker = wx.createWorker('/workers/workerA.js'); // 绝对路径
+    worker.postMessage({msg: 'hello worker'});
+
+    // 只能有1个worker线程，结束worker用
+    worker.terminate();
+
+兼容处理
+---
++ 版本号比较 `compareVersion`
++ 兼容api `wx.methodName`
+
+        if(wx.openBluetoothAdapter) {
+            wx.openBluetoothAdapter()
+        }else {
+            wx.showModal({
+                title: '提示',
+                content: '请更新微信版本'
+            })
+        }
+
++ 兼容参数 `wx.canIUse()`
+
+        wx.showModal({
+            success(res) {
+                if(wx.canIUse('showModal.cancel')) {
+                    console.log(res.cancel);
+                }
+            }
+        })
+
++ 兼容组件 `wx.canIUse()`
+
+        Page({
+            data: {
+                canIUse: wx.canIUse('cover-view')
+            }
+        })

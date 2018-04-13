@@ -9,10 +9,11 @@ window常用cmd命令
 + appwiz.cpl
 + ncpa.cpl
 + sysdm.cpl
-+ desk.cpl
++ desk.cpl # 修改屏幕分辨率 设置双屏
 + timedate.cpl
 + powercfg.cpl
-+ inetcpl.cpl
++ inetcpl.cpl # internet选项
++ intl.cpl # 区域语言设置
 + nusrmgr.cpl # win7 无这个面板ont
 + devmgmt.msc
 + compmgmt.msc

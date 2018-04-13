@@ -11,3 +11,5 @@ linux命令行
 - `su - root` 切换到root用户
 - `sudo /etc/init.d/nginx {start|restart|stop}` nginx启动/重启/停止
 - `sudo service nginx {start|stop|restart|reload|force-reload|status|configtest|rotate|upgrade}` 以服务的形式管理nginx
+- `nginx -v ` 显示nginx版本
+- `nginx -t` 测试配置文件的设置，可看到配置文件路径

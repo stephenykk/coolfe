@@ -13,13 +13,14 @@ apis
     wx.navigateTo({url: '../logs/index'}); //方法基本都是异步，都传入options
 
     getApp(); // 全局方法
-    getCurrentPages();
+    getCurrentPages(); // 获取页面栈的各个page对象
     App(opts);
     Page(opts);
     this.setData(data);
 
-    app的事件：{onLaunch, onShow, onHide, onError}
+    app的事件：{onLaunch, onShow, onHide, onError, noPageNotFound, globalData}
     page的事件和生命周期： {onLoad, onReady, onShow, onHide, onUnload, onPullDownRefresh, onReachBottom, onShareAppMessage, onPageScroll}
+
 
     onLoad(query) {
         // query 获取路径后面的参数
@@ -39,11 +40,16 @@ apis
         // 页面滚动的回调 高频事件
     }
 
+    onTabItemTap(item) {
+        // item = {index, text, pagePath}
+    }
+
     onShareAppMessage() {
         // 定义了这个回调，右上角才有转发选项
         // 需返回 object, 定义转发内容
         return {
             title: '转发标题',
+            imageUrl: '/images/share.jpg',
             path: '/pages/index/index?id=123' // 跳转页面
         }
     }
@@ -71,6 +77,10 @@ apis
         data: {name: 'wechat', like: 'green'},
         changeName: function() {
             this.setData({name: 'Nami'}); // => data 为 {name: 'Nami', like: 'green'}
+
+            // setData也可以设置包含函数的对象
+            this.setData({hi: function() { console.log('hi'); return 'hihi';}});
+            this.data.hi(); //逻辑层可以访问 hi函数，视图层无法使用hi
         }
     });
 
@@ -141,6 +151,7 @@ App()函数用于注册程序, 如:
 
     App({
         onLaunch: function(options) {
+            // options = {path, query, scence, shareTicket, referrerInfo}
             // 只触发一次
         },
         onShow: function(options) {
@@ -152,6 +163,10 @@ App()函数用于注册程序, 如:
         },
         onError: function() {
 
+        },
+        onPageNotFound(options) {
+            // options = {path, query, isEntryPage}
+            // wx.redirectTo({url: 'pages/home/home'});
         },
         globalData: {},
         otherData: {},
@@ -493,6 +508,9 @@ page对象
 ---
 `Page.prototype.route` (page.route) 可以获得当前页面的路径  
 `Page.prorotype.setData(data, [callback])` , 更新数据，把数据发送到视图层，是异步操作。  
+
+> setData 函数用于将数据从逻辑层发送到视图层（异步），同时改变对应的 this.data 的值（同步）。
+
 页面的数据对象较大时，属性访问路径会很深，所以setData方法做了些友好的处理，如：  
     this.setData({'a.b.c.d': {foo: 'good'}});
     this.setData({'friends[1].name', 'coco'});

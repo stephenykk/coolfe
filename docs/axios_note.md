@@ -55,7 +55,7 @@ axios api
 
 ### axios(config)
 
-    axios({
+    axios({// post 用 data 指定请求体参数, params 指定url参数
         method: 'post',
         url: '/user/123',
         data: {
@@ -64,10 +64,19 @@ axios api
         }
     });
 
+    axios({// get 用 params 指定url参数
+        method: 'get',
+        url: '/user',
+        params: {
+            id: '123'
+        }
+    });
+
 
 ### axios(url, [config])
 
-    axios('/user/123', {method: 'get', data: {...}});
+    axios('/user/123', {method: 'get', params: {...}});
+    axios('/user/123', {method: 'post', params: {}, data: {} });
 
 ### http动词别名方法
 

@@ -18,7 +18,7 @@ apis
     Page(opts);
     this.setData(data);
 
-    app的事件：{onLaunch, onShow, onHide, onError, noPageNotFound, globalData}
+    app的事件：{onLaunch, onShow, onHide, onError, onPageNotFound, globalData}
     page的事件和生命周期： {onLoad, onReady, onShow, onHide, onUnload, onPullDownRefresh, onReachBottom, onShareAppMessage, onPageScroll}
 
 

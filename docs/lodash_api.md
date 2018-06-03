@@ -22,7 +22,7 @@ array
     _.fill()
 
     #转对象
-    _.fromPaires()
+    _.fromPairs()
 
     #取索引
     _.findIndex() _.findLastIndex()

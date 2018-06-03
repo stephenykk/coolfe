@@ -269,3 +269,4 @@ config的优先级: `calling config > instance config > global config`
 
             var querystring = require('querystring');
             axios.post('/some/api', querystring.stringify({foo: 'bar'}));
+

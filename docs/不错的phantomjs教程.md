@@ -3,6 +3,12 @@ phantomjs教程
 
 [教程链接](http://www.phperz.com/special/45.html)
 
+简介
+---
+PhantomJS 是一个基于WebKit的服务器端 JavaScript API。它全面支持web而不需浏览器支持，其快速，原生支持各种Web标准： DOM 处理, CSS 选择器, JSON, Canvas, 和 SVG。PhantomJS可以用于页面自动化，网络监测，网页截屏，以及无界面测试等
+
+
+
 linux下使用phantomjs的问题
 ---
 ### 字体乱码，中文变方块

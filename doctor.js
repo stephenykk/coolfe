@@ -136,10 +136,13 @@ class DSchedule {
   async getScheduleOfOne(doc) {
     let data = pick(doc, ['hospitalId', 'departmentId', 'doctorId']);
     let ua = userAgent.replace('604.1.38', randomVersion());
-    let res = await axios.post(api, querystring.stringify(data), {headers: {'content-type': 'application/x-www-form-urlencoded', 'user-agent': ua}});
+    let res = await axios.post(api, querystring.stringify(data), {headers: {'content-type': 'application/x-www-form-urlencoded', 'user-agent': ua, proxy: {
+      host: '127.0.0.1',
+      port: 8888
+    }}});
     let resData = res.data.response;
     // console.log(JSON.stringify(res, null, 2), '<--res');
-    console.log(res, '<----------res');
+    // console.log(res, '<----------res');
     // console.log(JSON.stringify(res.data, null, 2), '<--res.data');
 
     this.ajaxingCount--;
@@ -190,6 +193,6 @@ class DSchedule {
 
 
 let ds = new DSchedule();
-ds.getScheduleOfOne(DOCTORS[0]);
-// ds.getAllSchedules();
+// ds.getScheduleOfOne(DOCTORS[0]);
+ds.getAllSchedules();
 // ds.polling();

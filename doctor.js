@@ -132,67 +132,33 @@ class DSchedule {
 
         this.ajaxingCount = DOCTORS.length;
 
-        DOCTORS.forEach((doc, i) => {
-            setTimeout(() => {
-                this.getScheduleOfOne(doc);
-            }, i * 3000);
-        });
-    }
+    DOCTORS.forEach(doc => {
+      this.getScheduleOfOne(doc);
+    });
+  }
+  
+  async getScheduleOfOne(doc) {
+    let data = pick(doc, ['hospitalId', 'departmentId', 'doctorId']);
+    let ua = userAgent.replace('604.1.38', randomVersion());
+    let res = await axios.post(api, querystring.stringify(data), {headers: {'content-type': 'application/x-www-form-urlencoded', 'user-agent': ua, proxy: {
+      host: '127.0.0.1',
+      port: 8888
+    }}});
+    let resData = res.data.response;
+    // console.log(JSON.stringify(res, null, 2), '<--res');
+    // console.log(res, '<----------res');
+    // console.log(JSON.stringify(res.data, null, 2), '<--res.data');
 
-    async getScheduleOfOne(doc) {
-        let data = pick(doc, ['hospitalId', 'departmentId', 'doctorId']);
-        let ua = userAgent.replace('604.1.38', randomVersion());
-        let res = await axios.post(api, querystring.stringify(data), {
-            headers: { 'content-type': 'application/x-www-form-urlencoded', 'User-Agent': ua },
-            proxy
-        });
-        let resData = res.data.response;
-        // console.log(JSON.stringify(res, null, 2), '<--res');
-        // console.log(res, '<----------res');
-        // console.log(JSON.stringify(res.data, null, 2), '<--res.data');
+    this.ajaxingCount--;
 
-        this.ajaxingCount--;
-
-        if (resData && resData.schedules) {
-            // letOutHour, letOutDay, doctorName, specialty, schedules(scheDate,amPm,freeNum,state)
-            let scheduleResult = this.parseSchedules(resData.schedules, resData);
-            let docData = pick(resData, ['letOutHour', 'letOutDay', 'doctorName', 'specialty', 'result']);
-            Object.assign(docData, { scheduleResult });
-            this.output(docData);
-        } else {
-            console.warn('\n数据异常/没有排班数据:', res.data);
-        }
-    }
-
-    parseSchedules(schedules, data) {
-        let scon = '';
-        scon = schedules.map(s => {
-            let state = s.state;
-            let stateText = STATES[state];
-            data.result = '不可预约:(';
-
-            if (state == 0 && s.freeNum > 0) {
-                stateText = '可预约';
-                data.result = '可预约啊！！！';
-            }
-
-            return `${s.scheDate} ${s.amPm} 剩余号: ${s.freeNum} 状态: ${state}`
-        }).join('\n');
-
-        return scon;
-    }
-
-    output(docData) {
-        let con = '';
-        eachKey(docData, (val, key) => {
-            if (key == 'scheduleResult') {
-                con += `${key}:\n${val}\n`;
-            } else {
-                con += `${key}: ${val} ${key=='result' ? '<------------------------------------' : ''}\n`;
-            }
-        });
-        con += '\n\n';
-        console.log(con);
+    if(resData && resData.schedules) {
+      // letOutHour, letOutDay, doctorName, specialty, schedules(scheDate,amPm,freeNum,state)
+      let scheduleResult = this.parseSchedules(resData.schedules, resData);
+      let docData = pick(resData, ['letOutHour', 'letOutDay', 'doctorName', 'specialty', 'result']);
+      Object.assign(docData, {scheduleResult});
+      this.output(docData);
+    } else {
+      console.warn('\n数据异常/没有排班数据:', res.data);
     }
 
 }

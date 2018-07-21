@@ -57,7 +57,7 @@ XMLHttpRequest Level 2 添加了一个新的接口——FormData。利用 FormDa
 
 还可以不借助 HTML 表单，直接向 FormData 对象中添加一个 File 对象或者一个 Blob 对象：
 
-	formData.append('myfile', myBlob);
+	formData.append('myfile', myBlob, 'myfile.txt');
 
 
 XMLHttpRequest

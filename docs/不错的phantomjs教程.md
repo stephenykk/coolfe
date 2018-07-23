@@ -31,4 +31,85 @@ linux下保存截图发现会乱码，则可以安装一下字体解决
 
 
 
+安装
+---
+    
+    npm install -g phantomjs-prebuilt
+
+使用
+---
+用 `phantomjs` 执行 `xx.js` 文件, 如: `phantomjs hello.js`, 或者用 `node` 执行 `callHello.js`
+
+### 示例
+    
+    // hello.js
+    console.log('Hello Phantomjs');
+    phantom.exit(0);
+
+    // callHello.js
+    var phantomjs = require('phantomjs-prebuilt');
+    var program = phantomjs.exec('./hello.js', url);
+    program.on('exit', code => console.log(code));
+
+
+    // getPage.js
+    var page = require('webpage').create();
+    var system = require('system');
+    var url = system.args[1];
+
+    page.open(url, function(status) {
+        if(status == 'success') {
+            var content = page.evalute(function() {
+                return document.querySelector('.content').innerHTML;
+            });
+            console.log(content);
+        }else {
+            console.log('fail to load url');
+        }
+    });
+
+    // renderPage.js png or pdf
+    var page = require('webpage').create();
+    var system = require('system');
+    var url = system.args[1];
+
+    page.open(url, status => {
+        if(status === 'success') {
+            page.pageSize = {
+                format: 'A4',
+                orientation: 'portrait',
+                border: '1cm'
+            };
+            page.viewportSize = {
+                width: 750,
+                height: 1000
+            }
+
+            page.render('test.png');
+            page.render('test.pdf');
+        }
+    });
+
+
+### 内置的包
++ webpage
++ system
+
+### API
++ page.scrollPosition
++ page.pageSize
++ page.viewportSize
++ page.open(url, callback);
++ page.render(fname);
++ page.evalute(fn); // fn可以访问 window, document
++ page.onConsoleMessage
++ page.onLoadStarted
++ page.onResourceRequested
++ page.onResourceReceived
++ page.onLoadFinished
++ page.includeJs(jsUrl)
++ phantom.exit(exitCode);
+
+
+
 

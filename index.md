@@ -1,6 +1,10 @@
 参考文档
 =======
 
+<script>
+    console.log('hello yarn...');
+</script>
+
 <!-- links -->
 + [axios notes](./docs/axios_note.md)
 + [cmder note ](./docs/cmder_note.md)

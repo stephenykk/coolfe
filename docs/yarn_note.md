@@ -114,6 +114,10 @@ CLI命令
 
 `yarn check --integrity`  检验包是否被篡改..
 
+<script>
+    console.log('hello yarn...');
+</script>
+
 
 
 

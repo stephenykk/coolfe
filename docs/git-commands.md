@@ -68,6 +68,7 @@ git branch
 + git branch new_branch
 + git branch -d merged_branch
 + git branch -D unmerged_branch
++ git branch -m oldBranch newBranch #分支重命名
 
 git clone 
 ----------
@@ -300,3 +301,4 @@ Git远程仓库管理
     git branch --set-upstream master origin/master
 
     git branch --set-upstream develop origin/develop
+

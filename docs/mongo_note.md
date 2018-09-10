@@ -26,3 +26,28 @@ mongodb notes
 语法 | 描述 | 示例
 -----|------|------
 mongodump --host <host> 
+
+
+
+MongoDB数据恢复
+mongodb使用 mongorerstore 命令来恢复备份的数据。
+
+语法
+mongorestore命令脚本语法如下：
+
+`mongorestore -h dbhost -d dbname --directoryperdb dbdirectory`
+
+**-h：**
+MongoDB所在服务器地址
+
+**-d：**
+需要恢复的数据库实例，例如：test，当然这个名称也可以和备份时候的不一样，比如test2
+
+**--directoryperdb：**
+备份数据所在位置，例如：c:\data\dump\test，这里为什么要多加一个test，而不是备份时候的dump，读者自己查看提示吧！
+
+**--drop：**
+恢复的时候，先删除当前数据，然后恢复备份的数据。就是说，恢复后，备份后添加修改的数据都会被删除，慎用哦！
+
+
+mongorestore -h 127.0.0.1 -d tms --dir  ./tms_back20180910/tms

@@ -32,7 +32,7 @@ apis
         });
     }
 
-    onReachBotton() {
+    onReachBottom() {
         // 触底距离 在 app.json / page.json 中设置 onReachBottomDistance
     }
 
@@ -799,7 +799,7 @@ component实例的属性：
 + this.dataset // 节点dataset
 + this.data // 包括内部数据和属性值
 
-component实例的属性：
+component实例的方法：
 
 + this.setData() 
 + this.hasBehavior()

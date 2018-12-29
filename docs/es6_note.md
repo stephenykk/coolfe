@@ -144,7 +144,7 @@ function* hello() {
     console.log(z); // 2: go company
 }
 
-// generator iterator
+// generator-iterator
 var g = hello();
 console.log(g.next()); // 1: {value: 1, done: false};
 console.log(g.next('go home')); // 3: {value: 2, done: false}
@@ -152,3 +152,42 @@ console.log(g.next('go school')); // 5: {value: 3, done: false}
 console.log(g.next('go company')); // 6: {value: undefined, done: true}
 ```
 
+`generator-iterator` 和 `for ... of` 结合, 完成自定义的遍历逻辑
+
+```
+function* objectEntries(obj) {
+    let keys = Object.keys(obj);
+    for(let key of keys) {
+        yield [key, obj[key]];
+    }
+}
+
+let jane = {first: 'Jane', last: 'Doe'};
+for(let [key, val] of objectEntries(jane)) {
+    console.log(`${key}: ${value}`);
+}
+
+// 或者 generator-iterator 赋值给对象的 Symbol.iterator
+jane[Symbol.iterator] = objectEntries
+```
+
+generator有throw方法, 外部抛出异常，内部捕获
+
+```
+var g = function* () {
+    try {
+        yield
+    }catch(e) {
+        console.log('内部捕获异常', e);
+    }
+}
+
+var i = g();
+i.next();
+try {
+    i.throw('a');
+    i.throw('b');
+}catch(e) {
+    console.log('外部捕获异常', e);
+}
+```

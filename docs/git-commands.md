@@ -54,7 +54,7 @@ reset的其他用法
     git reset HEAD 
 
     #从本地仓库恢复到暂存区
-    git reset <file> 
+    git reset <file>  #相当于 git reset HEAD -- <file>
     git reset -- .
 
 
@@ -168,7 +168,7 @@ git show
 
 
 git add
-----------
+----------i
 
     git add <file> # 将工作文件修改提交到本地暂存区
 

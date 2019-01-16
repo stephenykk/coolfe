@@ -147,10 +147,11 @@ linux下两种风格的键绑定： vi风格 和 emacs风格
 cd /usr/bin 
 cd ../bin 
 cd -
-cd ~
+cd ~   # 等同 cd 
+
 
 pwd
-ls -A
+ls -A # 不包含 .  ..
 ls -al
 
 软件
@@ -182,6 +183,9 @@ r(read) w(write) x(execute)
 
 - chmod 755 some_file
 - chmod a+x some_file
+- chmod u-x some_file
+- chmod g=x some_file
+- chmod o+x some_file
 - chown user:group some_file
 - chgrp group some_file
 

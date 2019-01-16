@@ -79,7 +79,7 @@ db.runCommand({getParameter: '*'})
 
 　　　　　　　③设置开机启动　　chkconfig mongod on 
 
-　　　　　　mongo脚本内容如下：
+　　　　　　mongo脚本内容如下： // 脚本有问题...
 
 　　　　　　#!/bin/bash
 

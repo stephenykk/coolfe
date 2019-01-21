@@ -202,7 +202,7 @@ r(read) w(write) x(execute)
 - mnt/ 临时挂载
 - media/ 挂载媒体设备
 - root/ root用户的$HOME
-- home/ (user/, ..)
+- home/ (userA/, userB/, ..)
 - bin/ 系统程序
 - sbin/ 管理员系统程序
 - lib/ 系统程序库文件
@@ -279,7 +279,7 @@ shell:
 用户配置文件:
 
 全局配置  eg: /etc/inputrc
-用户配置  eg:  /home/user/.inputrc
+用户配置  eg:  /home/user/.inputrc # /home/pan/.inputrc 
 
 
 软件安装

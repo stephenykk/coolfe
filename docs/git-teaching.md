@@ -110,3 +110,6 @@ Git也允许手动建立追踪关系。
     # 或者
     $ git config --global push.default simple
 
+
+子模块   
+`git submodule add https://github.com/chaconinc/DbConnector`

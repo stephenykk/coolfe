@@ -3,7 +3,7 @@
 
 避免所有文档都放到blog,有版本跟踪和方便提交的优点
 
-githubpage提供web服务，可以随时查看
+github page提供web服务，可以随时查看
 
 
 功能

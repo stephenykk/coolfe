@@ -55,4 +55,17 @@ vscode note
 - `ctrl+k, ctrl+f` 格式化选中内容
 - 右键菜单 -- 格式化
 
+代码折叠
+---
+- `ctrl+shift+[` 折叠光标所在的代码块
+- `ctrl+shift+]` 展开光标所在代码块
+- `ctrl+k, ctrl+3` 折叠第三层的代码
+- `ctrl+k, ctrl+j` 展开所有代码
 
+错误和告警遍历
+---
+按`f8` 可遍历当前文件的错误和告警
+
+emmet
+---
+[emmet语法示例](https://docs.emmet.io/cheat-sheet/)

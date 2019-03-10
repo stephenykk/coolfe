@@ -6,7 +6,8 @@ const opn = require('opn');
 })
 */
 
+
 // open url in default browser
-opn('https://baidu.com').then(() => {
-	console.log('after close bs?')
+opn('http://www.runoob.com/python/python-tutorial.html').then(() => {
+	console.log('after open the url called..')
 })

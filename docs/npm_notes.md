@@ -26,7 +26,7 @@ npm_notes
 - npm config edit // 直接编辑配置文件
 
 - npm get prefix -g // 全局安装的node_modules所在目录
-- npm get prefix // 同上 就是 -g 或没有 -g 一样样
+- npm get prefix // 在当前目录向上找 直至找到包含 node_modules的目录, 所以下项目的子目录执行 install , 也是装在项目根目录下的
 
 package.json
 ---

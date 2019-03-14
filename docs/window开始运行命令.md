@@ -49,3 +49,9 @@ control printers | 打印机面板
 ---
 `控制面板--默认程序` 可查看和设置文件关联.
 
+
+查找文件
+---
+`dir /s | find "hello"`
+
+`dir /s | findStr ".*.json"`

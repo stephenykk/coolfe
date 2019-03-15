@@ -1,4 +1,5 @@
 const fs = require('fs');
+const child_process = require('child_process');
 const path = require('path');
 
 let docsDir = path.resolve(__dirname, './docs');
@@ -16,12 +17,15 @@ async function getLinks() {
 
     let links = [];
 
-    for(let i = 0; i < files.length; i++) {
+    for (let i = 0; i < files.length; i++) {
         let link = await new Promise(resolve => {
             let file = files[i];
             let con = fs.readFileSync(path.join(docsDir, file))
             let firstLine = /^.*$/m.exec(con)[0];
-            resolve({ url: `./docs/${file}`, text: firstLine });
+            resolve({
+                url: `./docs/${file}`,
+                text: firstLine
+            });
         });
 
 
@@ -50,14 +54,21 @@ async function write(fpath) {
 }
 
 
-const child_process = require('child_process');
-try {
-    write('index.md');
 
-    // index.md -> index.html
-    let result = child_process.execSync('markdown-html index.md -o index.html');
-    console.log('index.md -> index.html done..');
-    
-} catch (e) {
-    console.log('err:', e);
+async function main() {
+    try {
+        await write('index.md');
+
+        // index.md -> index.html
+        let result = child_process.execSync('markdown-html index.md -o index.html');
+        console.log();
+        console.log();
+        console.log('index.md -> index.html done..');
+
+    } catch (e) {
+        console.log('err:', e);
+    }
+
 }
+
+main();

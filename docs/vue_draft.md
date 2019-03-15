@@ -1,3 +1,6 @@
+vue notes
+===
+
 dom和数据绑定 保持同步
 
 domListener 监听用户操作，修改model； 把model的改变同步给dom

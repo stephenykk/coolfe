@@ -36,8 +36,10 @@ npm_notes
 - npm config list -l # 显示全部配置
 - npm config edit # 直接编辑配置文件
 
-- npm get prefix -g // 全局安装的node_modules所在目录
-- npm get prefix // 在当前目录向上找 直至找到包含 node_modules的目录, 所以下项目的子目录执行 install , 也是装在项目根目录下的
+- npm get prefix -g  
+    全局安装的node_modules所在目录
+- npm get prefix   
+    在当前目录向上找 直至找到包含 node_modules的目录; 但是在项目的子目录执行 install , 是装在子目录下的, 再次 npm prefix, 就是返回子目录，所以prefix的作用，仅仅是供查看一下?
 
 package.json
 ---

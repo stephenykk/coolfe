@@ -65,3 +65,18 @@ sublime_text 快捷键
 36. `ctrl + k, c` 滚动文档，让光标所在行垂直居中
 
 
+sublime text 3 安装package control
+---
+通过github的方式手动安装
+1. 打开 [package control 的 github仓库](https://github.com/wbond/package_control)
+2. 下载zip压缩包
+3. 打开sublime, Preferences -- browser packages
+4. 然后把压缩包解压到该目录，重命名为 *Package Control*
+5. 重启sublime
+6. 但是国内用户此时，还是无法安装插件，需要加其他channel
+7. ctl+shift+p, pcac
+8. 加入以下两个channel  
+	```
+		https://gist.githubusercontent.com/nick1m/660ed046a096dae0b0ab/raw/e6e9e23a0bb48b44537f61025fbc359f8d586eb4/channel_v3.json
+		https://web.archive.org/web/20160103232808/https://packagecontrol.io/channel_v3.json
+	```

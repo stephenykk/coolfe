@@ -75,8 +75,12 @@ sublime text 3 安装package control
 5. 重启sublime
 6. 但是国内用户此时，还是无法安装插件，需要加其他channel
 7. ctl+shift+p, pcac
-8. 加入以下两个channel  
+8. 加入如下几个channel  
+
 	```
-		https://gist.githubusercontent.com/nick1m/660ed046a096dae0b0ab/raw/e6e9e23a0bb48b44537f61025fbc359f8d586eb4/channel_v3.json
-		https://web.archive.org/web/20160103232808/https://packagecontrol.io/channel_v3.json
+		"http://static.bolin.site/channel_v3.json",
+		"https://gist.githubusercontent.com/nick1m/660ed046a096dae0b0ab/raw/e6e9e23a0bb48b44537f61025fbc359f8d586eb4/channel_v3.json"
 	```
+
+9. 添加后可查看配置 preferences -- package settings -- package control -- user
+10. 访问不了的channel，最好注释掉，避免查找时间过长

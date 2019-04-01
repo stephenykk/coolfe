@@ -11,7 +11,8 @@ npm_notes
    	nrm ls
    	nrm use npm
    	npm adduser
-   ```	
+   ```
+
 1. npm whoami  
    只有成功调用 `npm adduser` 后，才知道 whoami
 
@@ -60,10 +61,10 @@ package.json
      npm i lodash
      npm ls lodash
      cd myProject
-     npm link loash
+     # 从全局目录的lodash链接到当前项目
+     npm link loash  
    ```
 - npm i -g express # 全局安装
-
 
 查看已安装的包
 ---
@@ -98,3 +99,23 @@ package.json
 - npm uni jquery
 - npm uninstall -g lodash
 
+npm link
+---
+在本地开发npm模块的时候，我们可以使用npm link命令，将npm 模块链接到对应的运行项目中去，方便地对模块进行调试和测试
+修改源模块，链接的模块也会同步修改(*类似引用，有别于快捷方式，linux有软链接和硬链接之分，windows貌似没有类似概念*)
+
+### 本地模块链接到全局
+
+```shell
+  cd my-module
+   npm link
+   # 查看全局模块的安装路径
+   npm get prefix
+  # 打开对应目录 看是否成功链接过去
+```
+### 全局模块链接到本地项目
+
+```shell
+    cd my-project
+    npm link lodash
+```

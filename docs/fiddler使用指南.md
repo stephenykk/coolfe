@@ -114,14 +114,82 @@ quickExec
 
 fiddlerScript
 ------------
-添加请求头部
+### 简介
+Fiddler Script 是用JScript.NET语言写的。   
 
+Fiddler 包含了一个脚本文件可以自动修改Http Request 和Response. 这样我们就不需要手动地下"断点"去修改了，实际上它是一个脚本文件CustomRules.js ，位于: C:\Users\sea\Documents\Fiddler2\Scripts\CustomRules.js 下。
+
+> 打开CustomRules.js文件，点击菜单Rules->Customize Rules 或者 ctrl + r
+
+
+### 主要方法
+
+```
+    // 在这个方法中修改Request的内容， 我们用得最多,
+    static function OnBeforeRequest(oSession: Session)
+
+     
+
+    // 在这个方法中修改Response的内容，
+    static function OnBeforeResponse(oSession: Session)
+
+```
+
+### 常用对象和方法
+fiddlerScript Editor有智能提示
+
+**对象**
+- oSession  
+    `oSession.url`, `oSession.fullUrl`, `oSession.host`, `oSession.hostname`,  `oSession.oRequest`, `oSession.oResponse`, `oSession.HostNameIs`    
+
+- FiddlerObject  
+    `FiddlerObject.log`
+
+**方法**
+- 字符串处理方法  
+    `replace()`, `indexOf()`, `substring()`
+
+### 例子
+
+高亮请求 和 打印日志
+
+```
+    function onBeforeRequest(oSession) {
+        if(oSession.HostNameIs('www.cnblogs.com')) {
+            oSession['ui-color'] = 'red'
+
+            FiddlerObject.log(oSession.url) // 不带 http://
+            FiddlerObject.log(oSession.fullUrl) // 带 http://
+        }
+    }
+```
+
+添加/删除 请求头
+
+```
     function OnBeforeRequest(oSession) {
         oSession.oRequest['x-hi'] = 'hello';
+        oSession.RequestHeaders.Add('foo', 'foolish');
+        oSession.RequestHeaders.Remove('Cache-Control'); // 删除请求头
+        // or use oRequest
+        oSession.oRequest.headers.Add('foo', 'foolish');
+        oSession.oRequest.headers.Remove('Cache-Control');
     }
+```
+
+添加响应头部 支持CORS
+
+```
+    function onBeforeResponse(oSession) {
+        if(oSession.HostNameIs('www.test.com')) {
+            oSession.ResponseHeaders.Add('Access-Control-Allow-Origin', 'http://10.66.51.87:9091')
+        }
+    }
+```
 
 将请求重定向到其他主机
 
+```
     function OnBeforeRequest(oSession) {
         if(oSession.HostnameIs('test.com')) {
             // test.com:90/foo/bar -> localhost:90/foo/bar
@@ -129,28 +197,41 @@ fiddlerScript
         }
 
         if(oSession.host == 'foo.com:90') {
-            oSession.host = 'bar.com:9012';
+            oSession.host = 'bar.com:9012'; // host == hostname:port
+        }
+
+        if(oSession.fullUrl.indexOf('http://www.foo.com') == 0) {
+            oSession.fullUrl = oSession.fullUrl.replace('http://www.foo.com', 'https://www.bar.com')
         }
     }
+```
 
 将一个url重定向到另外的url
 
+```
     function OnBeforeRequest(oSession) {
         if(oSession.url == 'example.com/test.js') {
-            oSession.url = 'localhost.com/mock-test.js';
+            // oSession.url 不包括protocol
+            oSession.url = 'localhost.com/mock-test.js';  
         }
     }
+```
 
 取消发送cookie
 
+```
     function OnBeforeRequest(oSession) {
         oSession.oRequest.headers.Remove('Cookie');
     }
+```
 
 替换html文件的内容
 
+```
     function OnBeforeResponse(oSession) {
         if(oSession.HostnameIs('www.test.com') && oSession.oResponse.headers.ExistsAndContains('Content-type', 'text/html')) {
             
         }
     }
+```
+

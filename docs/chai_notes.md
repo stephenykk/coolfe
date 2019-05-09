@@ -260,8 +260,9 @@ include()和contains()即可作为属性类断言前缀语言链又可作为作�
         green: {tar: 'hello'},
         teas: ['Chai', 'world', {tao: 'kongfu'}]
     }
-    expect(deepObj).to.have.deep.property('green.tar', 'hello');
-    expect(deepObj).to.have.deep.property('teas[2].tao', 'kongfu');
+    expect(deepObj).to.have.deep.property('green.tar', 'hello'); // error 可能api改了
+    expect(deepObj).to.have.deep.property('teas[2].tao', 'kongfu'); // 同上
+    expect(deepObj).to.have.deep.property('green', {tar: 'hello'}); // good,   deep.equal
 ```
 
 此外，property把断言的主语（subject）从原来的对象变为当前属性的值，使得可以在其后进一步衔接其它链式断言（来针对这个属性值进行测试）

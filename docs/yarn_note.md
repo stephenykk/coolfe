@@ -14,7 +14,7 @@ yarn notes
 用法
 ---------
 
-    # 初始化项目, 问答的方式生成 package.json, 通 npm init
+    # 初始化项目, 问答的方式生成 package.json, 同 npm init
     yarn init
 
     # 安装依赖包 通过 npm registry 安装指定的包, 会修改 packge.json 和 yarn.lock 文件

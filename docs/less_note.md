@@ -82,6 +82,14 @@ content: @@var;
 .my-other-mixin() { // 显示声明mixin, 不会输出到css中，仅用于编译时
   background: white;
 }
+
+
+// 块级元素水平居中
+.blockCenter(@rpx: auto) {// 设置参数默认值 @var: auto
+  margin-left: @rpx;
+  margin-right: @rpx;
+}
+
 .class {
   .my-mixin;
   .my-other-mixin;

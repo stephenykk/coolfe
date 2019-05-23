@@ -140,10 +140,10 @@ fiddlerScript Editor有智能提示
 
 **对象**
 - oSession  
-    `oSession.url`, `oSession.fullUrl`, `oSession.host`, `oSession.hostname`,  `oSession.oRequest`, `oSession.oResponse`, `oSession.HostNameIs`    
+    `oSession.url`, `oSession.fullUrl`, `oSession.host`, `oSession.hostname`,  `oSession.oRequest`, `oSession.oResponse`, `oSession.HostNameIs()`, `oSession.uriContains()`    
 
 - FiddlerObject  
-    `FiddlerObject.log`
+    `FiddlerObject.log()`
 
 **方法**
 - 字符串处理方法  

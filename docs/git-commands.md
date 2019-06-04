@@ -239,6 +239,12 @@ Git 本地分支管理
 
     git branch -D <branch> # 强制删除某个分支 (未被合并的分支被删除的时候需要强制)
 
+    git branch --set-upstream-to=origin/mydev # 建立当前本地分支跟远程mydev分支的跟踪关系
+
+    git checkout --track origin/mydev # 基于远程mydev分支创建本地mydev分支 并建立跟踪关系
+
+    git push --set-upstream origin mydev # 把本地分支推送到远程mydev分支，并建立两者的跟踪关系
+
 分支合并和rebase
 -----------------
 

@@ -5,6 +5,10 @@ fiddler 设置
 -------
 如果要手机抓包的话，需要设置fiddler, 允许远程设备连接 **tools/fiddler options/connection/allow remote computers to connect**
 
+手机安装fiddler证书
+---
+浏览器打开 `yourIP:8888`
+
 监控http通讯
 -----------
 开启/停止监控 

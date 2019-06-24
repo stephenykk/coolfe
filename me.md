@@ -8,7 +8,7 @@ kk_windy
 mp
 ---
 kk_idle
-
+weixinsame
 
 open
 ---

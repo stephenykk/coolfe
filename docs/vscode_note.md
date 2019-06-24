@@ -5,7 +5,8 @@ vscode note
 ---
 + `ctrl+shift+p` or `f1` 命令行面板
 + `ctrl+p` 快速打开文件
-+ `ctl+,` 打开设置
++ `ctl+,` 打开设置   
+    *容易快捷键冲突，`ctrl+k,ctrl+s` 搜索openStettings，修改为 `ctrl + ;` 比较好一点*
 + `ctrl+k,ctrl+o` 打开文件夹
 + `ctL+k, ctrl+s` 打开快捷键设置
 + `alt+shift+p` 选择项目
@@ -14,6 +15,10 @@ vscode note
 + `ctrl+k m` 选择开发语言
 + `ctrl+2` 切换到第2个分栏
 + `alt+2` 切换到第2个tab
+
+> 打开快捷键json定义文件, F1 -- 输入shortcutes
+> 复制现有快捷键设置  ctrl+k, ctrl+s -- 输入save all -- 右键复制
+> 然后就可以在 快捷键json文件中粘贴 并修改为自己喜欢的快捷键, 自定义和默认的快捷键同时生效的
 
 
 命令行面板
@@ -26,9 +31,19 @@ vscode note
 - `alt+shift+up`, `alt+shift+down` 添加编辑点
 - `alt+shift+鼠标拖动`
 - `alt+鼠标点击`
-- `ctrl+alt+shift+left`, `ctrl+alt+shift+right`, `ctrl+alt+shift+up`, `ctrl+alt+shift+down` 快速选择光标至括号开始/结尾的内容
+
+括号内容选择
+---
+- `ctrl+alt+left`, `ctrl+alt+up` 定位到左边括号前面
+- `ctrl+alt+right`, `ctrl+alt+down` 定位到右边括号后面
+- `ctrl+alt+shift+left`, `ctrl+alt+shift+up` 选中光标到左边括号前面的内容
+- `ctrl+alt+shift+right`, `ctrl+alt+shift+down` 选中光标到右边括号后面的内容  
+    *貌似用处不大，若要删除括号和它内部的内容，可先定位ctrl+alt+left, 再选中ctrl+alt+shift+right*
+
+其他
+---
 - `alt+f3` 查找所有 鼠标所在处的高亮文本，并同时编辑
-- 移动内容, 选择文本，然后点鼠标中键
+- 移动内容, 选择文本，然后按下鼠标中键，拖动到目标位置
 
 智能提示
 ---
@@ -39,6 +54,7 @@ vscode note
 - `ctrl+shift+D` 复制行
 - `ctrl+shfit+up`, `ctrl+shift+down` 行上移/下移
 - `ctrl+shift+K` 删除行
+- `ctrl+l` 选择光标所在行
 
 注释
 ---

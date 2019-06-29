@@ -90,6 +90,8 @@ chmod 改变文件或目录的权限
 
     chown xiaoming abc #改变abc的所有者为xiaoming
 
+    chown xiaoming:student abc #同时改变所有者和所属组
+
     chgrp root abc #改变abc所属的组为root
 
     chown root ./abc #改变abc这个目录的所有者是root

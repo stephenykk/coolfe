@@ -51,3 +51,55 @@ MongoDB所在服务器地址
 
 
 mongorestore -h 127.0.0.1 -d tms --dir  ./tms_back20180910/tms
+
+
+
+数据操作
+---
+### 查询文档
+`db.collection.find(query,projection)` 
+
+> 查看db对象 collection对象有哪些可用的方法 
+> Object.keys(db.constructor.prototype)
+> Object.keys(db.books.constructor.prototype)
+> 
+
+
+```
+// 假设有名为 books 的集合
+db.books.find()
+db.books.find().pretty()
+db.books.find({name: 'learn nodejs'})  // 查询 name == ‘learn nodejs'的文档
+db.books.find({name: {$regex: /java/}}) // 模糊搜索 name 包含 'java' 的文档
+db.books.find({name: {$in: [/java/, /h5/]}}) // $in操作符中 只能用正则对象，相反含义的操作符 $nin 
+db.books.find({name: /java/i}) // 可直接用正则
+db.books.find({price: {$lt: 100}}) // 价格小于100的  其他比较运算符 $gt $gte $ne   $lt $lte
+
+// and 条件 用对象表达
+db.books.find({key1: val1, key2: val2}).pretty()
+db.books.find({name: 'learn nodejs', year: '2019'}) // 同时满足两个条件
+
+// or 条件 用数组表达
+db.books.find({$or: [{key1: val1}, {key2: val2}]}).pretty()
+db.books.find({$or: [{name: 'learn nodejs'}, {name: 'begin js'}]}) // 满足其中一个条件的
+
+and or 联合使用
+db.books.find({"likes": {$gt:50}, $or: [{"by": "Mongodb中文网"},{"title": "MongoDB 教程"}]}).pretty()
+
+指定返回字段
+db.books.find({price: {$lt: 100}}, {_id: 0, name: 1, price: 1}) // 包含模式 指定只返回 name price 两个字段
+db.books.find({price: {$lt: 100}}, {book_id: 0}) // 排除模式 不返回 book_id字段，其他都返回
+
+指定数组返回的元素个数
+db.books.find({name:"java beginer"},{status:0,authors:{$slice:1}})
+
+排序
+db.books.find({name: /java/i}).sort({price: -1}) // 按价格倒序
+
+指定返回结果数
+db.books.findOne({name: /java/}) // 返回1条记录
+db.books.find({name: /java/}).limit(1) // 同 findOne
+
+skip and limit 等同 数组slice的效果
+db.books.find({name: /java/}).sort({price: -1}).skip(10).limit(3)
+```

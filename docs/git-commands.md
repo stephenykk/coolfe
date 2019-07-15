@@ -257,13 +257,28 @@ Git 本地分支管理
 Git暂存管理
 ------------
 
-    git stash # 暂存
+    git stash # 暂存(working tree and index tree)
 
-    git stash list # 列所有stash
+    git stash save "doing optimze" # 暂存时添加备注, 容易识别
 
-    git stash apply # 恢复暂存的内容
+    git stash list # 列所有stash, stash@{n} 标识每个stash记录
 
-    git stash drop # 删除暂存区
+    git stash apply # 恢复最近一个暂存(stash@{0})的内容
+    git stash apply stash@{2} # 恢复其他暂存记录
+
+
+    git stash show  # 默认显示第一个暂存的修改，简要(哪些文件，有几个修改)
+    git stash show stash@{2}  -p # 显示第3个暂存的修改，详细(打印具体修改哪些内容)
+
+    git stash pop # 应用第一个暂存，并删除它
+    git stash pop stash@{2} # 应用第三个暂存，并删除它
+
+    git stash drop # 默认删除第一个暂存
+    git stash drop stash@{2} # 删除第三个暂存
+
+    git stash clear # 删除所有暂存
+    
+
 
 Git远程分支管理
 -----------------

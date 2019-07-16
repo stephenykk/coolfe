@@ -24,6 +24,13 @@ sublime_text使用总结
 6. 自定义snippet  
 每个 `*.sublime-snippet` 文件，只能定义一个 snippet, 如 (*console.log.sublime-snippet*)
 
+7. 设置快速切换项目快捷键  
+  
+  `json
+    {"keys": ["ctrl+alt+o"], "command": "prompt_open_project"}, // open project
+    {"keys": ["ctrl+alt+w"], "command": "prompt_switch_project"}, // switch project
+    {"keys": ["ctrl+alt+p"], "command": "prompt_select_workspace"} // 对应菜单 quick switch project
+  `
 
 sublime_text 快捷键
 -------------
@@ -63,7 +70,10 @@ sublime_text 快捷键
 34. `Alt + F3` 全选相同的词(光标所在的词/选择的内容)
 35. `Ctrl + Shift + D` 复制这行文本
 36. `ctrl + k, c` 滚动文档，让光标所在行垂直居中
-
+37. `alt+-` 返回之前的焦点位置
+38. `alt+shift+-` 前进到后来的焦点位置 与 `alt+-` 相反
+39. `ctrl+0` 定位焦点到sidebar, `esc`让焦点回到编辑区
+40. `ctrl+k ctrl+v` 从复制历史记录中 选择粘贴哪项
 
 sublime text 3 安装package control
 ---

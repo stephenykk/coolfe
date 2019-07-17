@@ -952,7 +952,7 @@ export default CustomComp extends Component {
 
 给组件设置 defaultProps
 
-组件传递函数属性名以 on 开头
+组件事件属性名以 on 开头
 
 小程序端不要在组件中打印传入的函数
 

@@ -274,7 +274,7 @@ Redux 提供了一个combineReducers方法，用于 Reducer 的拆分。你只�
 combineReduces 让代码更简单一点
 
 ```
-    const {combinReducer} = 'redux';
+    import {combinReducer} from 'redux';
     const chatReducer = combinReducers({
         chatLog: chatLogReducer,
         status: statusReducer,
@@ -291,7 +291,7 @@ combineReduces 让代码更简单一点
             return Object.keys(reducers).reduce((nextState, key) => {
                 nextState[key] = reducers[key](nextState[key], action);
                 return nextState;
-            }, {})
+            }, state)
         }
     }
 ```

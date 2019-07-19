@@ -41,6 +41,9 @@ Taro 遵循 React 语法规范，它采用与 React 一致的组件化思想，�
 
         render() {
           // htmlFor className onClick(属性名驼峰风格)
+          // 数据绑定 {this.state.msg}
+          // 循环渲染 {this.state.list.map(fn)}
+          // 选择渲染 {this.state.success ? <View>1</view> : <View>0</View>}
             return (
                 <View className='index'>
                     <View className='title'>{this.state.title}</View>
@@ -191,7 +194,7 @@ Taro.navigateTo({url: '/pages/home/index?foo=bar&hi=hello'});
 Taro.redirectTo({url: '/pages/home/index'});
 
 // index.js
-class Index extend Component {
+class Index extends Component {
     componentWillMount() {
         console.log(this.$router.params); // {foo:'bar', hi: 'hello'}
     }
@@ -949,7 +952,7 @@ export default CustomComp extends Component {
 
 给组件设置 defaultProps
 
-组件传递函数属性名以 on 开头
+组件事件属性名以 on 开头
 
 小程序端不要在组件中打印传入的函数
 

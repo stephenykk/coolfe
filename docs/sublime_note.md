@@ -94,3 +94,18 @@ sublime text 3 安装package control
 
 9. 添加后可查看配置 preferences -- package settings -- package control -- user
 10. 访问不了的channel，最好注释掉，避免查找时间过长
+
+
+sublime text3 问题
+---
+win10下侧边栏和底部状态栏，中文出现乱码，变成口字方块
+1. 打开设置 ctrl+shift+p, 输入 settings
+2. 添加或修改配置项 dpi_scale: 1.0, 然后重启
+3. 重启后字体会变得很小，在配置文件中改一下 font_size:15
+
+package control 安装不了插件
+1. 下载 channel_v3.json
+2. 修改package control配置，添加channel
+```
+
+```

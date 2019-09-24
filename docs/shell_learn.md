@@ -44,6 +44,7 @@ Shell 主要用来开发一些实用的、自动化的小工具，而不是用�
 
 编译型语言的优点是执行速度快、对硬件要求低、保密性好，适合开发操作系统、大型应用程序、数据库等。  
 脚本语言的优点是使用灵活、部署容易、跨平台性好，非常适合 Web 开发以及小工具的制作。  
+
 Shell 就是一种脚本语言，我们编写完源码后不用编译，直接运行源码即可。  
 
 
@@ -69,22 +70,45 @@ Shell 脚本的优势在于处理偏操作系统底层的业务，例如，Linux
 不同的组织机构开发了不同的 Shell，它们各有所长，有的占用资源少，有的支持高级编程功能，有的兼容性好，有的重视用户体验。
 常见的 Shell 有 sh、bash、csh、tcsh、ash 等。
 
-### sh
+- sh  
 sh 的全称是 Bourne shell，sh 是 UNIX 上的标准 shell，很多 UNIX 版本都配有 sh。sh 是第一个流行的 Shell。
 
-### csh
+- csh  
 sh 之后另一个广为流传的 shell 是由柏克莱大学的 Bill Joy 设计的，这个 shell 的语法有点类似C语言，所以才得名为 C shell ，简称为 csh。  
 Bill Joy 是一个风云人物，他创立了 BSD 操作系统，开发了 vi 编辑器，还是 Sun 公司的创始人之一。
 
 > BSD 是 UNIX 的一个重要分支，后人在此基础上发展出了很多现代的操作系统，最著名的有 FreeBSD、OpenBSD 和 NetBSD，就连 Mac OS X 在很大程度上也基于BSD。
 
-### tcsh
+- tcsh  
 tcsh 是 csh 的增强版，加入了命令补全功能，提供了更加强大的语法支持。
 
-### ash
+- ash  
 一个简单的轻量级的 Shell，占用资源少，适合运行于低内存环境，但是与下面讲到的 bash shell 完全兼容。
 
-### bash
+- bash  
 bash shell 是 Linux 的默认 shell  
 bash 由 GNU 组织开发，保持了对 sh shell 的兼容性，是各种 Linux 发行版默认配置的 shell。
 
+### 查看shell  
+Shell 是一个程序，一般都是放在/bin或者/user/bin目录下，当前 Linux 系统可用的 Shell 都记录在/etc/shells文件中
+
+```
+cat /etc/shells #查看可用shell
+echo $SHELL #查看默认shell
+```
+
+如何进入shell
+---
+如今几乎所有的 Linux 发行版都使用某种图形桌面环境（例如 GNOME、KDE、Unity 等），这使得原生的 Shell 入口被隐藏了
+
+- 进入linux控制台  
+  现代 Linux 系统在启动时会自动创建几个虚拟控制台（Virtual Console），其中一个供图形桌面程序使用，其他的保留原生控制台的样子。虚拟控制台其实就是 Linux 系统内存中运行的虚拟终端（Virtual Terminal）  
+
+  `ctrl+alt+f1-f6` 进入控制台，`ctrl+alt+f7`返回图形界面
+
+> 在图形界面模式下，输入密码时往往会显示为*，密码有几个字符就显示几个*；而在控制台模式下，输入密码什么都不会显示，好像按键无效一样，这一点请大家不要惊慌，只要输入的密码正确就能够登录。
+
+图形界面也是一个程序，会占用CPU时间和内存空间，当 Linux 作为服务器系统时，安装调试完毕后，应该让 Linux 运行在控制台模式下，以节省服务器资源。
+
+- 使用终端  
+图形桌面都带有终端(Terminal), 打开它就可以使用 Shell， `ctrl+alt+t`

@@ -7,6 +7,7 @@ var extRe = /\.\w{2,5}$/;
 var spaceRe = /\s/;
 var dotfileRe = /^\./;
 
+
 function printJsonFile(fpath) {
     if(fpath.match(/\.json$/)) {
         console.log('---------->', fpath);

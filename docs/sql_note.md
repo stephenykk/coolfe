@@ -46,6 +46,7 @@ select @age:=22;
 select @age:=StuAge 
 from demo.student 
 where StuNo='A001';
+
 复制代码
  
 

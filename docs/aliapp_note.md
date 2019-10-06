@@ -305,7 +305,7 @@ pageA.axml 页面内容渲染
 
 <!-- 对象字面量 -->
 <view data-test="{{foo, bar}}">test obj</view>
-<view data-test="{{...oldData, age: 3}">change fat</view>
+<view data-test="{{...oldData, age: 3}}">change fat</view>
 
 
 <!-- 简单算术运算和三元表达式 -->

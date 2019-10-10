@@ -12,6 +12,13 @@ git clone
 
     git clone -o jq https://github.com/jquery/jquery.git
 
+ssh key
+---
+    // 生成秘钥对
+    ssh-keygen -t rsa -C "yourname@example.com"
+    // 添加公钥到github后台后，验证秘钥可用
+    ssh -T git@github.com
+    
 git remote
 ------------
 

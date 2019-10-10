@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>我的房贷计算</title>
+    <meta name="viewport" content="width=device-width, minimum-scale=1.0" />
+    <style type="text/css">
+    h1 {
+        color: skyblue;
+        font-size: 20px;
+        line-height: 20px;
+        cursor: pointer;
+        text-align: center;
+    }
+
+    .line {
+        display: flex;
+        flex-flow: row nowrap;
+
+        line-height: 20px;
+        font-size: 20px;
+        border-bottom: 1px dashed #333;
+    }
+
+
+
+    .line label {
+        margin-right: 20px;
+        width: 50%;
+        text-align: right;
+    }
+
+    .line:last-child {
+        border-bottom: 0;
+    }
+
+    form {
+        background: #eee;
+        border: 1px solid #aaa;
+        border-radius: 3px;
+    }
+
+    input {
+        font-size: 20px;
+        background: #f9f190;
+        border: 1px solid green;
+    }
+
+    select,
+    button {
+        font-size: 20px;
+    }
+
+    .ta-c {
+        text-align: center;
+    }
+
+
+    table {
+        /*margin-top: 30px;*/
+        border-spacing: 0;
+        table-layout: fixed;
+        border-collapse: collapse;
+    }
+
+    .output {/*
+        height: 500px;
+        overflow: auto;
+    */}
+
+    .output-wrap {
+        /*margin-top: 30px;*/
+    }
+
+    .table-hd {
+        display: flex;
+        flex-flow: row nowrap;
+        margin: 0;
+        padding: 0;
+        background: #fff;
+        width: 100%;
+    }
+
+    .table-hd.fixed {
+        position: fixed;
+        left: 0;
+        top: 0;
+        padding: 10px 0;
+    }
+
+    .table-hd li {
+        list-style: none;
+        flex: 1;
+    }
+    </style>
+</head>
+
+<body>
+    <!-- <h1 onclick="toggleForm()">房贷计算参考</h1> -->
+    <form onsubmit="return false;" id="form">
+        <div class="line">
+            <label>商业贷款总额:</label>
+            <input type="number" step="2000" id="btotal" />
+        </div>
+        <div class="line">
+            <label>公积金贷款总额:</label>
+            <input type="number" step="20000" id="gtotal" />
+        </div>
+        <div class="line">
+            <label>月供:</label>
+            <input type="number" max="12000" step="500" id="monthPay" />
+        </div>
+        <div class="line">
+            <label>商业贷款利率上浮:</label>
+            <select id="upPercent">
+                <option value="0">0%</option>
+                <option value="0.10">10%</option>
+                <option value="0.15" selected>15%</option>
+                <option value="0.20">20%</option>
+            </select>
+        </div>
+        <div class="line">
+            <label>还款方式:</label>
+            <select id="returnMethod">
+                <option value="0" selected>等额本息</option>
+                <option value="1">等额本金</option>
+            </select>
+        </div>
+        <div class="line">
+            <label>先还:</label>
+            <select id="firstReturn">
+                <option value="0" selected>公积金</option>
+                <option value="1">商业贷款</option>
+            </select>
+        </div>
+        <div class="ta-c">
+            <button id="calcBtn" onclick="houseLoanCalc()">计算</button>
+        </div>
+    </form>
+    <div class="output-wrap">
+        <div id="tableHdWrap">
+            <ul class="table-hd" id="tableHd">
+                <li>第几期</li>
+                <li>年限</li>
+                <li>月还款</li>
+                <li>月利息</li>
+                <li>月还本金</li>
+                <li>累计还款</li>
+                <li>累计利息</li>
+                <li>剩余贷款总额</li>
+            </ul>
+            
+        </div>
+        <div class="output">
+            <table class="output-table" id="outputTable" width="100%" border="1" align="center" border-collapse="true"></table>
+        </div>
+        <ul class="table-hd">
+            <li>第几期</li>
+            <li>年限</li>
+            <li>月还款</li>
+            <li>月利息</li>
+            <li>月还本金</li>
+            <li>累计还款</li>
+            <li>累计利息</li>
+            <li>剩余贷款总额</li>
+        </ul>
+    </div>
+    <script type="text/javascript">
+    var btotal = 75.6 * 10000
+    var gtotal = 0 * 10000
+
+    var monthPay = 7000
+    var firstReturn = 0; // 0: 'gjj', 1: bank
+    var returnMethod = 0;
+
+    var upPercent = 0.15
+
+    var totals = [gtotal, btotal]
+
+    function $(id) {
+        return document.getElementById(id)
+    }
+
+    function toggleForm() {
+        return false
+        var cur = $('form').style.display || 'block'
+        $('form').style.display = cur == 'block' ? 'none' : 'block';
+    }
+
+
+    function initInput(varName, cb) {
+        var id = varName
+        var input = $(id)
+        input.value = window[varName]
+
+        input.onchange = function(event) {
+            var value = event.target.value
+            if (typeof window[varName] === 'number') {
+                value *= 1;
+            }
+
+            if (typeof cb === 'function') {
+                return cb(value)
+            } else {
+                return window[varName] = value
+            }
+        }
+    }
+
+    initInput('monthPay')
+
+    initInput('gtotal', function(val) {
+        totals[0] = gtotal = val
+
+    })
+
+    initInput('btotal', function(val) {
+        totals[1] = btotal = val
+
+    })
+
+    initInput('upPercent', function(val) {
+        upPercent = val * 1
+    })
+
+    initInput('firstReturn', function(val) {
+        firstReturn = val * 1
+    })
+
+    initInput('returnMethod', function(val) {
+        returnMethod = val * 1
+    })
+
+
+    function affixTableHeader() {
+        var wrap = $('tableHdWrap')
+        var head = $('tableHd');
+        wrap.style.height = head.getBoundingClientRect().height;
+
+        window.addEventListener('scroll', onScroll, false)
+        function onScroll(event) {
+            var rect = wrap.getBoundingClientRect()
+            if(rect.top >=0) {
+                head.classList.remove('fixed')
+            } else {
+                head.classList.add('fixed');
+            }
+        }
+    }
+
+    window.onload = function() {
+        affixTableHeader()
+    }
+
+    function houseLoanCalc() {
+
+        totals = [gtotal, btotal]
+
+        console.count();
+
+        var baseRate = 4.9 * 0.01
+        var grate = 3.52 * 0.01
+        var brate = baseRate * (1 + upPercent)
+
+
+
+        var total = function() {
+            return totals[0] + totals[1];
+        }
+
+        var maxcount = 300;
+
+        var c = 0
+
+        var totalTax = 0;
+        var records = [];
+
+        function int(val) {
+            return Math.round(val * 1)
+        }
+
+        var totalPay = 0; 
+        while (c++ < maxcount && total() > 0) {
+            var monthTax = totals[1] * (brate / 12) + totals[0] * (grate / 12)
+            totalTax += monthTax
+
+            var realMonthPay = 0;
+            if (returnMethod === 0) {
+                totalPay += monthPay
+
+                realMonthPay = monthPay - monthTax;
+            } else {
+                realMonthPay = $('monthPay').value * 1
+                monthPay = realMonthPay + monthTax;
+
+                totalPay += monthPay;
+            }
+
+
+            if (totals[firstReturn] > 0) {
+                if (totals[firstReturn] >= realMonthPay) {
+                    totals[firstReturn] -= realMonthPay
+                } else {
+                    totals[firstReturn] = 0
+                    totals[!firstReturn * 1] -= realMonthPay - totals[firstReturn]
+                }
+            } else {
+                totals[!firstReturn * 1] -= realMonthPay
+            }
+
+            records.push({ sn: c, monthPay: int(monthPay), years: `${Math.floor(c/12)}年${c%12}月`, totalPay: int(totalPay), monthTax: int(monthTax), realMonthPay: int(realMonthPay), totalTax: int(totalTax), total: int(total()) })
+        }
+
+        $('outputTable').innerHTML = records.map(function(rec) {
+            return `
+            <tr>
+            <td>${rec.sn}</td>
+            <td>${rec.years}</td>
+            <td>${rec.monthPay}</td>
+            <td>${rec.monthTax}</td>
+            <td>${rec.realMonthPay}</td>
+            <td>${rec.totalPay}</td>
+            <td>${rec.totalTax}</td>
+            <td>${rec.total}</td>
+            </tr>`
+        }).join('\r\n')
+
+        // console.table(records);
+        toggleForm()
+    }
+    </script>
+</body>
+
+</html>

@@ -111,12 +111,22 @@
             <input type="number" max="12000" step="500" id="monthPay" />
         </div>
         <div class="line">
+            <label>商业贷款利率LPR:</label>
+            <input type="text" id="baseRatePercent" /> %
+        </div>
+        <div class="line">
+            <label>最终的利率:</label>
+            <input type="text" readonly id="bratePercent" style="background: #ddd;" /> %
+        </div>
+        <div class="line">
             <label>商业贷款利率上浮:</label>
             <select id="upPercent">
                 <option value="0">0%</option>
+                <option value="0.08">8%</option>
                 <option value="0.10">10%</option>
                 <option value="0.15" selected>15%</option>
                 <option value="0.20">20%</option>
+                <option value="0.30">30%</option>
             </select>
         </div>
         <div class="line">
@@ -169,11 +179,16 @@
     var btotal = 75.6 * 10000
     var gtotal = 0 * 10000
 
+    var baseRate = 4.9 * 0.01 // LPR
+    var baseRatePercent = baseRate * 100;
+
     var monthPay = 7000
     var firstReturn = 0; // 0: 'gjj', 1: bank
     var returnMethod = 0;
 
     var upPercent = 0.15
+
+    var bratePercent = baseRate * (1+upPercent) * 100
 
     var totals = [gtotal, btotal]
 
@@ -211,16 +226,27 @@
 
     initInput('gtotal', function(val) {
         totals[0] = gtotal = val
-
     })
+
+    initInput('baseRatePercent', function(val) {
+        baseRatePercent = val
+        baseRate = val * 0.01
+        bratePercent = baseRate * (1+upPercent) * 100
+        $('bratePercent').value = bratePercent.toFixed(4)
+
+    });
 
     initInput('btotal', function(val) {
         totals[1] = btotal = val
 
     })
 
+    initInput('bratePercent')
+
     initInput('upPercent', function(val) {
         upPercent = val * 1
+        bratePercent = baseRate * (1+upPercent) * 100
+        $('bratePercent').value = bratePercent.toFixed(4)
     })
 
     initInput('firstReturn', function(val) {
@@ -258,7 +284,6 @@
 
         console.count();
 
-        var baseRate = 4.9 * 0.01
         var grate = 3.52 * 0.01
         var brate = baseRate * (1 + upPercent)
 

@@ -1,10 +1,13 @@
-const hello = async () => {
-    console.log('start...');
-    debugger;
-    const res = await new Promise(resolve => setTimeout(() => resolve('good'), 3000));
-    console.log('res->', res);
-    console.log('done...');
-} 
+const http = require('http');
+const hostname = '127.0.0.1';
+const port = 3000;
 
+const server = http.createServer((req, res) => {
+    res.statusCode = 200;
+    res.setHeader('Content-Type', 'text/plain');
+    res.end('Hello World');
+})
 
-hello();
+server.listen(port, hostname, () => {
+    console.log(`server is running on ${hostname} ${port}`);
+})

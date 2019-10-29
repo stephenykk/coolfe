@@ -3,13 +3,13 @@ python基础教程 (from 廖雪峰)
 
 简介
 ---
-python是一种简单优雅的脚本语言，包含非常完善的基础代码库, 覆盖网络，文件，GUI, 数据库，文本等, 除了内置库以外还有大量第三方库。
+python是一种简单优雅的脚本语言，包含非常完善的基础代码库, 覆盖网络、文件、GUI、 数据库、文本等, 除了内置库以外还有大量第三方库。
 
 python的适用范围: 网络应用、脚本任务和其它自动化工具
 
 安装
 ---
-python是跨平台的，解释型的脚本语言(**貌似脚本语言都是解释型的，都是跨平台的**)
+python是跨平台的，解释型的脚本语言(**似乎脚本语言解释型和跨平台的**)
 python有2.x和3.x两个版本，较多的应用都是基于2.x开发的; 安装python就是安装python的解释器, 得到一个命令行交互环境.
 
 - mac `brew install python3`
@@ -18,10 +18,13 @@ python有2.x和3.x两个版本，较多的应用都是基于2.x开发的; 安装
 
 安装后将python安装目录，添加到环境变量, 然后打开命令行，输入 python ， 进去交互环境
 
+> 注意 windows用户在git bash下，输入python，不能进入到python交互环境
+
+```shell
     > python
     >>> print('hello world')
     >>> exit()
-
+```
 
 ### python解释器
 python代码文件以`.py`为后缀，由python解释器解释执行。
@@ -35,48 +38,55 @@ python有多种解释器:
 
 Hello World
 ---
-可以执行在命令行交互环境执行，或解释hello.py文件
-    
+可在命令行交互环境执行，或保存为hello.py文件
+
+```shell    
     >python
     >>>print('hello world')
     >>>exit()
 
     >python hello.py
+
     #mac 或 linux上还可直接运行 python文件，如：
     // hello.py
     #!/usr/bin/env python3
     print('hello world')
+
     > chmod a+x hello.py
     > ./hello.py
-
+```
 
 ### 输出
-
+```python
     print('hello python')
     print('nice', 'to', 'meet', 'you') #可打印多个字符串 同 console.log
     print('100+200=', 100+200) #计算逗号分开的每个表达式
+```
 
 ### 输入
-
-    >>>name = input('input your name please:') # 然后输入 'sindy'
-    >>>name # 'sindy'
-    >>>name2 = raw_input("what's your name:") # 然后输入 sindy
-    >>>name2 # 'sindy'
+```python
+    name = input('input your name:') # 然后输入 'sindy'
+    print(name) 
+    
 
 语法
 ---
-python的语法比较简单，采用缩进表示代码块(**不用括号,花括号划分代码块,也不用分号表示语句结束**)
+python的语法比较简单:
 
+- 用缩进表示代码块; 不用括号,花括号划分代码块
+- 不用分号表示语句结束
+- 标识符大小写敏感
+- 声明变量不需要var等关键字
+
+```python
     # print absolute value
     a = -120
-    if a>= 0:
+    if a >= 0:
         print(a)
     else:
-        <print>
-            <-a></-a>
-        </print>
-
-> 注意： python是大小写敏感的
+        print(-a)
+    
+```
 
 ### 数据类型和变量
 python的数据类型包括: 整数、浮点数、字符串、字节型、布尔值、空值、列表、字典和自定义类型

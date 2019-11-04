@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>ABC乱弹</title>
+    <style type="text/css">
+    @keyframes bounceInDown {
+
+        0%,
+        60%,
+        75%,
+        90%,
+        to {
+            -webkit-animation-timing-function: cubic-bezier(.215, .61, .355, 1);
+            animation-timing-function: cubic-bezier(.215, .61, .355, 1)
+        }
+
+        0% {
+            opacity: 0;
+            -webkit-transform: translate3d(0, -3000px, 0);
+            transform: translate3d(0, -3000px, 0)
+        }
+
+        60% {
+            opacity: 1;
+            -webkit-transform: translate3d(0, 25px, 0);
+            transform: translate3d(0, 25px, 0)
+        }
+
+        75% {
+            -webkit-transform: translate3d(0, -10px, 0);
+            transform: translate3d(0, -10px, 0)
+        }
+
+        90% {
+            -webkit-transform: translate3d(0, 5px, 0);
+            transform: translate3d(0, 5px, 0)
+        }
+
+        to {
+            -webkit-transform: none;
+            transform: none
+        }
+    }
+
+    .bounceInDown {
+        animation-duration: 1s;
+        animation-name: bounceInDown;
+        animation-fill-mode: both;
+        animation-iteration-count: 1;
+    }
+
+    body {
+        height: 100vh;
+        background: black;
+        padding: 0;
+        margin: 0;
+    }
+
+    #output {
+        /*line-height: 400px;*/
+        line-height: 100vh;
+        /*color: crimson;*/
+        font-family: cursive;
+        color: white;
+        font-size: 500px;
+        text-align: center;
+    }
+    </style>
+</head>
+
+<body>
+    <div id="output"></div>
+    <script type="text/javascript">
+	
+	var nums = Array(10).fill(1).map((el, i) => {
+		return i + 1;
+	});
+
+    var words= '爸妈爷奶哥姐大小日月天地高低饭水光明门窗家树林来去春夏秋冬星空冷暖'.split('');
+    var chars = nums.concat(words);
+    var charsBack = chars.slice();
+    var isRandom = false;
+
+    function randChar() {
+    	if(!chars.length) {
+    		chars = charsBack.slice();
+    	}
+
+    	var	randIndex = 0;
+    	if(isRandom) {
+	    	randIndex = Math.floor(Math.random() * chars.length);
+    	}
+    	return chars.splice(randIndex,1).pop();
+    }
+
+    function $(id) {
+        return document.getElementById(id)
+    }
+    document.body.onkeyup = function(ev) {
+        // console.log(ev)
+        var char = String.fromCharCode(ev.keyCode).toLowerCase();
+        char = randChar()
+        $('output').innerHTML = char 
+        $('output').classList.add('bounceInDown');
+    }
+
+    $('output').addEventListener('animationend', function() {
+        $('output').classList.remove('bounceInDown');
+    });
+    </script>
+</body>
+
+</html>

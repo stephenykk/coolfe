@@ -20,6 +20,7 @@ fiddler 设置
 - `ctrl + click` 多选
 - `shift + click` 选择连续的会话
 - `ctrl + up/down` 向上/向下选择
+- `ctrl + shfit + up/down` 向上/向下连续选择
 - `ctrl + i` 反选会话 //焦点先定位到 session list
 - `P` 选择当前会话的父会话 //对前端而言，比如选择一个js, 按`P`，就会定位到html文件
 - `C` 选择子会话 //选择html文件，按`C`, 定位所有由该html发起的请求, 其实很有用 

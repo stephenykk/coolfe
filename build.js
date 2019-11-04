@@ -17,6 +17,7 @@ async function getLinks() {
 
   let links = [];
 
+
   for (let i = 0; i < files.length; i++) {
     let link = await new Promise(resolve => {
       let file = files[i];
@@ -30,9 +31,9 @@ async function getLinks() {
 
     links.push(link);
   }
-
-  console.log("------------>links:", links);
-
+  
+  console.log("------------>links:", links);       
+  
   return links;
 }
 

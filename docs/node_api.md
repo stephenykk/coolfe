@@ -1,6 +1,37 @@
 nodejs api 
 ===
+```js
+node [options] [V8 options] [script.js | -e "script" | - ] [arguments]
+```
 
+断言
+---
+断言失败将会抛出 assertError 错误, assert本身是一个函数，它上面也有很多断言方法
+- assert(val, msg) // 同 assert.ok(val, msg) 判断值是否为真
+- assert.deepEqual(actual, expect, msg) //判断对象是否具有相同的字段，字段值是否相等, 只判断可枚举属性
+- assert.deepStrictEqual(actual, expect, msg) //判断对象是否具有相同的字段，字段值是否严格相等, 判断字段的数据类型，也判断原型对象
+- assert.doesNotThrow(testFn, error, msg); // 断言不会抛出指定类型的错误，抛出了指定类型错误则断言失败，抛出其他错误则直接抛出(还是断言成功的)，没抛出错误则断言成功
+- assert.equal(actual, expect, msg) //断言两个值相等
+- assert.strictEqual(actual, expect, msg) // 断言两个值严格相等
+
+```js
+var assert = require('assert');
+var done = true
+assert(done, 'not finish');
+assert.ok(done, 'not finish');
+assert.deepEqual({a:1, b:2}, {a: '1', b:2}); // pass
+assert.deepStrictEqual({a: 1}, {a: '1'}); // not pass
+
+assert.doesNotThrow(() => {
+    throw new TypeError('some type error')
+}, SyntaxError, '抛出了类型错误')
+
+assert.equal(1, '1'); // pass
+assert.equal({foo: 1}, {foo: 1}); // not pass
+assert.strictEqual(1, '1'); // not pass
+
+
+```
 ### Buffer
 
 Buffer对象是全局对象

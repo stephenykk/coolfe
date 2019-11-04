@@ -485,3 +485,24 @@ modules
       // ...
     })
     
+
+localStorage持久化vuex
+---
+```js
+const handleStore = store => {
+  if (localStorage.store) store.replaceState(JSON.parse(localStorage.store))  // 初始化store
+  store.subscribe((mutation, state) => {
+      localStorage.setItem("store",  JSON.stringify(state))
+  })
+}
+
+
+// 然后在new Vuex的时候进行调用
+
+const store = new Vuex.Store({
+  state,
+  mutations,
+  plugins: [handleStore]
+})
+
+```

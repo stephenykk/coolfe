@@ -63,6 +63,18 @@ apis
 
 框架
 ---
+weixinJSbridge -> JSSDK -> 小程序
+​网页开发渲染线程和脚本线程是互斥的，小程序中逻辑层和视图层工作在不同的线程，不互斥?
+逻辑层运行在JSCore中，没有DOM,BOM API, 与nodejs环境也不尽相同
+
+运行环境 | 逻辑层 | 渲染层
+-------|--------|--------
+ios | javascriptCore | WKwebview
+android | V8 | chromium定制内核
+小程序开发工具 | NWJS | chrome webview
+
+![小程序通信模型](https://res.wx.qq.com/wxdoc/dist/assets/img/4-1.ad156d1c.png, '小程序通信')
+
 + 视图层 `wxml` `wxss`
 + 逻辑层 `js`
 
@@ -90,6 +102,7 @@ apis
 
 配置
 ---
+
 `app.json` 配置页面的路径，窗口外观，网络超时和多tab等..
 
     {
@@ -142,6 +155,10 @@ apis
         //.. 同app.json
         disableScroll: false // 设置不能滚动
     }
+
+
+工具配置 project.config.json
+小程序开发者工具在每个项目的根目录都会生成一个 project.config.json，你在工具上做的任何配置都会写入到这个文件，当你重新安装工具或者换电脑工作时，你只要载入同一个项目的代码包，开发者工具就自动会帮你恢复到当时你开发项目时的个性化配置
 
 逻辑层
 ---

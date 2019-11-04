@@ -1,5 +1,6 @@
 es6 notes 
 =======
+[ES6入门教程](http://es6.ruanyifeng.com/#docs/intro)
 
 Decorator
 ---

@@ -295,3 +295,15 @@ deb包是预编译包, 包名约定: softwareName_version_revVersion_arch  eg: h
 vim
 ---
 
+
+
+其他
+---
+- 获取Codename(版本代号) `lsb_release -a`
+- 修改镜像源 `sudo vi /etc/apt/sources.list` , `sudo apt-get update`
+- 系统是32位的还是64位的：`getconf LONG_BIT`
+- 修改root密码 `sudo passwd root` 输入自己的密码，然后设置root密码
+- 查看用户id `id <userName>`
+- 查看网络 `ifconfig` , `cat /etc/resolv.conf`
+- 查看nginx默认配置 `cat /etc/default/nginx`
+- 查看服务是否安装 `which nginx`, `whereis nginx`

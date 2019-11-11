@@ -7,11 +7,11 @@ ubuntu notes
 
 启动器
 ---
-alt + f1, 启动栏导航
-super + tab 激活启动栏的应用
-alt + f2, 运行命令  eg:  firefox   #open firefox
-长按 super 显示快捷键表
-ctrl + alt + [f1-f6] 打开1-6号控制台; ctrl + alt + f7 返回图形界面
+- `alt + f1` 启动栏导航
+- `super + tab` 激活启动栏的应用
+- `alt + f2`, 运行命令  *eg:  firefox   #open firefox*
+- 长按 `super` 显示快捷键表
+- `ctrl + alt + [f1-f6]` 打开1-6号控制台; `ctrl + alt + f7` 返回图形界面
 
 搜索面板:
 ---

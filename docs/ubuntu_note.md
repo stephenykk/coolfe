@@ -89,7 +89,9 @@ linux, 分区挂载到系统目录（*/ ， swap分区， /home, /usr,  /var, /b
 
 shell
 ---
-GUI便是一种shell,实现人机交互。  
+GUI便是一种shell,实现人机交互。    
+[ubuntu终端常用快捷键，较全面](https://www.cnblogs.com/zzblrwg/p/9669869.html)  
+
 **CLI** 命令行  
 `tab` 自动补全  
 语法： 命令 -参数  对象  
@@ -107,39 +109,48 @@ GUI便是一种shell,实现人机交互。
 - 历史命令导航  `ctrl+r` `ctrl+p`  `ctrl+n`
 - 粘贴  `ctrl+y`(*粘贴删除内容*) `shift+insert`
 
-自动补全
-tab
-alt+=  alt+?
-alt+!
-alt+_
-alt+*
+**自动补全**
+- `tab`  只有1个匹配时，自动补全； 多个匹配时，列出
+- `alt+=` 列出匹配文件 *不会自动补全*
+- `alt+?`  同上
+- `alt+!` 列出匹配命令
+- `alt+_`
+- `alt+*` 自动补上全部匹配项
 
 linux下两种风格的键绑定： vi风格 和 emacs风格
 
 命令组合
 ---
 
-- &  背景任务   eg:  ls &
-- ; 多命令顺序执行
-- && 依次成功执行 js短路操作
-- `subCommand` 包含子命令，子命令优先执行，结果代入 eg: touch `date +%m.%d` 
+- `&`  背景任务   eg:  `ls &`
+- `;` 多命令顺序执行
+- `&&` 依次成功执行 *js短路操作*
+- <code>\`<cmd>\`</code> 包含子命令，子命令优先执行，结果代入 eg: <code>touch `date +%m.%d` </code>
 
 
 重定向
 ---
-- `>`
-- `>>`
-- `|` eg: ls -al | less
-- `<`
+- `>` 输出重定向
+- `>>` 输出重定向 追加内容
+- `|`  管道符 输出重定向 eg: `ls -al | less`
+- `<` 输入重定向
 
 
-更友好的shell推荐 `fish`
+更友好的shell推荐 **fish**
 
 环境变量 
 ---
-配置文件路径:  /etc/environment
+配置文件路径:  **/etc/environment**
 
-- $PATH 
+```shell
+    echo $PATH
+    # 自定义环境变量
+    export hi=hello
+    echo $hi
+    # 修改PATH
+    export PATH=$PATH:/home/pan
+    echo $PATH
+```
 
 
 程序和进程
@@ -315,3 +326,9 @@ vim
 - 查看网络 `ifconfig` , `cat /etc/resolv.conf`
 - 查看nginx默认配置 `cat /etc/default/nginx`
 - 查看服务是否安装 `which nginx`, `whereis nginx`
+- 升级git  
+    ```shell
+    sudo add-apt-repository ppa:git-core/ppa
+    sudo apt-get update
+    sudo apt-get install git
+    ```

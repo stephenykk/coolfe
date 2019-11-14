@@ -160,22 +160,25 @@ linux下两种风格的键绑定： vi风格 和 emacs风格
 
 路径
 ---
-绝对路径 /usr/local/bin /usr/bin /bin
-相对路径 ../local/bin
+绝对路径 */usr/local/bin*  */usr/bin*  */bin*
+相对路径 *../local/bin*
 
+```shell
+# 切换路径
 cd /usr/bin 
 cd ../bin 
-cd -
+cd - # 返回之前的路径
 cd ~   # 等同 cd 
 
-
-pwd
+pwd # 显示当前路径
 ls -A # 不包含 .  ..
-ls -al
+ls -al # 包含所有文件 长列表格式
+```
+
 
 软件
 ---
-linux没有注册表概念，安装程序也只是拷贝文件到 bin ， etc, share , lib等目录中.
+linux没有注册表概念，安装程序也只是拷贝文件到 `bin` ， `etc`, `share` , `lib` 等目录中.
 
 配置
 ---
@@ -183,7 +186,7 @@ linux没有注册表概念，安装程序也只是拷贝文件到 bin ， etc, s
 
 隐藏文件
 ---
-.开头的文件/文件夹，系统默认隐藏, 需 ls -A 查看
+`.` 开头的文件/文件夹，系统默认隐藏, 需 `ls -A` 查看
 
 文件类型
 ---

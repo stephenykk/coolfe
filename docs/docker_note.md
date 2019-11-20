@@ -12,9 +12,9 @@ Docker 架构
 ---
 Docker 包括三个基本概念:
 
-- 镜像（Image）：Docker 镜像（Image），就相当于是一个 root 文件系统。比如官方镜像 ubuntu:16.04 就包含了完整的一套 Ubuntu16.04 最小系统的 root 文件系统。
+- 镜像（Image）：创建 Docker 容器的模板。
 - 容器（Container）：镜像（Image）和容器（Container）的关系，就像是面向对象程序设计中的类和实例一样，镜像是静态的定义，容器是镜像运行时的实体。容器可以被创建、启动、停止、删除、暂停等。
-- 仓库（Repository）：仓库可看着一个代码控制中心，用来保存镜像。
+- 仓库（Repository）：保存各种镜像的地方
 
 Docker 使用客户端-服务器 (C/S) 架构模式，使用远程API来管理和创建Docker容器。
 
@@ -58,15 +58,9 @@ sudo add-apt-repository \
   $(lsb_release -cs) \
   stable"
 
-sudo apt-key fingerprint 0EBFCD8 验证指纹
-
 sudo apt-get update
 
 sudo apt-get install docker-ce
-
-
-#添加官方pgp
-curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
 
 # ubuntu14.04 需要升级内核
 sudo apt-get install --install-recommends linux-generic-lts-xenial
@@ -122,7 +116,7 @@ sudo docker restart <container_id or container_name>
 
 **Docker 客户端** 
 直接输入 `docker` , 返回docker命令的帮助信息  
-`docker <command> --help` 查看具体命令的帮助信息
+`docker <command> --help` 查看具体命令的帮助信息 (如: `docker ps --help`)
 
 ### 进入容器
 
@@ -239,10 +233,167 @@ docker 连接会创建一个父子关系，其中父容器可以看到子容器�
 
 ```shell
 docker run -d -P --name runoob training/webapp python app.py # --name 给容器命名
-docker ps
+docker ps -l
 
 # 新建网络
 docker network create -d bridge test-net # -d  网络类型，有 bridge、overlay
 docker network ls
 
+# 终端1新建容器utest1
+docker run -itd --name utest1 --network test-net ubuntu:14.04 /bin/bash
+# 终端2新建容器utest2
+docker run -itd --name utest2 --network test-net ubuntu:14.04 /bin/bash
+# 分别进入容器 ping对方
+docker exec -it utest2 /bin/bash
+ping utest1 # 若没有ping命令 则安装 apt-get update , apt-get install iputils-ping
+docker exec -it utest1 /bin/bash
+ping utest2
+
+# 查看容器的dns信息
+docker run -it --rm ubuntu:14.04 cat etc/resolv.conf # --rm 若存在同名容器先删除
+
+# 指定容器dns设置
+docker run -it --rm myubuntu --dns="114.114.114.114" --dns-search=test.com ubuntu:14.04
+# -h HOSTNAME 或者 --hostname=HOSTNAME： 设定容器的主机名，它会被写到容器内的 /etc/hostname 和 /etc/hosts。
+# --dns=IP_ADDRESS： 添加 DNS 服务器到容器的 /etc/resolv.conf 中，让容器用这个服务器来解析所有不在 /etc/hosts 中的主机名。
+# --dns-search=DOMAIN： 设定容器的搜索域，当设定搜索域为 .example.com 时，在搜索一个名为 host 的主机时，DNS 不仅搜索 host，还会搜索 host.example.com。
 ```
+
+Docker仓库管理
+---
+仓库（Repository）是集中存放镜像的地方。如:(Docker Hub)[https://hub.docker.com/]。当然不止 docker hub，只是远程的服务商不一样，操作都是一样的。
+
+### 注册
+在 https://hub.docker.com 免费注册一个 Docker 账号，然后执行`docker login`
+
+### 退出
+`docker logout`
+
+### 拉镜像
+```bash
+docker search ubuntu
+docker pull ubuntu # 默认tag latest
+docker image ls
+```
+
+### 推送镜像
+```shell
+# 创建本地镜像
+docker tag ubuntu:14.04 username/ubuntu:14.04
+docker images
+# 推送
+docker push username/ubuntu:14.04
+docker search username/ubuntu
+```
+
+
+Docker 实例
+---
+
+### 安装nginx
+```bash
+docker search nginx
+docker pull nginx
+docker images
+docker run --name mynginx -p 8080:80 -d nginx
+docker ps -l
+docker port mynginx  # docker port mynginx 80
+curl localhost:8080 # 查看nginx欢迎页
+
+mkdir -p ~/nginx/www ~/nginx/conf ~/nginx/logs #创建nginx相关目录
+docker cp mynginx:/ect/nginx/nginx.conf ~/nginx/conf #复制容器内的文件到宿主机
+docker run -d -p 8082:80 --name usenginx -v ~/nginx/www:/usr/share/nginx/html -v ~/nginx/conf/nginx.conf:/etc/nginx/nginx.conf -v ~/nginx/logs:/var/log/nginx nginx # -v 把宿主机目录挂载到容器内
+cd ~/nginx/www
+vi index.html #创建个html文件 然后浏览器访问 localhost:8082 就能看到这个文件了
+
+docker kill -s HUP container_name #发送HUP信号给容器 
+docker restart container_name #重启容器
+```
+
+### 安装php
+```bash
+docker search php
+docker pull php:5.6-fpm
+docker images
+docker run --name myphp -v ~/nginx/www:/www -d php:5.6-fpm # 创建php容器
+mkdir -p ~/nginx/conf/conf.d
+# 添加配置文件 my-php.cof 保存到上面创建的目录
+server {
+  listen 80;
+  server_name localhost;
+
+  location / {
+    root /usr/share/nginx/html;
+    index index.html index.php;
+  }
+
+  error_page 500 502 503 504 /50x.html
+  location = /50x.html {
+    root /usr/share/nginx/html;
+  }
+
+  location ~ \.php$ {
+    fastcgi_pass php:9000;
+    fastcgi_index index.php;
+    fastcgi_param SCRIPT_FILENAME /www/$fastcgi_script_name;
+    include fastcgi_params
+  }
+}
+
+
+# 启动nginx
+docker run --name php-nginx -p 8083:80 -d \
+-v ~/nginx/www:/usr/share/nginx/html:ro \
+-v ~/ngix/conf/conf.d:etc/nginx/conf.d:ro \
+--link myphp:php
+nginx
+
+# 在~/ngix/www创建新php文件
+<?php
+echo phpinfo();
+?>
+
+# 浏览器访问 http://localhost:8083
+```
+
+Docker命令大全
+---
+### 容器生命周期管理
+- run
+- start/stop/restart
+- kill
+- rm
+- pause/unpause
+- create
+- exec
+### 容器操作
+- ps
+- inspect
+- top
+- attach
+- events
+- logs
+- wait
+- export
+- port
+### 容器rootfs命令
+- commit
+- cp
+- diff
+### 镜像仓库
+- login
+- pull
+- push
+- search
+### 本地镜像管理
+- images
+- rmi
+- tag
+- build
+- history
+- save
+- load
+- import
+### info|version
+- info
+- version

@@ -60,7 +60,7 @@ Hello World
 ```python
     print('hello python')
     print('nice', 'to', 'meet', 'you') #可打印多个字符串 同 console.log
-    print('100+200=', 100+200) #计算逗号分开的每个表达式
+    print('100+200=', 100+200) #逗号分隔的每个表达式间加空格
 ```
 
 ### 输入

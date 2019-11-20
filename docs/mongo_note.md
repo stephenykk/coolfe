@@ -71,7 +71,8 @@ db.books.find()
 db.books.find().pretty()
 db.books.find({name: 'learn nodejs'})  // 查询 name == ‘learn nodejs'的文档
 db.books.find({name: {$regex: /java/}}) // 模糊搜索 name 包含 'java' 的文档
-db.books.find({name: {$in: [/java/, /h5/]}}) // $in操作符中 只能用正则对象，相反含义的操作符 $nin 
+db.books.find({name: {$in: [/java/, /h5/]}}) // $in操作符中 可用正则对象或字符串，相反含义的操作符 $nin 
+db.book.find({name: {$in: ['two cities', 'war and peace']}}, {name: 1, price: 1, \_id: 0})
 db.books.find({name: /java/i}) // 可直接用正则
 db.books.find({price: {$lt: 100}}) // 价格小于100的  其他比较运算符 $gt $gte $ne   $lt $lte
 

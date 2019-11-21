@@ -65,7 +65,8 @@ Hello World
 
 ### 输入
 ```python
-    name = input('input your name:') # 然后输入 'sindy'
+    name = input('input your name:') # 然后输入 'sindy' python3
+    # name = raw_input('input your name:') # python2
     print(name) 
     
 
@@ -91,33 +92,57 @@ python的语法比较简单:
 ### 数据类型和变量
 python的数据类型包括: 整数、浮点数、字符串、字节型、布尔值、空值、列表、字典和自定义类型
 
+```python
     1, 100, -80, 0xfa #整数    
     1.23 1.23e9, 1.2e-5 #浮点数
-    "what's your name" 'I\'m \"OK\"'  r'\the-school\n' '''line1, line2''' #字符串
-    b'ABC'  b'hello'.decode('ascii') #字节型
-    len('abc') len(b'good') #3
+    
+    #字符串 单双引号互相包含
+    "what's your name"
+    'I\'m "OK"'  
+    
+    # raw string 都做普通字符对待
+    r'\the-school\n'  
+    
+    # 三引号 可输出换回字符串
+    '''line1,
+    line2''' 
+    
+    #字节型
+    b'ABC'  
+    len('abc') # 3
+    b'hello'.decode('ascii') 
+    len(b'good') #4
+    
+    #布尔值
+    True False
 
-    True False 3>2  True or False  not True #布尔值
-    None #空值
+    #空值
+    None 
+    
     # 条件判断
     if age >= 18:
       print('adult')
     else:
       print('teenager')
+```
 
 python是弱类型(动态类型)语言
 
+```python
     a = 100 #整数
     print(a)
     a = 'hello' #字符串
     print(a)
-
+```
 python中常量习惯用全大些字母表示, 如 `PI=3.1415`, 并非真正意义的常量(**同JS**)
 
 python的两种除法：
-
-    >>>10 / 3 #普通除法 结果为浮点数
-    >>>10 // 3 #地板除 结果为整数
+```python
+    print(10 / 3) #3.33.. 普通除法 结果为浮点数
+    print(10 // 3) #3 整除(有小数 则向下取整) 结果为整数
+    print(20 / 3)
+    print(20 // 3) #6
+```
 
 python的整数和浮点数没有大小限制
 
@@ -128,20 +153,30 @@ python的整数和浮点数没有大小限制
 - UTF-8 用于存储和传输 英文1个字节 中文3个字节
 
 > 计算机内存中，统一使用unicode, 当需要存储或传输时，转换为utf-8
-
-    >>> ord('A') #字符对应的编码
-    >>> chr(66) #编码对应的字符
+```python
+    print(ord('A')) #字符对应的编码
+    print(chr(66)) #编码对应的字符
+```
   
 声明py源文件的编码类型
-
+```python
     #!/usr/bin/env python3
     # -*- coding: utf-8 -*-
-
+```
 格式化输出
+```python    
+    # %d 整数 %f浮点数 %g 整数或科学计数法显示
+    print('Hello, %s' % 'world')
+    # 多个占位 值用列表
+    print('Hi %s, you have spent $%d' % （'sindy', 1000))
     
-    # %d 整数 %f浮点数 %
-    'Hello, %s' % 'world'
-    'Hi %s, you have $%d' % （'sindy', 1000)
-
-    >>>(growth rate: %d %%)
+    print('normal number: %g' % 123)
+    print('big number: %g' % 1234567)
+    
+    print('float number: %f' % 12.2235)
+    print('float number: %.2f' % 12.2225)
+    print('float number: %+.2f' % -12.6135)
+    print('float number: % .2f' % 12.5685)
+    
+```
     

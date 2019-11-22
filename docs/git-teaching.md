@@ -99,7 +99,8 @@ Git也允许手动建立追踪关系。
     如果省略本地分支名，则表示删除指定的远程分支，因为这等同于推送一个空的本地分支到远程分支。
     git push origin :master
     #等同于
-    git push origin --delete master
+    git push --delete origin  master
+    git push -d origin master #删除远程的master分支
 
     如果当前分支与远程分支之间存在追踪关系，则本地分支和远程分支都可以省略。
     git push origin
@@ -108,6 +109,7 @@ Git也允许手动建立追踪关系。
     git push
 
     git push -u origin master //令将本地的master分支推送到origin主机，同时指定origin为默认主机，后面就可以不加任何参数使用git push了
+    git push -u origin mydev // 将本地分支推送到远端
 
 
     不带任何参数的git push，默认只推送当前分支，这叫做simple方式。此外，还有一种matching方式，会推送所有有对应的远程分支的本地分支。

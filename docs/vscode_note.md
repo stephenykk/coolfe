@@ -149,3 +149,23 @@ ctrl + k, ctrl + t 选择主题
 emmet
 ---
 [emmet语法示例](https://docs.emmet.io/cheat-sheet/)
+
+使用问题
+---
+### 配置vue文件html标签属性不换行显示
+1. ctrl + shift + p 输入 open settings
+2. 粘贴以下vetur的配置
+  ```json
+    // Options for all default formatters
+	"vetur.format.defaultFormatterOptions": {
+		"js-beautify-html": {
+			"wrap_attributes": "auto"
+		},
+		"prettyhtml": {
+			"printWidth": 100,
+			"singleQuote": false,
+			"wrapAttributes": false,
+			"sortAttributes": false
+		}
+	},
+    ```

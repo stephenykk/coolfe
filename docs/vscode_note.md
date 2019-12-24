@@ -146,6 +146,14 @@ ctrl + shift + x
 ctrl + k, ctrl + t 选择主题
 ```
 
+常用插件
+---
+- turbo console log
+- bookmarks
+- project manager
+- select bracket
+- vetur
+
 emmet
 ---
 [emmet语法示例](https://docs.emmet.io/cheat-sheet/)

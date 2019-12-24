@@ -882,3 +882,248 @@ TypeError: 'int' object is not callable
 > 注：由于abs函数实际上是定义在import builtins模块中的，所以要让修改abs变量的指向在其它模块也生效，要用import builtins; builtins.abs = 10。
 
 **传入函数**  
+可以接受函数作为参数的函数，称为高阶函数
+```python
+def add(x, y, f):
+    return f(x) + f(y)
+
+# map map(f, list)
+def f2(x):
+    return x * x
+
+r = map(f2, [1,2,3]) # 返回map对象  同js arr.map
+print(list(r), type(r))
+
+print(list(map(str, [1,2,3])))
+
+# reduce reduce(f, list)
+from functools import reduce
+def add(x, y):
+    return x + y
+
+print(reduce(add, [1,3,5,7]))
+
+# lamda  同js匿名函数
+from functools import reduce
+
+DIGITS = {'0': 0, '1': 1, '2': 2, '3': 3, '4': 4, '5': 5, '6': 6, '7': 7, '8': 8, '9': 9}
+
+def char2num(s):
+    return DIGITS[s]
+
+def str2int(s):
+    return reduce(lambda x, y: x * 10 + y, map(char2num, s))
+
+# filter filter(f, list)
+def is_odd(n):
+    return n % 2 == 1
+# filter()函数返回的是一个Iterator，也就是一个惰性序列，所以要强迫filter()完成计算结果，需要用list()函数获得所有结果并返回list
+list(filter(is_odd, [1, 2, 4, 5, 6, 9, 10, 15]))
+
+# sorted sorted(list, keyFn)
+sorted(['bob', 'about', 'Zoo', 'Credit'], key=str.lower) #升序
+sorted(['bob', 'about', 'Zoo', 'Credit'], key=str.lower, reverse=True) #降序
+
+```
+
+**函数作为返回值**  
+高阶函数除了可以接受函数作为参数外，还可以把函数作为结果值返回。
+```python
+def lazy_sum(*args):
+    def sum():
+        ax = 0
+        for n in args:
+            ax = ax + n
+        return ax
+    return sum
+```
+
+当lazy_sum返回函数sum时，相关参数和变量都保存在返回的函数中，这种称为“闭包（Closure）”的程序结构拥有极大的威力    
+
+**闭包**  
+当一个函数返回了一个函数后，其内部的局部变量还被新函数引用
+```python
+def count():
+    fs = []
+    for i in range(1, 4):
+        def f():
+             return i*i
+        fs.append(f)
+    return fs
+
+f1, f2, f3 = count()
+f1() #9
+f2() #9
+f3() #9
+```
+
+**匿名函数**  
+在Python中，对匿名函数提供了有限支持, 匿名函数有个限制，就是只能有一个表达式，不用写return，返回值就是该表达式的结果 *比js的匿名函数弱*
+```python
+list(map(lambda x: x * x, [1, 2, 3, 4, 5, 6, 7, 8, 9]))
+
+def build(x, y):
+    return lambda: x * x + y * y
+
+f = lambda x: x * x
+```
+
+**装饰器**  
+由于函数也是一个对象，而且函数对象可以被赋值给变量，所以，通过变量也能调用该函数; 函数对象有一个__name__属性，可以拿到函数的名字
+```python
+def now():
+    print('2019-09-02')
+
+f = now
+f()
+
+print(now.__name__, f.__name__) # now now
+```
+
+不修改now()函数的定义，又可以代码运行期间动态增加功能，称之为“装饰器”（Decorator）。
+
+本质上，decorator就是一个返回函数的高阶函数
+```python
+def log(func):
+    def wrapper(*args, **kw):
+        print('call %s():' % func.__name__)
+        return func(*args, **kw)
+    return wrapper #返回装饰了目标函数的函数
+
+# 借助Python的@语法，把decorator置于函数的定义处
+@log
+def now2():
+    print('2019-01-09')
+
+now2() # 调用now()函数，不仅会运行now()函数本身，还会在运行now()函数前打印一行日志   
+```
+把`@log`放到`now()`函数的定义处，相当于执行了语句 `now=log(now)`
+
+```python
+# 可接受参数的装饰器
+def log(text):
+    def decorator(func):
+        def wrapper(*args, **kw):
+            print('%s %s():' % (text, func.__name__))
+            return func(*args, **kw)
+        return wrapper
+    return decorator
+
+# now = log('execute')(now)
+@log('execute') #返回的结果作为装饰器
+def now():
+    print('2019-11-12')
+
+
+# 修正__name__的值
+import functools
+
+def log(func):
+    # wrapper.__name__ = func.__name__
+    @functools.wraps(func)
+    def wrapper(*args, **kw):
+        print('call %s():' % func.__name__)
+        return func(*args, **kw)
+    return wrapper
+```
+
+在面向对象（OOP）的设计模式中，decorator被称为装饰模式。OOP的装饰模式需要通过继承和组合来实现，而Python除了能支持OOP的decorator外，直接从语法层次支持decorator。Python的decorator可以用函数实现，也可以用类实现。
+
+decorator可以增强函数的功能，定义起来虽然有点复杂，但使用起来非常灵活和方便。
+
+
+**偏函数**  
+在介绍函数参数的时候，我们讲到，通过设定参数的默认值，可以降低函数调用的难度。而偏函数也可以做到这一点
+```python
+# int(num, base)
+def int2(x, base=2):
+    return int(x, base)
+
+# functools.partial就是帮助我们创建一个偏函数的，不需要我们自己定义int2()
+
+import functools
+int2 = functools.partial(int, base=2) #预绑定末尾参数的函数
+# 固定了int()函数的关键字参数base
+# 相当于
+kw = {'base': 2}
+init('1001', **kw)
+
+max2 = functools.partial(max, 10)
+# 实际上会把10作为*args的一部分自动加到左边
+max2(5,6)
+# args = (10, 5, 6)
+
+```    
+
+当函数的参数个数太多，需要简化时，使用`functools.partial`可以创建一个新的函数，这个新函数可以固定住原函数的部分参数，从而在调用时更简单。
+
+模块
+---
+为了编写可维护的代码，我们把很多函数分组，分别放到不同的文件里，这样，每个文件包含的代码就相对较少，很多编程语言都采用这种组织代码的方式。在Python中，一个.py文件就称之为一个模块（Module）。
+
+模块化有什么好处？
+
+- 最大的好处是大大提高了代码的可维护性。
+- 其次，编写代码不必从零开始。当一个模块编写完毕，就可以被其他地方引用。我们在编写程序的时候，也经常引用其他模块，包括Python内置的模块和来自第三方的模块。
+- 使用模块还可以避免函数名和变量名冲突。
+
+> 你也许还想到，如果不同的人编写的模块名相同怎么办？为了避免模块名冲突，Python又引入了按目录来组织模块的方法，称为包（Package）
+
+> 包作为模块的命名空间，避免模块名冲突
+
+请注意，每一个包目录下面都会有一个``__init__.py`的文件，这个文件是必须存在的，否则，Python就把这个目录当成普通目录，而不是一个包。`__init__.py`可以是空文件，也可以有Python代码，因为`__init__.py`本身就是一个模块
+
+包也可以有多级结构，如`mycompanry.web.util`
+
+### 使用模块
+Python本身就内置了很多非常有用的模块
+```python
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+
+' a test module '
+
+__author__ = 'Michael Liao'
+
+import sys
+
+def test():
+    args = sys.argv
+    if len(args)==1:
+        print('Hello, world!')
+    elif len(args)==2:
+        print('Hello, %s!' % args[1])
+    else:
+        print('Too many arguments!')
+
+if __name__=='__main__':
+    test()
+```
+
+**作用域**  
+在一个模块中，我们可能会定义很多函数和变量，但有的函数和变量我们希望给别人使用，有的函数和变量我们希望仅仅在模块内部使用(*约定用`_`前缀标识*)。
+
+正常的函数和变量名是公开的（public），可以被直接引用，比如：abc，x123，PI等；
+
+`__author__`，`__name__`等是特殊变量，如: `__doc__`可访问文档注释，自定义的变量一般不要用`__xx__`格式；
+
+实际上模块内的所有东西都是可访问的，`_`私有前缀也只是习惯约定
+
+```python
+def _private_1(name):
+    return 'Hello, %s' % name
+
+def _private_2(name):
+    return 'Hi, %s' % name
+
+def greeting(name):
+    if len(name) > 3:
+        return _private_1(name)
+    else:
+        return _private_2(name)
+```
+
+**安装第三方模块**  
+在Python中，安装第三方模块，是通过包管理工具pip完成的。
+
+`pip install Pillow`

@@ -340,3 +340,8 @@ Git远程仓库管理
 
     git branch --set-upstream develop origin/develop
 
+
+其他问题
+---
+- remote origin 用git协议的url, push操作时，提示 *Connection reset by 13.229.188.59 fatal: Could not read from remote repository.*  
+  `git config --global credential.helper store` 记录上次的密码 不用每次都输入啦！ 

@@ -9,3 +9,13 @@ windows 命令行
 - `label` 修改分区卷标
 
 - 开始运行`mstsc`， 打开远程桌面连接
+- 文件关联
+```shell
+# 查看文件关联
+assoc .txt  # .txt=txtfile 查看文件关联 
+ftype txtfile # txtfile=%SystemRoot%\system32\NOTEPAD.EXE %1
+# 设置文件关联
+assoc .doc=wordfile
+assoc .docx=wordfile
+ftype wordfile=F:\软件\Office2007\MicrosoftOfficeWordPortable.exe %1
+```

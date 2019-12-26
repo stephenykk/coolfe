@@ -345,3 +345,5 @@ Git远程仓库管理
 ---
 - remote origin 用git协议的url, push操作时，提示 *Connection reset by 13.229.188.59 fatal: Could not read from remote repository.*  
   `git config --global credential.helper store` 记录上次的密码 不用每次都输入啦！ 
+- 遇到warning: LF will be replaced by CRLF警告  
+   修改git全局配置，禁止git自动将LF转化成CRLF。命令是：git config --global core.autocrlf false

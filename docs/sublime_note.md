@@ -107,5 +107,6 @@ package control 安装不了插件
 1. 下载 channel_v3.json
 2. 修改package control配置，添加channel
 ```
-
+  "D:\\channel_v3.json", # 百度云有备份
+  "http://static.bolin.site/channel_v3.json",
 ```

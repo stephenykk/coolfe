@@ -1,5 +1,6 @@
 egg docs 
 ========
+[eggjs文档](https://eggjs.org/zh-cn/intro/)  
 
 简介
 ---
@@ -558,7 +559,7 @@ Config
         app.config
         ctx.helper.config
     ```
-    
+
 Logger
 ---
 框架提供了强大的日志功能，方便地打印各种级别的日志到对应的日志文件中。   

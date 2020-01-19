@@ -32,6 +32,8 @@ curl是一种命令行工具，作用是发出网络请求，然后得到和提�
   ```
 - curl --trace output.txt  url #显示更加详细的数据
 
+- curl -G --data "login=xx&name=xx" localhost:7001  # GET请求并带参数
+
 - curl -X POST --data-urlencode "val" url #指定请求方法 并带参数(*会把参数urlencode*)
 - curl -X POST --data "val" url  #指定请求方法 并带参数(*不会把参数urlencode*)    --data 同 -d
    ```shell

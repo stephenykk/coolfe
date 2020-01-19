@@ -4,7 +4,7 @@ es6 notes
 
 Decorator
 ---
-修饰器是一个函数，用来修饰类/类的方法
+修饰器是一个函数，用来修饰类/类的方法    
 
 安装 `babel-core` 和 `babel-plugin-transform-decorators-legacy` 后，babel可支持 Decorator
 

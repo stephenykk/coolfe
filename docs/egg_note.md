@@ -53,7 +53,7 @@ Koa的中间件和Express不同，Koa是洋葱圈模型(*层层深入，层层�
 ！[中间件执行顺序图](https://raw.githubusercontent.com/koajs/koa/a7b6ed0529a58112bac4171e4729b8760a34ab8b/docs/middleware.gif)
 
 **Context**
-Express只有request和response两个对象，Koa增加Context对象,作为这次请求的上下文对象(*koa1是中间件的this,koa2作为中间件第一个参数*)
+Express只有request和response两个对象，Koa增加Context对象,作为这次请求的上下文对象(*koa1是中间件的this, koa2作为中间件第一个参数*)
 
 Context对象上也挂载了`request`和`response`对象,它们提供了很多便捷的方法和属性:
 
@@ -109,7 +109,7 @@ Express 和 Koa 中，通常会引入许多的中间件来提供各种功能，�
 Egg 提供了更强大的插件机制，让独立的功能模块更容易编写
 
 一个插件可以包括:
-- extend  扩展基础对象的上下文，提供各种工具类和属性
+- extend  扩展基础对象(`application, context, request, response`)，提供各种工具类和属性
 - middleware  增加一个或多个中间件 提供前处理或后处理逻辑
 - config  各个环境下插件的配置信息
 
@@ -151,7 +151,7 @@ Egg 快速入门
 Egg 内置 `static` 插件，默认映射 `/public/* --> app/public/*` 目录 
 
 ### 模板渲染
-1. 安装对应的模板引擎插件，如： `npm i egg-view-numjucks --save`
+1. 安装对应的模板引擎插件，如： `npm i egg-view-nunjucks --save`
 2. 开启插件
     ```js
         // config/plugin.js 
@@ -285,7 +285,7 @@ Egg 内置 `static` 插件，默认映射 `/public/* --> app/public/*` 目录
         // view/news/list.tpl
         <div>{{helper.padZero(item.id)}}<\/div>
     ```
-11. 编写middleware
+11. 编写middleware  
 假设编写一个禁止爬虫的middleware
     ```js
         // app/middleware/robot.js
@@ -299,7 +299,6 @@ Egg 内置 `static` 插件，默认映射 `/public/* --> app/public/*` 目录
                     ctx.message = 'Go away, robot'
                 }else {
                     await next();
-                }
                 }
             }
         }
@@ -316,7 +315,7 @@ Egg 内置 `static` 插件，默认映射 `/public/* --> app/public/*` 目录
 12. 配置文件
 写业务时候，不可避免的需要配置文件，框架提供了强大的配置合并功能
 
-- 支持根究环境变量加载对应配置，如 `config.local.js`, `config.prod.js`
+- 支持根据环境变量加载对应配置，如 `config.local.js`, `config.prod.js`
 - 应用、插件、框架都可以有自己的配置，将按顺序合并
 
 ### 单元测试
@@ -389,8 +388,8 @@ Egg 内置 `static` 插件，默认映射 `/public/* --> app/public/*` 目录
 ```
 
 ### 框架内置基础对象
-- 从Koa继承的Context, Application, Request, Response
-- 框架扩展的对象Controller, Service, Helper,Config, Logger
+- 从Koa继承的 `Context`, `Application`, `Request`, `Response`
+- 框架扩展的对象 `Controller`, `Service`, `Helper`, `Config`, `Logger`
 
 ### Application
 全局对象，在一个应用中，只会实例化一个， 继承自 Koa.Application, 可以挂载一些全局的方法和对象
@@ -503,13 +502,17 @@ Controller基类的获取方式
 
 ```js
     // app/controller/user.js
-    // egg上获取
+    // egg上获取 require('egg').Controller
     const Controller = require('egg').Controller;
     class UserController extends Controller {
         //todo
     }
+    // 返回控制器类
+    module.exports = UserController 
 
-    // app上获取
+
+    // app上获取 app.Controller
+    // 返回会返回控制器类的函数
     module.exports = app => {
         return class UserController extends app.Controller {
             // todo
@@ -537,7 +540,7 @@ class UserController extends Controller {
         ctx.body = ctx.helper.formatUser(user); // ctx.helper
     }
 }
-// 模板中使用
+// 模板中 可直接使用helper
 <div>{{helper.formatUser(user)}}<\/div>
 ```
 
@@ -548,6 +551,14 @@ Config
 获取方式   
 通过`app.config`获取应用配置，也可在`Controller`, `Service`, `Helper`上通过 `this.config`获取到config对象
 
+    ```js
+        this.app
+        this.ctx
+        this.config // this is controller service
+        app.config
+        ctx.helper.config
+    ```
+    
 Logger
 ---
 框架提供了强大的日志功能，方便地打印各种级别的日志到对应的日志文件中。   

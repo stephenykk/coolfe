@@ -88,8 +88,13 @@ sublime text 3 安装package control
 8. 加入如下几个channel  
 
 	```
-		"http://static.bolin.site/channel_v3.json",
-		"https://gist.githubusercontent.com/nick1m/660ed046a096dae0b0ab/raw/e6e9e23a0bb48b44537f61025fbc359f8d586eb4/channel_v3.json"
+    // 打开package control的设置文件: 首选项 -- 插件设置 -- package control -- 用户设置
+    // 加入 channels
+    "channels": [
+      "http://static.bolin.site/channel_v3.json",
+      "https://gist.githubusercontent.com/nick1m/660ed046a096dae0b0ab/raw/e6e9e23a0bb48b44537f61025fbc359f8d586eb4/channel_v3.json"
+    ]
+
 	```
 
 9. 添加后可查看配置 preferences -- package settings -- package control -- user
@@ -105,8 +110,12 @@ win10下侧边栏和底部状态栏，中文出现乱码，变成口字方块
 
 package control 安装不了插件
 1. 下载 channel_v3.json
-2. 修改package control配置，添加channel
+2. 修改package control配置，添加channels
 ```
-  "D:\\channel_v3.json", # 百度云有备份
-  "http://static.bolin.site/channel_v3.json",
+  // 打开package control的设置文件: 首选项 -- 插件设置 -- package control -- 用户设置
+  // 加入 channels
+  "channels": [
+    "D:\\channel_v3.json", # 百度云有备份
+    "http://static.bolin.site/channel_v3.json",
+  ]
 ```

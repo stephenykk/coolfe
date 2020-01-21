@@ -34,6 +34,9 @@ curl是一种命令行工具，作用是发出网络请求，然后得到和提�
 
 - curl -G --data "login=xx&name=xx" localhost:7001  # GET请求并带参数
 
+- curl -X POST http://127.0.0.1:7001/form --data '{"name":"controller"}' --header 'Content-Type:application/json'   # 模拟发起 post 请求。
+  
+
 - curl -X POST --data-urlencode "val" url #指定请求方法 并带参数(*会把参数urlencode*)
 - curl -X POST --data "val" url  #指定请求方法 并带参数(*不会把参数urlencode*)    --data 同 -d
    ```shell

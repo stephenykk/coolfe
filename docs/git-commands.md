@@ -346,4 +346,15 @@ Git远程仓库管理
 - remote origin 用git协议的url, push操作时，提示 *Connection reset by 13.229.188.59 fatal: Could not read from remote repository.*  
   `git config --global credential.helper store` 记录上次的密码 不用每次都输入啦！ 
 - 遇到warning: LF will be replaced by CRLF警告  
-   修改git全局配置，禁止git自动将LF转化成CRLF。命令是：git config --global core.autocrlf false
+   `git config --global core.autocrlf false` 修改git全局配置，禁止git自动将LF转化成CRLF。
+   
+    #AutoCRLF#提交时转换为LF，检出时转换为CRLF
+    git config --global core.autocrlf true#提交时转换为LF，检出时不转换
+    git config --global core.autocrlf input   
+    #提交检出均不转换
+    git config --global core.autocrlf false#SafeCRLF#拒绝提交包含混合换行符的文件
+    git config --global core.safecrlf true#允许提交包含混合换行符的文件
+    git config --global core.safecrlf false#提交包含混合换行符的文件时给出警告
+    git config --global core.safecrlf warn
+    
+    > git config 有三个作用域system，globe，local。优先级是local>globe>system。

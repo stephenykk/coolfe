@@ -12,7 +12,7 @@ react特点
 
 简单示例
 
-```
+```html
 <!DOCTYPE html>
 <html>
 <head>
@@ -46,7 +46,7 @@ ReactDOM.render(
 ---
 使用 `create-react-app` 快速构建 React 开发环境
 
-
+[react入门教程](http://www.ruanyifeng.com/blog/2015/03/react.html)
 
 
 redux

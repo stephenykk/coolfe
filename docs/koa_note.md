@@ -131,7 +131,8 @@ keys被传递给 KeyGrip，但是你也可以传递你自己的 KeyGrip 实例
     });
 ```
 
-> ctx 上的许多属性都是使用Object.defineProperty() 定义的getter ，setter。你只能通过在 app.context 上使用 Object.defineProperty() 来编辑这些属性（不推荐）。
+> ctx 上的许多属性都是使用Object.defineProperty() 定义的getter ，setter。你只能通过在 app.context 上使用 Object.defineProperty() 来编辑这些属性（不推荐）。 
+> Object.definedProperty(obj, propName, {value, enumerable, writable, configurable, get, set})
 
 错误处理
 ---

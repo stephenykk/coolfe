@@ -10,7 +10,7 @@ ls.stdout.on('data', data => {
     console.log('stdout:', data);
 });
 
-ls.stderr.on('data', data => {
+ls.stderr.on('error', data => {
     console.log('stderr:', data);
 });
 

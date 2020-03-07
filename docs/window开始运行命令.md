@@ -36,8 +36,8 @@ Windows的命令列模式下有个非常好用的命令叫做Control。这个命
 命令和参数 | 说明
 ---------- | -----
 control admintools | 系统管理工具
-control system | 系统属性
-control desktop | 桌面属性-个性化
+control system | 系统属性 *查看操作系统 cpu 和 内存*
+control desktop | 桌面属性-个性化 修改桌面背景 *和desk.cpl不同*
 control folders | 文件夹选项
 control keyboard | 键盘属性
 control mouse  | 鼠标属性

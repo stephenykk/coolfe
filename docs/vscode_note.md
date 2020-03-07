@@ -151,8 +151,11 @@ ctrl + k, ctrl + t 选择主题
 - turbo console log
 - bookmarks
 - project manager
-- select bracket
 - vetur
+- beautify
+- bracket select
+- Highlight Matching Tag
+- Quick and Simple Text Select
 
 emmet
 ---

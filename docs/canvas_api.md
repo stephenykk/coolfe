@@ -403,3 +403,17 @@ ctx.restore();
 ```
 ### 缩放（scale）
 `ctx.scale(xScale, yScale)` 以坐标原点为中心缩放canvas(实际是整个坐标系缩放了)
+
+
+### 转换 (transform)
+
+`ctx.setTransform(m11, m12, m21, m22, dx, dy)` 
+
+了解一下矩阵乘法，就能更好的理解，各个参数是如何起作用的了
+
+[参数矩阵图](https://atts.w3cschool.cn/attachments/image/20170619/
+mayuan_juzheng.png)
+
+```js
+cxt.transform (1,0,0,1,dx,dy) // 同 cxt.translate(dx,dy)
+cxt.transform(m11,0,0,m22,0,0) // 同cxt.scale(m11,m22)

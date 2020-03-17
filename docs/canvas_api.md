@@ -334,86 +334,338 @@ img.onload = function() {
 // ctx.drawImage(imageEle, 0, 0) // 写到目标位置
 // drawImage(image, x, y, width, height) // 画入时缩放大小 跟原图比例不一致，会变形
 // drawImage(image, sx, sy, sWidth, sHeight, dx, dy, dWidth, dHeight) // 切片并缩放写入目标位置
-
-
 ```
 
 ## 变形
+
 绘制复杂图形就必不可少的方法
 
 ```js
-ctx.save() // 保存 canvas 状态
-ctx.restore() // 恢复 canvas 状态
-
+ctx.save(); // 保存 canvas 状态
+ctx.restore(); // 恢复 canvas 状态
 ```
-Canvas 的状态就是当前画面应用的所有样式和变形的一个快照。  
 
-Canvas 状态是以堆(stack)的方式保存的，每一次调用 save 方法，当前的状态就会被推入堆中保存起来。 
+Canvas 的状态就是当前画面应用的所有样式和变形的一个快照。
 
-*这种状态包括*
-1. 当前应用的变形（即移动，旋转和缩放） 
-2. strokeStyle, fillStyle, globalAlpha, lineWidth, lineCap, lineJoin, miterLimit, shadowOffsetX, shadowOffsetY, shadowBlur, shadowColor, globalCompositeOperation 的值. 
-3. 当前的裁切路径（clipping path） 
+Canvas 状态是以堆(stack)的方式保存的，每一次调用 save 方法，当前的状态就会被推入堆中保存起来。
+
+_这种状态包括_
+
+1. 当前应用的变形（即移动，旋转和缩放）
+2. strokeStyle, fillStyle, globalAlpha, lineWidth, lineCap, lineJoin, miterLimit, shadowOffsetX, shadowOffsetY, shadowBlur, shadowColor, globalCompositeOperation 的值.
+3. 当前的裁切路径（clipping path）
 
 你可以调用任意多次 save 方法。 每一次调用 restore 方法，上一个保存的状态就从堆中弹出，所有设定都恢复。
 
 ```js
-ctx.fillStyle="red";
-ctx.fillRect(10,10,50,50);
+ctx.fillStyle = "red";
+ctx.fillRect(10, 10, 50, 50);
 ctx.save();
-ctx.fillStyle="blue";
-ctx.fillRect(20,20,30,30);
+ctx.fillStyle = "blue";
+ctx.fillRect(20, 20, 30, 30);
 ctx.restore();
-ctx.fillRect(30,30,10,10);
+ctx.fillRect(30, 30, 10, 10);
 ```
-
 
 **变形**  
-在Canvas中，变形包括移动、旋转、缩放、变形，跟CSS3中的2D转换类似。
+在 Canvas 中，变形包括移动、旋转、缩放、变形，跟 CSS3 中的 2D 转换类似。
+
 > 注意：原有内容不会受变形的影响，变形只是坐标变换，新绘制的图形就是在变换后的坐标轴里绘制的。
 
-
 ### 移动（translate）
-`ctx.translate(x, y)`  canvas的坐标原点移动到指定位置(实际是整个坐标系移动了)
+
+`ctx.translate(x, y)` canvas 的坐标原点移动到指定位置(实际是整个坐标系移动了)
+
+![translate](https://atts.w3cschool.cn/attachments/image/20170619/mayuan_tran1.jpg)
 
 ```js
-ctx.fillRect(0,0,100,100);
+ctx.fillRect(0, 0, 100, 100);
 ctx.save();
-ctx.translate(60,60);
-ctx.fillStyle="red";
-ctx.fillRect(0,0,100,100);
+ctx.translate(60, 60);
+ctx.fillStyle = "red";
+ctx.fillRect(0, 0, 100, 100);
 ctx.restore();
 ```
+
 ### 旋转（rotate）
-`ctx.rotate(angle)`  以坐标原点为中心旋转canvas(实际是整个坐标系旋转了) *角度(angle)，它是顺时针方向的，以弧度为单位的值*
+
+`ctx.rotate(angle)` 以坐标原点为中心旋转 canvas(实际是整个坐标系旋转了) _角度(angle)，它是顺时针方向的，以弧度为单位的值_
+
+![rotate](https://atts.w3cschool.cn/attachments/image/20170619/mayuan_rotate1.jpg)
 
 ```js
 ctx.beginPath();
-ctx.moveTo(0,50);
-ctx.lineTo(100,50);
+ctx.moveTo(0, 50);
+ctx.lineTo(100, 50);
 ctx.stroke();
 ctx.save();
-ctx.rotate(Math.PI/12);
-ctx.strokeStyle="red";
+ctx.rotate(Math.PI / 12);
+ctx.strokeStyle = "red";
 ctx.beginPath();
-ctx.moveTo(0,50);
-ctx.lineTo(100,50);
+ctx.moveTo(0, 50);
+ctx.lineTo(100, 50);
 ctx.stroke();
 ctx.restore();
 ```
-### 缩放（scale）
-`ctx.scale(xScale, yScale)` 以坐标原点为中心缩放canvas(实际是整个坐标系缩放了)
 
+### 缩放（scale）
+
+`ctx.scale(xScale, yScale)` 以坐标原点为中心缩放 canvas(实际是整个坐标系缩放了)
 
 ### 转换 (transform)
 
-`ctx.setTransform(m11, m12, m21, m22, dx, dy)` 
+`ctx.setTransform(m11, m12, m21, m22, dx, dy)`
 
 了解一下矩阵乘法，就能更好的理解，各个参数是如何起作用的了
 
-[参数矩阵图](https://atts.w3cschool.cn/attachments/image/20170619/
-mayuan_juzheng.png)
+![参数矩阵图](https://atts.w3cschool.cn/attachments/image/20170619/mayuan_juzheng.png)
 
 ```js
-cxt.transform (1,0,0,1,dx,dy) // 同 cxt.translate(dx,dy)
-cxt.transform(m11,0,0,m22,0,0) // 同cxt.scale(m11,m22)
+ctx.transform (1,0,0,1,dx,dy) // 同 ctx.translate(dx,dy)
+ctx.transform(m11,0,0,m22,0,0) // 同cxt.scale(m11,m22)
+ctx.transform(Math.cos(θ*Math.PI/180)，Math.sin(θ*Math.PI/180), -Math.sin(θ*Math.PI/180),Math.cos(θ*Math.PI/180)，0，0） // 同 context.rotate(θ)
+
+```
+
+## 合成与裁剪
+
+在我们绘制图形时，不同的图形会因为绘制的先后而有了层级关系。如果新绘制的图形和原有内容有重叠部分，在默认情况下，新绘制的图形是会覆盖在原有内容之上。
+
+我们可以利用 `globalCompositeOperation` 属性来改变新旧图形的合成方式。
+
+它共有 12 个值：
+
+> source 图形来源 即新绘的图形；destination 目标 即原有图形
+
+- source-over （默认值） 新图形会覆盖在原有内容之上 _在原有图形前面绘图_
+- source-in 新图形仅仅会出现与原有内容重叠的部分，其他区域都变成透明的。 _新图形上取交集_
+- source-out 只有新图形中与原有内容不重叠的部分会被绘制出来 _新图形上取补集_
+- source-atop 新图形中与原有内容重叠部分会被绘制，并覆盖于原有内容之上。 _新图形上取交集，并保留原图形_
+- xor 重叠部分会变成透明 _新旧图形并集 去掉交集_
+- destination-over 会在原有内容之上绘制新图形 _在原有图形后面绘图_
+- destination-in 原有内容与新图形重叠的部分会被保留，其他部分变成透明的 _旧图形上取交集_
+- destination-out 原有内容中与新图形不重叠的部分会被保留 _旧图形上取补集_
+- destination-atop 原有内容中与新图形重叠部分会被保留，并会在原有内容之上绘制新图形 _旧图形上取交集，并保留新图形_
+- lighter 两图形中重叠部分作加色处理 _交集部分 色彩混合_
+- darker 两图形重叠部分作减色处理
+- copy 只有新图形会被保留，其他都被清除掉 _新建模式_
+
+![globalCompsiteOperation示意图](https://atts.w3cschool.cn/attachments/image/20170619/mayuan_globalCompositeOperation.jpg)
+
+**裁切路径**
+
+裁切路径和普通的 canvas 图形差不多，不同的是它的作用是遮罩，用来隐藏没有遮罩的部分。
+
+如果和上面介绍的 globalCompositeOperation 属性作一比较，它可以实现与 source-in 和 source-atop 差不多的效果。最重要的区别是裁切路径不会在 canvas 上绘制东西，而且它永远不受新图形的影响。
+
+我们用 clip 方法来创建一个新的裁切路径。默认情况下，canvas 有一个与它自身一样大的裁切路径（也就是没有裁切效果）。
+
+```js
+var image = new Image();
+image.src = "comic_girl.png";
+image.onload = function() {
+  ctx.beginPath();
+  ctx.arc(100, 100, 50, 0, Math.PI * 2, true);
+  ctx.clip(); // 裁剪路径
+  ctx.drawImage(image, 0, 0);
+};
+```
+
+## 像素操作
+
+### ImageData 对象
+
+ImageData 对象中存储着 canvas 对象真实的像素数据，它包含以下几个只读属性
+
+```js
+var imageData = ctx.createImageData(width, height); // 指定尺寸的ImageData对像 初始所有像素为透明黑色 [0,0,0,0]
+/* 
+    imageData = {
+        width: npx
+        height: npx
+        data: [dot1R, dot1G, dot1B, dot1A, dot2R, dot2G, ...] // 0 <= a <= 255
+    }
+    
+     */
+
+// 例子
+var imageData = ctx.createImageData(100, 100);
+// imageData.data.length === 40000
+var data = imageData.data;
+for (var i = 0; i < data.length; i += 4) {
+  // 一次处理一个像素的数据
+  data[i] = 255;
+  data[i + 1] = 0;
+  data[i + 2] = 0;
+  data[i + 3] = 255;
+}
+ctx.putImageData(imgData, 10, 10);
+
+// 创建与指定的另一个 ImageData 对象尺寸相同的新 ImageData 对象（不会复制图像数据）：
+var newImageData = cxt.createImageData(imageData);
+```
+
+获取画布指定区域的像素数据  
+`cxt.getImageData(x,y,width,height);`
+
+颜色反转效果  
+![颜色反转](https://atts.w3cschool.cn/attachments/image/20170619/mayuan_getImageData.jpg)
+
+```js
+var img = new Image();
+img.src = 'comic_girl.png'
+img.onload = function() {
+    ctx.drawImage(img, 10, 10)
+    var imageData = ctx.getImageData(10, 10, 200, 300)
+    var data = imageData.data
+    for(var i =0; i<data.length; i+= 4) {
+        data[i] = 255 - data[i]
+        data[i+1] = 255 - data[i+1]
+        data[i+2] = 255 - data[i+2]
+        data[i+3] = 255
+    }
+
+    ctx.putImageData(imageData, 230, 100)
+}
+```
+
+在画布中写入像素数据
+
+`cxt.putImageData(imgData,x,y,dirtyX,dirtyY,dirtyWidth,dirtyHeight);`
+
+
+## 保存文件
+用canvas.toDataURL()这个方法把canvas绘制的图形生成一幅图片
+
+```html
+<a id="download" download="foo.jpg">下载</a>
+<canvas id="mycanvas"></canvas>
+<script>
+    var $ = function(id) {return document.getElmentById(id)}
+    var canvas = $('mycanvas')
+    var a = $('download')
+    var dataUrl = canvas.toDataURL()
+    
+    a.setAttribute('download', 'comicGirl.jpg')
+    a.setAttribute('href', dataUrl)
+</script>
+
+```
+
+
+## 基础动画
+实现动画，我们首先想到的肯定是setTimeout和setInterval，这两个在这里就不细说了。
+
+除了这两个外，我们还可以使用window.requestAnimationFrame()这个方法。
+
+requestAnimationFrame 是专门为实现高性能的帧动画而设计的一个API
+
+> window.requestAnimationFrame()这个方法是用来在页面重绘之前，通知浏览器调用一个指定的函数，以满足开发者操作动画的需求。这个方法接受一个函数为参，该函数会在重绘前调用。   
+注意: 如果想得到连贯的逐帧动画，requestAnimationFrame(callback) callback函数中必须重新调用 requestAnimationFrame()。
+
+```js
+var requestId = window.requestAnimationFrame(callback)
+window.cancelAnimationFrame(requestId)
+```
+
+抽奖例子
+```js
+var canvas = document.getElementById("canvas");
+var ctx = canvas.getContext("2d");
+var canvasHide = document.createElement("canvas");
+var ctxHide = canvasHide.getContext("2d");
+
+canvasHide.width = canvasHide.height = 500;
+
+
+//加载多个图片
+function loadImages(urls, callback) {
+  var promises = urls.map(
+    url =>
+      new Promise(function(resolve) {
+        var image = new Image();
+        image.onload = function() {
+          resolve(image);
+        };
+      })
+  );
+
+  Promise.all(promises).then(function(images) {
+    callback(images);
+  });
+}
+
+// 画背景
+function drawGameBg() {
+  loadImages(icons, function(images) {
+    var x = (y = 0);
+
+    for (var i = 0; i < icons.length; i++) {
+      ctxHide.drawImage(images[i], x * 100, y * 100, 100, 100);
+
+      if (i < 4) {
+        // [x=[0-4], y=0] icon [0-4]  画第一行
+        x++;
+      } else if (i >= 4 && i < 8) {
+        // [x=4, y=[1-4]]  icon[5-8] 画最后一列
+        y++;
+      } else if (i >= 8 && i < 12) {
+        // [x=[3-0], y=4] icon[9-12] 画最后一行
+        x--;
+      } else {
+        // [x=0, y=[3-0]] 画第一列
+        y--;
+      }
+    }
+  });
+}
+
+// var icons = Array(10).fill(1).map(function(v, i) { return 'game/image/' + i + '.png' })
+var icons = Array.from({ length: 10 }, function(v, i) {
+  return "game/image/" + i + ".png";
+});
+
+// 抽奖
+function lottery(){
+    var total = Math.floor(Math.random() * 10) + icons.length * 2;
+    
+    var count = 0;
+    
+    function move() {
+      var max = 400;
+    
+      var step = 100;
+    
+      if (x < max && y == 0) {
+        x += step;
+      } else if (x == max && y < max) {
+        y += step;
+      } else if (y == max && x > 0) {
+        x -= step;
+      } else if (x == 0 && y > 0) {
+        y -= step;
+      }
+    
+      ctx.clearRect(0, 0, 500, 500);
+    
+      ctx.drawImage(canvasHide, 0, 0, 500, 500);
+    
+      ctx.fillStyle = "rgba(0,0,0,.5)";
+    
+      ctx.fillRect(x, y, 100, 100);
+    
+      if (count > total) {
+        cancelAnimationFrame();
+      }
+    
+      count++;
+    
+      requestAnimationFrame(move);
+    }
+
+}
+
+drawGameBg();
+lottery();
+```
+

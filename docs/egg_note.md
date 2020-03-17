@@ -51,7 +51,7 @@ Koa和Express的设计风格非常类似，底层也共用一套HTTP基础库
 **Middleware**
 Koa的中间件和Express不同，Koa是洋葱圈模型(*层层深入，层层退出*)；Express是管道式模型(*一个接一个*)
 
-！[中间件执行顺序图](https://raw.githubusercontent.com/koajs/koa/a7b6ed0529a58112bac4171e4729b8760a34ab8b/docs/middleware.gif)
+![中间件执行顺序图](https://raw.githubusercontent.com/koajs/koa/a7b6ed0529a58112bac4171e4729b8760a34ab8b/docs/middleware.gif)
 
 **Context**
 Express只有request和response两个对象，Koa增加Context对象,作为这次请求的上下文对象(*koa1是中间件的this, koa2作为中间件第一个参数*)
@@ -167,7 +167,8 @@ Egg 内置 `static` 插件，默认映射 `/public/* --> app/public/*` 目录
             defaultViewEngine: 'nunjucks',
             mapping: {
                 '.tpl': 'nunjucks'
-            }
+            },
+            root: ['/data/act-static', path.join(__dirname, 'app/view')].join(',') // 查找模板文件的目录列表 逗号分隔
         }
     ```
 >  **注意是 config目录，不是 app/config目录**
@@ -316,7 +317,13 @@ Egg 内置 `static` 插件，默认映射 `/public/* --> app/public/*` 目录
 12. 配置文件
 写业务时候，不可避免的需要配置文件，框架提供了强大的配置合并功能
 
-- 支持根据环境变量加载对应配置，如 `config.local.js`, `config.prod.js`
+- 支持根据环境变量(EGG_SERVER_ENV)加载对应配置，如 `config.local.js`, `config.prod.js`  
+    ```js
+    config.env === 'local' //默认
+    // 执行 npm script: cross-env EGG_SERVER_ENV=pro egg-bin dev
+    // 则会加载 config.pro.js  config.env === 'pro'
+
+    ```
 - 应用、插件、框架都可以有自己的配置，将按顺序合并
 
 ### 单元测试
@@ -493,9 +500,9 @@ ctx.status === ctx.response.status
 Controller
 ---
 Controller基类拥有如下属性
-- ctx
-- app
-- config
+- ctx (ctx.helper)
+- app (app.config Controller Service)
+- config  (同 app.config)
 - service  应用所有的service
 - logger  为当前controller封装的logger对象
 
@@ -527,7 +534,7 @@ Service基类拥有的属性和访问方式，参考Controller基类
 
 Helper
 ---
-Helper提供实用工具函数，Helper自身也是一个类，拥有和Controller基类同样的属性，所以helper中也能访问请求上下文对象和全局应用对象
+Helper提供实用工具函数，Helper自身也是一个类，拥有和Controller基类同样的属性，所以helper中也能访问 ctx 和 app
 
 helper的获取方式
 
@@ -553,21 +560,110 @@ Config
 通过`app.config`获取应用配置，也可在`Controller`, `Service`, `Helper`上通过 `this.config`获取到config对象
 
     ```js
-        this.app
-        this.ctx
-        this.config // this is controller service
+        // 访问配置的方式
         app.config
-        ctx.helper.config
+        this.config // controller service helper 中访问config
+
+        // config.default.js默认配置 各个运行环境都会加载
+        // config.dev.js 开发环境配置 (执行npm script时 需要指定环境  cross-env EGG_SERVER_ENV=dev  egg-bin dev)
+
+        // 修改默认端口  config.default.js
+        config.cluster = {
+            listen: {
+                path: '',
+                port: 8000,
+                hostname: '0.0.0.0',
+            }
+        };
+
+        // 指定调用中间件 
+        config.middleware = ['robot', 'access']
+        // 配置中间件选项
+        config.robot = {blackList: [/baiduspider/i]}
+
+        // 配置logger
+        config.logger = {
+            "dir": path.join(__dirname, '../logs'),  // 日志文件目录
+            "encoding": "utf8",
+            "env": "dev",
+            "level": "INFO", // 日志级别  logger.debug(msg) debug日志不会记录
+            "consoleLevel": "INFO",
+            "disableConsoleAfterReady": true, // false 允许console.log输出到 stdout
+            "outputJSON": false,
+            "buffer": true,
+            "appLogName": "topic-api-web.log",
+            "coreLogName": "egg-web.log",
+            "agentLogName": "egg-agent.log",
+            "errorLogName": "common-error.log",
+            "coreLogger": {},
+            "allowDebugAtProd": false,
+            "type": "application"
+        }
+
+        // 自定义logger
+        config.customLogger = {
+            access: {file: path.join(__dirname, '../logs/access.log')}
+        }
+        
     ```
 
 Logger
 ---
 框架提供了强大的日志功能，方便地打印各种级别的日志到对应的日志文件中。   
+
+logger 默认不是输出到项目下logs文件夹的，需要配置一下
+```js
+    // config/config.default.js
+
+    exports.logger = {
+            consoleLevel: 'INFO',
+            dir: path.join(__dirname, '../logs')
+        }
+
+    /* 
+    {
+        "dir": "C:\\Users\\username\\logs\\topic-api",
+        "encoding": "utf8",
+        "env": "dev",
+        "level": "INFO",
+        "consoleLevel": "INFO",
+        "disableConsoleAfterReady": true, // disableConsoleAfterReady: false 允许输出到 stdout
+        "outputJSON": false,
+        "buffer": true,
+        "appLogName": "topic-api-web.log",
+        "coreLogName": "egg-web.log",
+        "agentLogName": "egg-agent.log",
+        "errorLogName": "common-error.log",
+        "coreLogger": {},
+        "allowDebugAtProd": false,
+        "type": "application"
+    }
+
+     */
+
+    // 自定义logger
+    config.customLogger = {
+        access: {file: path.join(__dirname, '../logs/access.log')}
+    }
+
+    // 调用自定义logger
+    this.app.getLogger('access').info('some msg')
+
+```
+
 logger对象的方法:
 - logger.debug()
 - logger.info()
 - logger.warn()
 - logger.error();
+
+```js
+    logger.info('query data: %j', data); // 打印对象
+    logger.error(new Error('some error')); // 打印错误
+    logger.error('this is error: %j', new Error('some error')); // 不能这样打印错误
+    logger.info('num: %d, str: %s, data: %j', 10, 'hello', {go: 'good'})
+
+```
 
 框架提供了多个logger对象:
 - App Logger   

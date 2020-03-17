@@ -58,16 +58,21 @@ linux关机
 ```
   shutdown -h 1 'machine will shutdown in 1 minute' # -h halt
   shutdown now # 马上关机
+  shutdown -r now # 马上重启 同 reboot
   shutdown -r +5 # 5分钟后重启
-  shutdown -r now # 马上重启 
-  reboot # 同 shutdown -r now
   shutdown -h 20:24 # 某时间点关机
+  shutdown -h now # 马上关机 同 halt
   shutdown -c # 取消定时关机
-  halt # 关机 同 shutdown -h now
   poweroff # 关机
   init 0 # 关机
   init 6 # 重启
 ```
+
+> shutdown 和  halt的区别  
+halt 执行时﹐杀死应用进程﹐执行sync系统调用﹐文件系统写操作完成后就会停止内核，要手动关闭电源  
+shutdown 会停止应用进程 卸载文件系统 然后关闭电源
+
+
 
 
 linux系统目录结构
@@ -163,6 +168,29 @@ linux文件基本属性
 
 > 文件所有者以外的用户又可以分为文件所有者的同组用户和其他用户。  对于 root 用户来说，一般情况下，文件的权限对其不起作用。
 
+```bash
+cat /etc/group | sort  #查看用户组    sort 按字母排序 group_name:passwd:GID:user_list
+cat /etc/passwd | sort #查看用户信息
+whoami # 查看当前登录用户
+groups <user> # 查看当前登录用户/指定用户 属于哪些组 如 groups root
+ls /etc/sudoers.d #sudo用户列表
+
+# 不同用户有不同权限 若没有x权限不能打开目录
+cd /opt
+mkdir myfolder
+ll
+chown pan myfolder
+chmod g-x,o-x myfolder
+su test
+cd myfolder # test用户没有x权限 所以打不开文件夹
+
+
+alias # 查看别名
+
+su - <user> # 切换用户 工作目录也切换到新用户的home目录
+su <user> # 只切换用户
+
+```
 
 ### 更改文件属性
 

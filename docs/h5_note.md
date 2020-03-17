@@ -5,8 +5,9 @@ FormData
 ---
 XMLHttpRequest Level 2 添加了一个新的接口——FormData。利用 FormData 对象，我们可以通过 JavaScript 用一些键值对来模拟一系列表单控件，我们还可以使用 XMLHttpRequest 的 send() 方法来异步的提交表单。与普通的 Ajax 相比，使用 FormData 的最大优点就是我们可以异步上传二进制文件。
 
-### 创建一个FormData对象
+### 创建FormData对象
 
+```js
 	var formData = new FormData();
 	// 字段的值可以是一个 Blob 对象，File对象或者字符串，剩下其他类型的值都会被自动转换成字符串
 	formData.append('name', 'sandy');
@@ -15,19 +16,21 @@ XMLHttpRequest Level 2 添加了一个新的接口——FormData。利用 FormDa
 	var xhr = new XMLHttpRequest();
 	xhr.open('POST', 'http://a.com/test.php');
 	xhr.send(formData);
+```
 
 ### 使用HTML表单来初始化一个FormData对象
 可以用一个已有的 form 元素来初始化 FormData 对象，只需要把这个 form 元素作为参数传入 FormData 构造函数即可：
-
+```js
 	var formData = new FormData(document.getElementById('myform'));
 	// 可以通过这种方式添加一些不想让用户编辑的固定字段,然后再发送.
 	formData.append('other', 'some data');
 	var xhr = new XMLHttpRequest();
 	xhr.open('POST', 'test.php');
 	xhr.send(formData);
+```
 
 ### 使用FormData对象发送文件
-
+```html
 	<form enctype="multipart/form-data" method="post" name="fileInfo">
 		<label>email:</label>
 		<input type="email" autocomplete="on" autofocus name="userEmail" required size="30" maxlength="12" />
@@ -38,7 +41,7 @@ XMLHttpRequest Level 2 添加了一个新的接口——FormData。利用 FormDa
 	</form>
 	<div id="output"></div>
 	<a href="javascript: sendForm();">upload file</a>
-
+	<script>
 	function sendForm() {
 		var output = document.querySelector('#output');
 		var formData = new FormData(document.forms.namedItem('fileInfo'));
@@ -55,10 +58,12 @@ XMLHttpRequest Level 2 添加了一个新的接口——FormData。利用 FormDa
 		xhr.send(formData);
 	}
 
-还可以不借助 HTML 表单，直接向 FormData 对象中添加一个 File 对象或者一个 Blob 对象：
+	// 还可以不借助 HTML 表单，直接向 FormData 对象中添加一个 File 对象或者一个 Blob 对象：
 
 	formData.append('myfile', myBlob, 'myfile.txt');
+	</script>
 
+```
 
 XMLHttpRequest
 ---
@@ -99,3 +104,14 @@ XMLHttpRequest
 自定义请求头，需在 xhr.open() 之后，调用
 
 
+---
+
+HTML5新版本特性  
+
+- 淘汰过时的或冗余的属性
+- 脱离Flash 和Silverlight直接在浏览器中显示图形或动画 (*canvas audio video*)
+- 对本地离线存储的更好的支持 (*Indexed DB本地存储功能 , localStorage, sessionStorage*)
+- 新的特殊内容元素，比如 article、footer、header、nav、section
+- 新的表单控件，比如 calendar、date、time、email、url、search
+- 一个HTML5文档到另一个文档间的拖放功能
+- 提供外部应用和浏览器内部数据之间的开放接口

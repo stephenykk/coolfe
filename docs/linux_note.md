@@ -146,9 +146,11 @@ window下远程登录客户端有 `secureCRT`, `Putty`, `SSH Secure Shell`, `Xsh
 
 linux文件基本属性
 ---
-```
-  ls -al
-  ll
+
+```bash
+  ls -al # 长列表格式 显示所有文件 包括 . ..
+  ls -R # 递归地显示子目录内容
+  ll # 同 ls -l
 ```
 
 文件类型|属主权限|属组权限|其他用户的权限  
@@ -168,56 +170,74 @@ linux文件基本属性
 
 > 文件所有者以外的用户又可以分为文件所有者的同组用户和其他用户。  对于 root 用户来说，一般情况下，文件的权限对其不起作用。
 
+
 ```bash
-cat /etc/group | sort  #查看用户组    sort 按字母排序 group_name:passwd:GID:user_list
-cat /etc/passwd | sort #查看用户信息
+cat /etc/group | sort  #查看用户组 (sort表示按字母排序) group_name:passwd:GID:user_list (passwd 为 x 表示加密)
+cat /etc/passwd | sort #查看用户信息 user_name:passwd:uid:gid:group_name:home_dir:default_shell
+cat /etc/gshadow  # 用户组的密码文件 group_name:passwd 密码是加密的
+cat /etc/shadow  # 用户的密码文件 user_name:passwd
+
 whoami # 查看当前登录用户
 groups <user> # 查看当前登录用户/指定用户 属于哪些组 如 groups root
 ls /etc/sudoers.d #sudo用户列表
 
 # 不同用户有不同权限 若没有x权限不能打开目录
+sudo adduser test # 创建用户test
+# sudo deluser test --remove-home  删除用户和用户的主目录
 cd /opt
 mkdir myfolder
-ll
-chown pan myfolder
-chmod g-x,o-x myfolder
-su test
-cd myfolder # test用户没有x权限 所以打不开文件夹
+ll # 查看
+chown pan myfolder # 修改所有者为pan
+chmod g-x,o-x myfolder #同组和其他组的用户 取消执行权限
+su test # 切换到test用户
+cd myfolder # test用户没有myfolder的执行权限 所以打不开文件夹
 
 
 alias # 查看别名
 
-su - <user> # 切换用户 工作目录也切换到新用户的home目录
+su - <user> # 切换用户 工作目录也切换到目标用户的home目录
 su <user> # 只切换用户
 
+
+tar -zxvf demo.tar.gz -C /home/pan # 解压到指定路径下
+
 ```
+
+
 
 ### 更改文件属性
 
 chgrp更改文件属组
 
-```
-chgrp [-R] 属组名 文件名
+```bash
+# chgrp [-R] 属组名 文件名
+chgrp pan tmpdir
 ```
 
 chown更改文件所有者，也可同时属组
+```bash
+# chown [–R] 属主名 文件名
+# chown [-R] 属主名:属组名 文件名
+chown test:test tmpdir
 ```
-chown [–R] 属主名 文件名
-chown [-R] 属主名：属组名 文件名
-```
-
 
 chmod更改文件权限  
 Linux文件属性有两种设置方法，一种是数字，一种是符号。
 
-```
-  chmod -R 700 hello
-  chmod -R u+x hello // 属主+x权限
-  chmod -R o-x hello // 其他用户-x权限
-  chomd -R g+w hello // 属组+w权限
-  chmod -R a+w hello // 所有用户+w权限
-  chmod -R u=rxw hello // 设置所有者的权限
-  chmod -R u=rxw,g=r,o=w hello //设置三种用户的权限
+符号:
+- a = all
+- u = user 所有者
+- g = group
+- o = other
+
+```bash
+  chmod -R 700 hello # 用数字指定权限 相对方便
+  chmod -R u+x hello # 属主+x权限
+  chmod -R o-x hello # 其他用户-x权限
+  chomd -R g+w hello # 属组+w权限
+  chmod -R a+w hello # 所有用户+w权限
+  chmod -R u=rxw hello # 设置所有者的权限
+  chmod -R u=rxw,g=r,o=w hello #设置三种用户的权限 (注意逗号分隔)
 
 ```
 
@@ -225,7 +245,7 @@ linux文件和目录管理
 ---
 Linux的目录结构为树状结构，最顶级的目录为根目录 /
 
-- **绝对路径**  从根目录开始 `/home/pan`
+- **绝对路径**  从根目录开始 `/home/pan`, `/media/pan`
 - **相对路径**  `./pan` or `../pan`
 
 目录管理命令
@@ -242,34 +262,48 @@ Linux的目录结构为树状结构，最顶级的目录为根目录 /
 > man ls 查看帮助文档
 
 列出目录
-```
+
+```bash
   ls -a  # 全部文件，连同.开头的隐藏文件
   ls -d # 显示目录自身，而不是目录的内容
-  ls -l # 长格式显示文件内容，包含文件的属性和权限等
+  ls -l # 长格式显示文件内容，包含文件的权限、大小和修改时间等
 ```
 
 切换目录
-```
+
+```bash
   cd /root/hello
   cd ./foo
   cd ~ # 用户的主目录
-  cd   # 不带参数 则返回用户主目录
+  cd   # 不带参数 同上 则返回用户主目录
   cd - # 返回之前的目录
   cd .. # 上级目录
 ```
 
 
 显示当前目录
-```
+```bash
   pwd 
   pwd -P #显示真实路径，而非链接文件的路径
+  
+  # 例子
+  cd ~
+  ln -s Music mp3 #创建软链接 mp3
+  cd mp3
+  pwd -P
+  
 ```
 
 创建目录
-```
+```bash
 mkdir dirname
 mkdir -m 711 dirname #配置文件的权限喔！直接配置，不需要看默认权限 (umask) 的脸色～
 mkdir -p path/to/you/want #创建多层目录
+
+cd path/to/you/want
+touch hello
+rm -rf path/to/you/wan/*
+rmdir -p path/to/you/want # rmdir 不能删除非空目录 所以要先用 rm
 ```
 
 磁盘管理
@@ -292,7 +326,7 @@ mkdir -p path/to/you/want #创建多层目录
   -a：列出所有的文件与目录容量，因为默认仅统计目录底下的文件量而已。
   -h：以人们较易读的容量格式（G / M）显示;
   -s：列出总量而已，而不列出每个各别的目录占用容量;
-  -S：不包括子目录下的总计，与-s有点差别。
+  -S：不包括子目录下的总计(*当前目录下文件的总大小*)，与-s有点差别。
   -k：以KBytes列出容量显示;
   -m：以MBytes列出容量显示;
   
@@ -309,7 +343,71 @@ mkdir -p path/to/you/want #创建多层目录
   若系统掉电或磁盘发生问题，可用fsck进行检查, 详细用法见 `fsck -h`
 
 + 磁盘挂载(mount)或卸载(unmount)  
-  `mount -L label -t 文件系统类型  挂载点`    
+  `mount -L label -t 文件系统类型  挂载点`
   `unmount -fn 设备文件名或挂载点` 
 
 
+定时任务
+---
+crontab命令(cron table)，它是cron的配置文件，也可以叫它作业列表，我们可以在以下文件夹内找到相关配置文件。
+
+- /var/spool/cron/ 目录下存放的是每个用户包括root的crontab任务，每个任务以创建者的名字命名
+- /etc/crontab 这个文件负责调度各种管理和维护任务。
+- /etc/cron.d/ 这个目录用来存放任何要执行的crontab文件或脚本。
+
+> 我们还可以把脚本放在/etc/cron.hourly、/etc/cron.daily、/etc/cron.weekly、/etc/cron.monthly目录中，让它每小时/天/星期、月执行一次。
+
+```bash
+crontab [-u username]　　　　#省略用户 表示操作当前用户的crontab
+    -e      (编辑工作表)
+    -l      (列出工作表里的命令)
+    -r      (删除工作作)
+
+
+crontab -e  # 编辑定时任务
+
+# 语法 
+分 时 日 月 周 cmd
+
+# 例子
+
+# 每1分钟执行一次myCommand 
+# 默认不支持秒级别执行频率
+* * * * * myCommand
+# 每小时的第3和第15分钟执行
+3,15 * * * * myCommand
+# 在上午8点到11点的第3和第15分钟执行
+3,15 8-11 * * * myCommand
+# 每隔两天的上午8点到11点的第3和第15分钟执行
+# * == */1 执行30次 每天1次 ,  而 */2 代表 12次，每2天执行1次
+3,15 8-11 */2  *  * myCommand
+# 每周一上午8点到11点的第3和第15分钟执行
+3,15 8-11 * * 1 myCommand
+# 每晚的21:30重启smb
+30 21 * * * /etc/init.d/smb restart
+# 每月1、10、22日的4 : 45重启smb
+45 4 1,10,22 * * /etc/init.d/smb restart
+# 每周六、周日的1 : 10重启smb
+10 1 * * 6,0 /etc/init.d/smb restart
+# 每天18 : 00至23 : 00之间每隔30分钟重启smb
+0,30 18-23 * * * /etc/init.d/smb restart
+# 每星期六的晚上11 : 00 pm重启smb
+0 23 * * 6 /etc/init.d/smb restart
+# 每一小时重启smb
+* */1 * * * /etc/init.d/smb restart
+# 晚上11点到早上7点之间，每隔一小时重启smb
+* 23-7/1 * * * /etc/init.d/smb restart
+```
+
+常用命令
+---
+```bash
+type curl # 查看命令的类型 *可以用来确认有没有这个命令*
+type echo
+type ifconfig 
+
+which mongo # 查看应用安装在哪里
+whereis mongo
+
+
+```

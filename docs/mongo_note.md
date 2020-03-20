@@ -63,8 +63,85 @@ mongo #连接本地mongodb
 show dbs
 use book
 db.books.insert({name: 'two cities', price: 12}) # 创建collection, 添加1条数据
+db.users.insert([{"_id":1,"name":"tom","age":21},{"_id":2,"name":"joe","age":22},{"_id":3,"name":"bob","age":22}]) # 可批量添加
 # db.createCollection('books') # 显式地创建collection
 db.stats()
+
+# 查询
+db.users.find({age: 12}) # 返回列表 同 db.users.find({age: {$eq: 12}})
+db.users.find({name: {$ne: 'tom'}})
+db.users.findOne({age: 12}) # 只返回一个
+
+db.blogs.find({"author":"张三","title":"MongoDB简介"})
+db.blogs.find({"readCount":{"$gte":200,"$lt":1000}})
+db.blogs.find({"$or":[{"author":"张三"},{"author":"李四"}]})
+db.blogs.find({"tags":{"$in":["NoSQL","数学"]}})
+# 注：not in操作
+db.blogs.find({"tags":{"$nin":["NoSQL","数学"]}})
+db.blogs.find({"content": /hello/})
+db.blogs.find({"tags":{"$all":["story","rule"]}}) # tags同时包含story 和 rule
+db.blogs.find({"tags.0":"MongoDB"}) # tags[0] == MongoDB 的
+db.blogs.find({"tags":{"$size":3}}) # tags有3个元素的
+
+db.blogs.find({"comment.name":"Jack"}) #查询内嵌文档
+# 注：skip()、limit()、sort()，分别表示略过文档的数量，匹配的数量和排序（1表示正序，-1表示倒序）
+db.blogs.find({}).skip(2).limit(2).sort({"readCount":-1})
+
+# 单文档更新
+db.users.update({"name":"bob"},{$set:{"age":23}}) # 更新匹配第一个文档的 age字段
+db.users.update({"name":"bob"},{"age":23}) # 替换匹配第一个文档为新文档 {age: 23} objectId不变
+
+# 多文档更新
+# 集合的所有文档 加新字段
+db.users.update({},{$set:{"hobby":"write"}},false,true)  # 第三个参数为是否启用特殊更新，第四个为是否更新所有匹配的文档；
+
+
+# 把 userA hobby属性改成string数组类型
+db.users.update({"_id":0},{"$set":{"hobby":["write","read","paly ping-pong"]}})
+
+# 删除 userB 的 hobby字段
+db.users.update({"_id":1},{"$unset":{"hobby":1}}) # 1表示彻底删除这个键值对
+
+# 全部用户年龄+1
+db.users.update({},{"$inc":{"age":1}},false,true) # 别忘了将第四个参数置为true
+
+# 给 userA 加新的爱好
+db.users.update({"_id":0},{"$push":{"hobby":"swim"}}) # hobby必须是一个数组，所以你在其他文档上使用是不会成功的
+
+# 给 userA 去掉 read爱好
+db.users.update({"_id":0},{"$pull":{"hobby":"read"}}) #它会移除数组中所有匹配到的“read”元素
+# 移除 首/尾 元素
+db.users.update({"_id":0},{"$pop":{"hobby":1}}) # 表示移除hobby中的最后一个元素，为-1表示移除第一个元素
+
+
+db.users.stats() # 查看collection信息
+
+
+db.users.remove({"_id":{"$lte":1}}) # 删除“_id”的值小于等于1的所有文档
+db.users.remove() # 清空集合 db.users.drop()  更快
+
+
+# 索引
+db.users.createIndex({ "username" : 1 }) # 添加索引能大幅的提高查询速度 索引方向：1表示升序，-1表示降序
+db.users.createIndex({ "username" : 1, "age" : -1, "userid" : 1 })  # 在“username”、“age”和“userid”上建立复合索引
+
+db.users.createIndex({"username" : "text"}) # 文本索引
+db.users.createIndex({"username" : "hashed"}) # 哈希索引
+
+db.users.createIndex({"username" : 1}, {"unique" : true}) # 唯一索引
+# 在“createdate”字段上建立一个TTL索引，当这个字段存在并且是日期类型，当服务器时间比“createdate”字段的时间晚60*60*24秒，即24小时，文档就会被删除
+db.users.createIndex({ "createdate" : 1 },{ "expireAfterSecs" : 60*60*24 }) # TTL（Time-To-Live）索引
+db.users.createIndex({"age" : 1},{"sparse" : true}) # 稀疏索引
+
+# 查看索引
+db.users.getIndexes()
+# 移除索引
+db.users.dropIndex({"createdate1" : 1 })
+# 移除所有索引
+db.users.dropIndexes()
+# 重建索引
+db.users.reIndex()
+
 ```
 
 恢复

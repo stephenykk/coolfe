@@ -224,7 +224,8 @@ Egg 内置 `static` 插件，默认映射 `/public/* --> app/public/*` 目录
     ```
 6. 访问 http://localhost:7001/news 预览
 
-**提示，开发期间默认开启 `development` 插件，修改代码后，会自动重启worker**
+> 提示，开发期间默认开启 `development` 插件[详见](https://eggjs.org/en/core/development.html#mobileAside)，修改代码后，会自动重启worker  
+需要 `config.env = local` development插件才会生效, `cross-env EGG_SERVER_ENV=local egg-bin dev` 这样也可以
 
 7. 编写 service 
     实际上 controller 一般不产生数据，业务逻辑通常在 service 中处理
@@ -604,8 +605,28 @@ Config
         config.customLogger = {
             access: {file: path.join(__dirname, '../logs/access.log')}
         }
+
+        // 配置session egg内置session插件
+        config.session = {
+            key: 'EGG_SESS',
+            maxAge: 24 * 3600 * 1000, // 1 天
+            httpOnly: true,
+            encrypt: true,
+            renew: true, // 延迟session的有效期
+        };
         
     ```
+
+session
+---
+egg内置session插件
+
+```js
+let count = ctx.session.count // 读取
+ctx.session.count = count + 1 // 设置
+ctx.session.count = null // 删除
+
+```
 
 Logger
 ---

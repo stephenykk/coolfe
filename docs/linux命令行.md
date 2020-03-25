@@ -8,6 +8,8 @@ ctrl + q # 关闭应用
 ctrl + alt + t # 打开终端
 win + a # 然后输入 terminal 同上
 ctrl + l # 清屏 同 clear
+shift + pageUp # 向上滚动bash命令行的内容
+shift + pageDown # 向下滚动bash命令行的内容
 ```
 
 

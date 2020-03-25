@@ -238,6 +238,7 @@ Egg 内置 `static` 插件，默认映射 `/public/* --> app/public/*` 目录
                 // read config
                 const {serverUrl, pageSize} = this.config.news;
                 // use build-in http client to GET hacker-news api
+                // curl get or post 都通过 data 传数据（get data === query)
                 const {data: idList} = await this.ctx.curl(`${serverUrl}/topstories.json`, {
                     data: {
                         orderBy: '"$key"',

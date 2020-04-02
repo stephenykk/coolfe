@@ -292,3 +292,56 @@ db.books.find({name: /java/}).sort({price: -1}).skip(10).limit(3)
 db.books.remove({})
 
 ```
+
+配置账号密码
+---
+
+添加管理员账号
+
+```bash
+> use admin
+switched to db admin
+> db.createUser({user:"admin",pwd:"hi",roles:["root"]})
+Successfully added user: { "user" : "admin", "roles" : [ "root" ] }
+
+```
+
+添加数据库账号(*同上 仅仅数据库不同*)
+```bash
+> use test
+> db.createUser({user: 'pan', pwd: '123', roles: [{role: 'dbOwner', db: 'test'}]}) # 设置角色为 dbOwner
+> db.auth('pan' , '123')
+
+```
+
+登录测试
+
+```bash
+> use admin
+> db.auth("admin", "hi")  # 1
+> use test
+> db.auth('admin', 'hi') # error
+# 用户有角色权限，刚创建的admin用户 只对 admin数据库有权限
+```
+
+ 查看所有用户
+```bash
+> use admin
+> db.system.users.find()
+{ "_id" : "admin.admin", "user" : "admin", "db" : "admin", "credentials" : { "SCRAM-SHA-1" : { "iterationCount" : 10000, "salt" : "ZZ65o/Xynxut0zp2F5ALiQ==", "storedKey" : "YJzQW7g/7hv17aEiR9fzXShpA/Q=", "serverKey" : "x3zNT9RY4HoyPQ0RNZDOo6qVVkM=" } }, "roles" : [ { "role" : "root", "db" : "admin" } ] }
+{ "_id" : "test.pan", "user" : "pan", "db" : "test", "credentials" : { "SCRAM-SHA-1" : { "iterationCount" : 10000, "salt" : "O8ofiEd7FUgY2dJqRv9MMQ==", "storedKey" : "XpdW288aGLELuu4d3WxjXuU0U8A=", "serverKey" : "BH0px2JrTjfOCYp11Ci3yz8wOsQ=" } }, "roles" : [ { "role" : "dbOwner", "db" : "test" } ] }
+```
+
+删除用户   
+
+```bash
+# 删除用户的时候需要切换到用户管理的数据库才可以删除
+> use test
+> db.dropUser('pan')
+# 验证
+> db.auth('pan', '123')
+# 查看用户
+> use admin
+> db.system.users.find()
+
+```

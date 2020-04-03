@@ -1,3 +1,2 @@
 # mongoose 教程
-
-[深入浅出 mongoose](https://www.cnblogs.com/chris-oil/p/9142795.html) _包括 mongoose 基本所有操作,非常实用!_
+[mongoose使用教程](https://www.cnblogs.com/chris-oil/p/9145364.html) _比较清晰_

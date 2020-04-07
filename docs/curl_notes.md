@@ -46,7 +46,7 @@ curl -X POST --data "val" url #指定请求方法 并带参数(_不会把参数 
 # -d 参数用于发送 POST 请求的数据体。
 curl -d 'login=emma&password=123' -X POST https://google.com/login
 # 可用多个-d发送多个键值对数据
-curl -d 'login=emma' -d 'password=123' -X POST  https://google.com/login  
+curl -d 'login=emma' -d 'password=123' -X POST  https://google.com/login
 
 # 用-d参数以后，HTTP 请求会自动加上标头Content-Type : application/x-www-form-urlencoded。并且会自动将请求转为 POST 方法，因此可以省略-X POST。
 # -d参数可以读取本地文本文件的数据，向服务器发送。
@@ -65,13 +65,13 @@ curl --referer val url
 curl --cookie "name=xx" url
 
 # 返回的 cookie 保存为文件
-curl -c cookies.txt http://example.com 
+curl -c cookies.txt http://example.com
 
 # 发送 cookie 文件
-curl -b cookies.txt http://example.com 
+curl -b cookies.txt http://example.com
 
 # 增加请求头 同 curl -H val url , curl --header val url
-curl --head "content-type: application/json" url 
+curl --head "content-type: application/json" url
 
 # http 认证
 curl --user name:password url

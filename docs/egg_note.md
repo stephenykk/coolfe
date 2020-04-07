@@ -239,13 +239,25 @@ Egg 内置 `static` 插件，默认映射 `/public/* --> app/public/*` 目录
                 const {serverUrl, pageSize} = this.config.news;
                 // use build-in http client to GET hacker-news api
                 // curl get or post 都通过 data 传数据（get data === query)
+                // result = await ctx.curl(url, options) // options => {method, data, datType: 'json'}
+                /* result => {
+                    status: 200, 
+                    data: {},  
+                    headers: {'server', 'content-type', 'content-length', 'date', 'etag'}, 
+                    res: {// 这里包含更多的信息
+                        statusCode: 200, 
+                        statusMessage: 'OK', 
+                        headers: {'server', 'content-type', 'content-length', 'date', 'etag'}, 
+                        data: {}
+                    }
+                } */
                 const {data: idList} = await this.ctx.curl(`${serverUrl}/topstories.json`, {
                     data: {
                         orderBy: '"$key"',
                         startAt: `"${pageSize * (page - 1)}"`,
                         endAt: `"${pageSize * page -1}"`
                     },
-                    dataType: 'json'
+                    dataType: 'json' // 注意 一般需要指定期待返回的数据类型 不然会是 buffer 类型
                 });
 
                 // parallel GET detail

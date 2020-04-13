@@ -83,7 +83,7 @@ git commit
 ```bash    
     #一些文件在本地修改后，不希望commit到远端仓库，可以这样
     git add .
-    git commit -m "commit part of changes" -- folderName_or_fileName
+    git commit -m "commit part of changes" -- <folder/file>
 
     git commit --amend -m "new commit logs" #修改最后一次提交记录 (通常用来修改提交日志)
 ```
@@ -93,8 +93,8 @@ git show
 查看提交对象
 
 ```bash
-    git show {commit_id} # 显示某次提交的内容 git show $id
-    git show head #查看最新的提交
+    git show <commit_id> # 显示某次提交的内容 git show $id
+    git show head #查看最新的提交 同 git log -1 -p
     git show head^ #查看上次的提交
 ```
 

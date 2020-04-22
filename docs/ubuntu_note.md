@@ -50,6 +50,8 @@ HUD(*head up display*)和菜单栏:
 - `alt + 左键` 拖动窗口
 - `ctrl + w` 关闭当前应用的当前窗口
 - `ctrl + q` 关闭当前应用的所有窗口
+- `ctrl + alt + t` 打开终端
+- `ctrl + d` 关闭终端
 
 输入命令的方式
 ---

@@ -48,6 +48,7 @@ git log
 ```bash
     git log --since="1 day ago" #查看1天前到现在的提交日志
     git log --since "1 day ago" #同上 = 是可选的
+    git log --since "2019-01-03" --until "2019-01-04"  # 查看某时间段的提交日志
     
     git log -- somefile.html #查看某文件的更新历史
     git log <file> # 同上

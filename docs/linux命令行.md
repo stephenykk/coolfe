@@ -1,5 +1,6 @@
 # linux 命令行
 
+[每天一个linux命令](https://yelog.org/2016/12/01/linux-command%EF%BC%881%EF%BC%89-ls/)
 
 ## 快捷键
 
@@ -179,6 +180,10 @@ cp -r srcDir destDir # 复制文件夹
 ```bash
 rm file # 删除文件
 rm -rf dir # 删除文件夹 (注意:无法恢复)
+
+# 批量删除时，排除个别文件
+shopt -s extglob  # 开启extglob  -s 开启 -u 关闭   
+rm -rf !(dist.rar|node_modules)
 ```
 
 ### tail

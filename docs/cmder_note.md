@@ -17,6 +17,15 @@ cmder note
 
 	+ 关闭cmder，重新启动cmder，即可看到中文显示正常
 
+### 自定义aliases不生效问题
+win10下cmder很多命令history pwd无法使用，ls字体也没有颜色显示，其根本原因是win10下cmd控制台版本问题，切换回老版本就OK了
+1. 开始运行 cmd , 打开命令行
+2. 点击左上角标题，选择属性，勾选"使用旧版本控制台"
+3. 重新打开cmder
+4. alias 可查看当前别名定义
+5. win + alt + p 打开设置，Startup -- Environment 可自定义别名 如: `alias kk=echo hello kk`
+
+
 使用方法
 ---
 

@@ -291,7 +291,7 @@ Egg 内置 `static` 插件，默认映射 `/public/* --> app/public/*` 目录
         await ctx.render('news/list.tpl', {list: newsList});
     ```
 
-10. 编写扩展
+10. 编写扩展 _(扩展对象包括: application, context, request, response, helper)_ **注意: 不扩展controller service, 需自行实现**
     ```js
         // app/extend/helper.js
         exports.padZero = function(n) {

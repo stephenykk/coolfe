@@ -1,9 +1,17 @@
 git教程
 ================
 
-git clone
--------------
 
+git init
+---
+```bash
+    git init # 在当前目录初始化git仓库
+    git init <project_name> # 新建文件夹，并初始化git窗口
+```
+
+git clone
+---
+```bash
     //支持协议 http(s)://, ssh://, git://, file:///, ftp(s)://, rsync://
     git clone remote_repo <local_dir>?
     
@@ -11,47 +19,53 @@ git clone
     git clone git@github.com:stephenykk/test.git
 
     git clone -o jq https://github.com/jquery/jquery.git
+```
 
 ssh key
 ---
-    // 生成秘钥对
+   ```bash // 生成秘钥对
     ssh-keygen -t rsa -C "yourname@example.com"
     // 添加公钥到github后台后，验证秘钥可用
     ssh -T git@github.com
+    ```
     
 git remote
-------------
-
+---
+```bash
     git remote //=> jq
     git remote -v
     git remote add origin repo_url
     git remote rm origin
     git remote rename origin newOrigin
     git remote show origin # 显示origin仓库的详细信息
+```
 
 git fetch
--------------
-
+---
+```bash
     git fetch  //默认会取回所有分支的更新 所取回的更新，在本地主机上要用"远程主机名/分支名"的形式读取。比如origin主机的master，就要用origin/master读取
 
     git fetch <remote_repo> <branch_name> //只取回指定分支的更新
     git fetch origin master
 
     git checkout -b newBranch origin/master //在取回的远程分支(origin/master)的基础上， 创建分支
+```
 
 git merge
-----------
-    git merge origin/master
+---
+   ```bash git merge origin/master
     git rebase origin/master //合并 orgin/master到当前分支
+```
 
 git branch
------------
-    git branch -r //查看远程分支
+---
+   ```bash git branch -r //查看远程分支
     git branch -a //查看所有分支(包括远程和本地)
+```
 
 git pull
-----------
-    
+---
+   ```bash 
     git pull <远程主机名> <远程分支>:<本地分支>
     git pull origin next:master //比如，取回origin主机的next分支，与本地的master分支合并
 

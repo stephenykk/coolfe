@@ -10,7 +10,14 @@
 ```
 
 ## git config
-Git的设置文件为.gitconfig，它可以在用户主目录下（全局配置），也可以在项目目录下（项目配置）。
+git有三级配置文件，分别为:  
+
+- local   项目文件夹/.git/config
+- system  /etc/gitconfig
+- global ~/.gitconfig
+
+> local配置的内容优先级最高, 显示配置列表或编辑配置时，可指定配置文件级别(如: git config -l --global)
+
 ```bash
 # 显示当前的Git配置
 git config --list
@@ -19,13 +26,13 @@ git config --list
 git config -e (--global|--system|--local)
 
 # 设置提交代码时的用户信息
-git config [--global] user.name "[name]"
-git config [--global] user.email "[email address]"
+git config user.name "your name" # 同 git config --add user.name  "your name"
+git config user.email "your email"
 
-git config [--global] --add user.name "jie"
-git config [--global] --get user.name
-git config [--global] --get-all user.name
-git config [--global] --unset user.name
+git config --add user.name "jie"
+git config --get user.name
+git config --get-all user.name
+git config --unset user.name
 
 
 # 推送设置

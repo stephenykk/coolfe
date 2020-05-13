@@ -41,11 +41,11 @@ arr.concat(el1, el2, arr1) // => new arr, 参数为数组会自动展开
 ### 查元素/索引
 
 ```js
-arr.indexOf(el); // => index or -1
+arr.indexOf(el); // => index or -1 严格相等比较 [1].indexOf('1') => -1
 arr.lastIndexOf(el);
 arr.find(cb);
 arr.findIndex(cb);
-arr.includes(el);
+arr.includes(el); // 严格相等比较 [1].includes('-1') => false
 ```
 
 ### 其他
@@ -55,6 +55,8 @@ arr.fill(val);
 arr.join(sep);
 
 new Array(10).fill(1); // 生成指定数量元素的数组
+Array.from(new Set([1,2,2,1])); // => [1,2] 生成数组 去重
+
 ```
 
 ## Function

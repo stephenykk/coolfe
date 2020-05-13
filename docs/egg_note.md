@@ -1007,3 +1007,20 @@ class Schedule extends Subscription {
 ```
 
 插件开发者可以根据自己的需求基于它定制订阅规范，如定时任务就是使用这种规范实现的。
+
+### 踩坑记录
+
+```js
+// config/config.default.js
+
+
+cors: {
+    origin: function(ctx) {
+        // ctx.origin 和 ctx.get('origin') 居然是不同的！！！
+        // ctx.origin === ctx.request.origin
+        // ctx.get('origin') === ctx.request.header.origin
+        return ctx.get('origin')
+    }
+}
+
+```

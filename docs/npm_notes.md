@@ -16,7 +16,7 @@ npm_notes
 1. npm whoami  
    只有成功调用 `npm adduser` 后，才知道 whoami
 
-1. npm publish 
+1. npm publish  
    `npm adduser` 后，就可以发布自己的包了
 
 
@@ -29,6 +29,8 @@ npm_notes
 - npm set registry https://registry.npm.taobao.org   
 - npm config set registry https://registry.npm.taobao.org # 同上
 - npm c set registry https://registry.npm.taobao.org # 同上
+- npm set @mydomain:registry https://registry.mynpm.com # 为特定scope的包 指定镜像源
+- npm set myproj:port 9090  # 为myproj项目添加配置 通过环境变量 npm_package_config_port 访问
 
 - npm set hello test
 - npm config delete hello
@@ -62,11 +64,25 @@ package.json
      npm ls lodash
      cd myProject
      # 从全局目录的lodash链接到当前项目
-     npm link loash  
+     npm link loash
+
+     # 常用选项 -D (--save-dev) -P (--save-prod)
+     npm i vue -P
+     npm i webpack -D
+
+     # 安装本地的包
+     # npm i <folder>
+     mkdir ../bar
+     cd ../bar
+     npm init -y
+     echo console.log('hello') > index.js
+     cd ../foo
+     npm i ../bar
+     npm ls # 本地包链接到了当前项目 类似 npm link, 修改本地包代码，在当前项目能立即看到效果
    ```
 - npm i -g express # 全局安装
 
-查看已安装的包
+查看已安装的包(list , ls)
 ---
 - npm ls vue
 - npm list # 查看所有本地包
@@ -76,9 +92,9 @@ package.json
 
 
 
-查询包信息(view, list, ls)
+查询包信息(view , v , info)
 ---
-- npm view opn  # 包的摘要信息
+- npm view opn  # 包的摘要信息 包不需要安装在本地
 - npm view opn version # 包 package.json 具体字段查看
 - npm view opn author
 - npm view opn description
@@ -119,3 +135,70 @@ npm link
     cd my-project
     npm link lodash
 ```
+
+package-lock.json
+---
+`package-lock.json`保证其他人安装到一样的依赖。
+
+```shell
+# package-lock.json 不会被发布出去
+# package-lock.json 会被重命名为 shrinkwrap.json, shrinkwrap.json可以发布出去
+npm shrinkwrap
+
+```
+
+查看包的主页
+---
+```shell
+# 会用浏览器打开 npm v vue homepage
+npm home vue 
+```
+
+查看帮助
+---
+```shell
+# 查看npm的帮助文档(网页版)
+npm help npm
+
+# 查看某个命令的帮助
+npm help install
+
+```
+
+
+npm-scripts
+---
+```shell
+npm start
+npm stop
+npm test
+npm restart
+npm publish
+npm unpublish
+
+npm run dev
+npm run-script dev # 同上
+npm run myscript  # premyscript myscript postmyscript 都会被执行
+
+# 可以访问 package.json 的字段
+# "dev": "echo %npm_package_name%"
+
+# 可以访问 npm 的配置信息
+# npm set hi hello
+# "dev": "echo %npm_config_hi%"
+
+```
+
+npm explore <pkg>
+---
+```bash
+# 打开新的命令行，工作目录切换到依赖包根目录 _很方便_
+npm explore  lodash
+
+```
+
+常见问题
+- `npm install --unsafe-perm`  
+   npm 出于安全考虑不支持以 root 用户运行，即使你用 root 用户身份运行了，npm 会自动转成一个叫 nobody 的用户来运行，而这个用户几乎没有任何权限。这样的话如果你脚本里有一些需要权限的操作，比如写文件（尤其是写 /root/.node-gyp），就会崩掉了。
+
+   为了避免这种情况，要么按照 npm 的规矩来，专门建一个用于运行 npm 的高权限用户；要么加 --unsafe-perm 参数，这样就不会切换到 nobody 上，运行时是哪个用户就是哪个用户，即使是 root。

@@ -55,11 +55,46 @@ arr.fill(val);
 arr.join(sep);
 
 new Array(10).fill(1); // 生成指定数量元素的数组
-Array.from(new Set([1,2,2,1])); // => [1,2] 生成数组 去重
-
+Array.from(new Set([1, 2, 2, 1])); // => [1,2] 生成数组 去重
 ```
 
 ## Function
+
+### IIF 立即执行函数
+
+立即执行函数常用于创建独立的作用域，声明的变量不污染外部命名空间，或 返回闭包
+
+```js
+// 常用形式
+(function () {
+  console.log("call at once");
+  var ms = 200;
+  function hello() {
+    console.log("hello world");
+  }
+  return function foo() {
+    setTimeout(hello, ms);
+  };
+})();
+
++(function () {
+  console.log("call at once too");
+})();
+
+!(function () {
+  console.log("call at once too");
+})();
+```
+
+### 形参数量 和 函数名
+
+```js
+function sum(a, b) {
+  return a + b;
+}
+console.log(sum.length); // => 2
+console.log(sum.name); // sum
+```
 
 ### 具名函数
 
@@ -225,9 +260,255 @@ var sum = new Function("a", "b", "return a + b;");
 console.log(sum(10, 20)); // => 30
 
 // 获取全局对象
-var getGlobal = new Function('return this');
-console.log(getGlobal() === window) // in browser
+var getGlobal = new Function("return this");
+console.log(getGlobal() === window); // in browser
 
-var global = eval('this');
-console.log(global === window)
+var global = eval("this");
+console.log(global === window);
+```
+
+## Object
+
+Object 是普通对象的构造函数，它上面有很多有用的方法(_内省方法_)
+
+```js
+//--- Object.assign 合并对象
+// 将所有可枚举属性的值从一个或多个源对象复制到目标对象
+Object.assign({}, defData, newData);
+
+// 若 source包含getter, 要保证原样复制到目标，则应
+Object.defineProperties(target, Object.getOwnPropertyDescriptors(soruce));
+
+// 继承属性和不可枚举属性是不能拷贝的
+const obj = Object.create(
+  { foo: 1 },
+  {
+    // foo 是个继承属性。
+    bar: {
+      value: 2, // bar 是个不可枚举属性。
+    },
+    baz: {
+      value: 3,
+      enumerable: true, // baz 是个自身可枚举属性。
+    },
+  }
+);
+const copy = Object.assign({}, obj);
+console.log(copy); // { baz: 3 }
+
+// 原始类型会被包装为对象
+const v1 = "abc";
+const v2 = true;
+const v3 = 10;
+const v4 = Symbol("foo");
+const obj = Object.assign({}, v1, null, v2, undefined, v3, v4);
+// 原始类型会被包装，null 和 undefined 会被忽略。
+// 注意，只有字符串的包装对象才可能有自身可枚举属性。
+console.log(obj); // { "0": "a", "1": "b", "2": "c" }
+
+//--- deep clone
+var cloneData = JSON.parse(JSON.stringify(data));
+
+//--- Object.create(proto[, propertiesObject])
+// Object.create 以某个对象为原型创建对象
+var person = {
+  hello: function () {
+    console.log("hello! I am", this.name);
+  },
+};
+var lucy = Object.create(person, {
+  age: { value: 12, writable: true, enumerable: true, configurable: true },
+});
+lucy.name = "lucy";
+lucy.hello();
+console.log(lucy.age);
+Object.getOwnPropertyDescriptor(lucy, "age");
+console.log(lucy.__proto__ === person); // true
+
+// 用 Object.create实现类式继承
+function Shape() {
+  this.x = 0;
+  this.y = 0;
+}
+Shape.prototype.move = function (x, y) {
+  this.x += x;
+  this.y += y;
+};
+function Rectangle() {
+  Shape.apply(this, arguments);
+}
+Rectangle.prototype = Object.create(Shape.prototype); // {__proto__}
+// Rectangle.prototype = new Shape() // 原型对象是父类的实例({__proto__})
+Rectangle.prototype.constructor = Rectangle;
+
+// 创建一个原型为null的空对象
+o = Object.create(null);
+
+// getter setter
+var alice = Object.create(person, {
+  // 省略了的属性特性默认为false,所以属性p是不可写,不可枚举,不可配置的:
+  p: { value: 12 },
+  _name: { value: "alice", writable: true },
+  name: {
+    // getter setter 内 this指向当前对象
+    get: function () {
+      return this._name;
+    },
+    set: function (val) {
+      console.log("in setter this:", this);
+      this._name = val;
+    },
+  },
+});
+
+// 没有指定 enumerable: true , 默认不可枚举
+alice.propertyIsEnumerable("_name"); // false
+
+//--- Object.defineProperties(obj, props)
+// 直接在一个对象上定义新的属性或修改现有属性，并返回该对象。
+// vue下，把响应式的对象属性复制到别的对象上
+var alice = { name: "alice" };
+ret = Object.defineProperties(alice, {
+  age: { value: 12, writable: true },
+  fav: { value: "shop", writable: true, enumerable: true },
+});
+console.log(ret === alice); // true
+Object.keys(alice); // ['alice', 'fav']
+
+//--- Object.defineProperty(obj, propName, descriptor)
+// 直接在一个对象上定义一个新属性，或者修改一个对象的现有属性，并返回此对象。
+// descriptor = {value, writable, enumerable, configurable, get , set}
+var alice = { name: "alice" };
+ret = Object.defineProperty(alice, "tall", { value: true, writable: true });
+console.log(ret === alice);
+
+// 继承的属性y不可写，则本地属性y，创建不了
+let proto = Object.defineProperty({}, "y", { value: 1, configurable: true });
+let foo = Object.create(proto, { x: { value: 1, writable: true } });
+foo.x = 2;
+console.log(foo.x); // 2
+foo.y = 2;
+console.log(foo.y); // 1
+foo.hasOwnProperty("y"); // false
+
+//--- 遍历对象
+var lufy = { name: "lufy", age: 12, job: "captin" };
+Object.entries(lufy); // 返回 可枚举属性的键值对数组 二维数组
+// 方便的遍历方式
+const obj = { a: 5, b: 7, c: 9 };
+for (const [key, value] of Object.entries(obj)) {
+  console.log(`${key} ${value}`); // "a 5", "b 7", "c 9"
+}
+// obj -> map
+var obj = { foo: "bar", baz: 42 };
+var map = new Map(Object.entries(obj));
+console.log(map); // Map { foo: "bar", baz: 42 }
+
+// map -> obj
+var arr = [
+  ["foo", "food"],
+  ["coo", "cool"],
+];
+Object.fromEntries(arr); // 键值对数组(二维数组)转换为对象
+Object.fromEntries(map);
+
+// obj map values
+Object.fromEntries(Object.entries(lufy).map(([key, val]) => [key, val + "kk"]));
+
+Object.defineProperty(lufy, "skill", { value: "stretch" });
+Object.keys(lufy); // 返回 可枚举属性列表
+Object.values(lufy); // 返回 可枚举属性对应的值列表
+Object.getOwnPropertyNames(lufy); // 返回自有属性列表 不管是否可枚举
+Object.getOwnPropertySymbols(obj); // 获取自有symbol属性列表
+
+//--- in and for .. in
+var zoro = {};
+Object.defineProperty(zoro, "name", { value: "zoro" });
+Object.defineProperty(zoro, "skill", { value: "sword", configurable: true });
+// in 运算符 判断属性在对象上能否访问(不管是自有的还是继承的)
+"name" in zoro; // true
+// for .. in 只能遍历可枚举属性(不管是自有的还是继承的)
+var hunter = { lonely: true };
+Object.setPrototypeOf(zoro, hunter);
+for (var p in zoro) console.log(p); // skill lonely,
+
+//-- 获取和设置原型对象
+// Object.getPrototypeOf(obj)
+// Object.setPrototypeOf(obj, proto)
+var sandy = Object.create(person, {
+  name: { value: "sandy", writable: true },
+  job: { value: "singer", writable: true, configurable: true },
+});
+Object.getPrototypeOf(sandy);
+var singer = {
+  hello: function () {
+    console.log("hi~, I am", this.name, "Nice to see you!");
+  },
+};
+Object.setPrototypeOf(sandy, singer);
+sandy.hello();
+
+//--- 获取属性描述符对象
+Object.getOwnPropertyDescriptor(sandy, "job");
+Object.getOwnPropertyDescriptors(sandy);
+
+//--- 判断相同值
+// Object.is(val1, val2) 有别于 == 和 === 比较, 不会做隐式类型转换
+Object.is(window, window); // true
+Object.is(null, undefined); // false
+Object.is(NaN, NaN); // true
+Object.is("hi", "hi"); // true
+Object.is(-0, -0); // true
+Object.is(0, -0); // false
+Object.is(0, +0); // false
+Object.is([], []); // false
+
+//--- 对象扩展 冻结 密封
+
+// 冻结
+// 指对象不可扩展，所有属性都是不可配置的(configurable)，且所有数据属性（即没有getter或setter组件的访问器的属性）都是不可写的(writable)。
+// 即 不可以: 加属性,删属性, 修改属性值
+var comic = { name: "fullmetal", year: 2010 };
+Object.freeze(comic); // return comic
+Object.isFrozen(comic); // true 对象不可扩展 所有属性只读且不可配置
+// 以下都无效
+comic.hero = "yuki";
+delete comic.name;
+comic.year = 2011;
+// 一个不可扩展的空对象同时也是一个冻结对象.
+var vacuouslyFrozen = Object.preventExtensions({});
+Object.isFrozen(vacuouslyFrozen); //=== true;
+// 一个冻结对象也是一个密封对象.
+Object.isSealed(frozenObj); //=== true
+// 当然,更是一个不可扩展的对象.
+Object.isExtensible(frozenObj); //=== false
+
+// 密封
+// 指不可扩展，且所有自身属性都不可配置（但不一定是不可写）
+// 即 不可以：加属性，删属性
+var book = { name: "two city", price: 12 };
+Object.seal(book); // return book
+Object.isSealed(book); // true 对象不可扩展 所有属性不可配置
+// 以下无效
+book.name = "war and peace";
+book.author = "winter";
+
+// 不可扩展
+// 即 不可以： 加属性
+var book2 = { name: "two city", price: 12 };
+Object.preventExtensions(book2);
+Object.isExtensible(book2);
+// 以下无效
+book2.from = "england";
+```
+
+普通对象的方法
+
+```js
+obj.hasOwnProperty(key);
+obj.propertyIsEnumerable(key);
+obj.isPrototypeOf(o);
+obj.toString();
+obj.valueOf();
+obj.__proto__; // 访问原型对象
 ```

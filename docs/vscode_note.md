@@ -157,6 +157,12 @@ ctrl + k, ctrl + t 选择主题
 - Highlight Matching Tag
 - Quick and Simple Text Select
 
+主题推荐
+---
+- Dracula 颜色艳丽 对比度高
+- Monokai 经典
+- Boxy Tommorrow 柔和
+
 emmet
 ---
 [emmet语法示例](https://docs.emmet.io/cheat-sheet/)

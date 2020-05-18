@@ -512,3 +512,11 @@ obj.toString();
 obj.valueOf();
 obj.__proto__; // 访问原型对象
 ```
+
+
+
+异步
+---
+[setTimeout和setImmediate到底谁先执行，本文让你彻底理解Event Loop](https://juejin.im/post/5e782486518825490455fb17)
+
+[从Generator入手读懂co模块源码](https://www.cnblogs.com/dennisj/p/12744022.html)

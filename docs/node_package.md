@@ -117,3 +117,28 @@ example(dir)
 
 
 ```
+
+js-yaml
+---
+解析或导出yaml文件的工具
+
+### 常用方法
+```js
+var yaml = require('js-yaml')
+var fs = require('fs')
+
+// yaml.safeLoad(string [, option])
+// yaml.load(string [, option])
+try {
+  var doc = yaml.safeLoad(fs.readFileSync('/my/data/file.yml', 'utf8'))
+  console.log(doc)
+}catch(e) {
+  console.error(e)
+}
+
+// yaml.dump(object [,option])
+// yaml.safeDump(object [,option])
+let yamldoc = yaml.dump(data)
+console.log(yamldoc);
+
+```

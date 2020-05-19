@@ -48,6 +48,7 @@ git log
 ```bash
     git log --since="1 day ago" #查看1天前到现在的提交日志
     git log --since "1 day ago" #同上 = 是可选的
+    git log --since "2019-01-03" --until "2019-01-04"  # 查看某时间段的提交日志
     
     git log -- somefile.html #查看某文件的更新历史
     git log <file> # 同上
@@ -83,7 +84,7 @@ git commit
 ```bash    
     #一些文件在本地修改后，不希望commit到远端仓库，可以这样
     git add .
-    git commit -m "commit part of changes" -- folderName_or_fileName
+    git commit -m "commit part of changes" -- <folder/file>
 
     git commit --amend -m "new commit logs" #修改最后一次提交记录 (通常用来修改提交日志)
 ```
@@ -93,8 +94,8 @@ git show
 查看提交对象
 
 ```bash
-    git show {commit_id} # 显示某次提交的内容 git show $id
-    git show head #查看最新的提交
+    git show <commit_id> # 显示某次提交的内容 git show $id
+    git show head #查看最新的提交 同 git log -1 -p
     git show head^ #查看上次的提交
 ```
 

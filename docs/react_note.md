@@ -47,8 +47,329 @@ ReactDOM.render(
 使用 `create-react-app` 快速构建 React 开发环境
 
 [react入门教程](http://www.ruanyifeng.com/blog/2015/03/react.html)
+---
+### html模板
+```html
+<!DOCTYPE html>
+<html>
+  <head>
+    <script src="../build/react.js"></script>
+    <script src="../build/react-dom.js"></script>
+    <!-- 解析jsx -->
+    <script src="../build/browser.min.js"></script>
+  </head>
+  <body>
+    <div id="example"></div>
+    <!-- text/babel for jsx -->
+    <script type="text/babel">
+      // ** Our code goes here! **
+    </script>
+  </body>
+</html>
+```
+
+### ReactDOM.render()
+```js
+ReactDOM.render(
+    <h1>Hello world!</h1>, // 根组件
+    document.getElementById('exmpale') // 挂载点
+)
+```
 
 
+### JSX语法
+HTML 语言直接写在 JavaScript 语言之中，不加任何引号，这就是 JSX 的语法，它允许 HTML 与 JavaScript 的混写
+
+```js
+var names = ['Alice', 'Emily', 'Kate']
+ReactDOM.render(
+    <div>
+    {
+        names.map(function(name) {
+            return <div>Hello, {name}</div>
+        })
+    }
+    </div>,
+    document.getElementById('example')
+)
+```
+> JSX 的基本语法规则：遇到 HTML 标签（以 < 开头），就用 HTML 规则解析；遇到代码块（以 { 开头），就用 JavaScript 规则解析。
+
+JSX 允许直接在模板插入 JavaScript 变量。如果这个变量是一个数组，则会展开这个数组的所有成员
+
+```js
+var arr = [
+    <h1>Hello world!</h1>,
+    <h2>React is awesome</h2>
+]
+ReactDOM.render(
+    <div>{arr}</div>,
+    document.getElementById('example')
+)
+```
+### 组件
+React 允许将代码封装成组件（component），然后像插入普通 HTML 标签一样，在网页中插入这个组件。React.createClass 方法就用于生成一个组件类
+
+```js
+var HelloMessage = React.createClass({
+  render: function() {
+    return <h1>Hello, {this.props.name}</h1>
+  }
+});
+
+ReactDOM.render(
+  <HelloMessage name="kk" />,
+  document.getElmentById('example')
+)
+```
+> 注意，组件类的第一个字母必须大写，否则会报错，比如HelloMessage不能写成helloMessage。另外，组件类只能包含一个顶层标签，否则也会报错。
+
+添加组件属性，有一个地方需要注意，就是 class 属性需要写成 className ，for 属性需要写成 htmlFor ，这是因为 class 和 for 是 JavaScript 的保留字。
+
+### this.props.children
+this.props 对象的属性与组件的属性一一对应，但是有一个例外，就是 this.props.children 属性。它表示组件的所有子节点
+
+```js
+var NoteList = React.createClass({
+  render: function() {
+    return (
+      <ol>
+        {
+          React.Children.map(this.props.children, function(child) {
+            return <li>{child}</li>
+          })
+        }
+      </ol>
+    )
+  }
+});
+
+ReactDOM.render(
+  <NoteList>
+    <span>Hello</span>
+    <span>World</span>
+  </NoteList>,
+  document.body
+)
+```
+这里需要注意， this.props.children 的值有三种可能：如果当前组件没有子节点，它就是 undefined ;如果有一个子节点，数据类型是 object ；如果有多个子节点，数据类型就是 array 。所以，处理 this.props.children 的时候要小心。
+
+React 提供一个工具方法 React.Children 来处理 this.props.children 。我们可以用 React.Children.map 来遍历子节点，而不用担心 this.props.children 的数据类型是 undefined 还是 object
+
+### PropTypes
+组件类的PropTypes属性，就是用来验证组件实例的属性是否符合要求
+
+```js
+var MyTitle = React.createClass({
+  propTypes: {
+    title: React.PropTypes.string.isRequired
+  },
+  render: function() {
+    return <h1>{this.props.title}</h1>
+  }
+});
+
+```
+
+此外，getDefaultProps 方法可以用来设置组件属性的默认值
+
+```js
+var MyTitle = React.createClass({
+  getDefaultProps: function() {
+    return {
+      title: 'Hello World'
+    }
+  },
+  render: function() {
+    return <h1>{this.props.title}</h1>
+  }
+});
+
+ReactDOM.render(
+  <MyTitle />,
+  document.body
+)
+
+```
+
+### 获取真实DOM节点
+组件并不是真实的 DOM 节点，而是存在于内存之中的一种数据结构，叫做虚拟 DOM （virtual DOM）。只有当它插入文档以后，才会变成真实的 DOM 。根据 React 的设计，所有的 DOM 变动，都先在虚拟 DOM 上发生，然后再将实际发生变动的部分，反映在真实 DOM上，这种算法叫做 DOM diff ，它可以极大提高网页的性能表现。
+
+有时需要从组件获取真实 DOM 的节点，这时就要用到 ref 属性
+
+```js
+var MyComponent = React.createClass({
+  handleClick: function() {
+    this.refs.input.focus();
+  },
+  render: function() {
+    return (
+      <div>
+        <input type="text" ref="input" />
+        <button onClick={this.handleClick}>focus the input</button>
+      </div>
+    )
+  }
+})
+
+ReactDOM.render(
+  <MyComponent />,
+  document.body
+)
+```
+
+### this.state
+组件免不了要与用户互动，React 的一大创新，就是将组件看成是一个状态机，一开始有一个初始状态，然后用户互动，导致状态变化，从而触发重新渲染 UI 
+
+```js
+// getInitialState, this.setState, this.state
+var LikeButton = React.createClass({
+  getInitialState: function() {
+    return {liked: false}
+  },
+  handlClick: function() {
+    this.setState({liked: !this.state.liked})
+  },
+  render: function() {
+    var text = this.state.liked ? 'like' : 'haven\'t liked'
+    return (
+      <p onClick={this.handleClick}>
+        you {text} this, click to toggle
+      </p>
+    )
+  }
+})
+
+ReactDOM.render(
+  <LikeButton />,
+  document.body
+)
+```
+this.setState 方法就修改状态值，每次修改以后，自动调用 this.render 方法，再次渲染组件。
+
+由于 this.props 和 this.state 都用于描述组件的特性，可能会产生混淆。一个简单的区分方法是，this.props 表示那些一旦定义，就不再改变的特性，而 this.state 是会随着用户互动而产生变化的特性
+
+
+### 表单
+
+用户在表单填入的内容，属于用户跟组件的互动，所以不能用 this.props 读取
+
+```js
+var Input = React.createClass({
+  getInitialState: function() {
+    return {value: 'Hello'}
+  },
+  handleChange: function(event) {
+    this.setState({value: event.target.value})
+  },
+  render: function() {
+    var value = this.state.value
+    return (
+      <div>
+        <input type="text" value={value} onChange={this.handleChange} />
+      </div>
+    )
+  }
+});
+ReactDOM.render(<Input />, document.body)
+```
+
+### 组件的生命周期
+
+组件的生命周期分成三个状态：
+
+- Mounting：已插入真实 DOM
+- Updating：正在被重新渲染
+- Unmounting：已移出真实 DOM
+
+React 为每个状态都提供了两种处理函数，will 函数在进入状态之前调用，did 函数在进入状态之后调用，三种状态共计五种处理函数。
+
+- componentWillMount()
+- componentDidMount()
+- componentWillUpdate(object nextProps, object nextState)
+- componentDidUpdate(object prevProps, object prevState)
+- componentWillUnmount()
+
+此外，React 还提供两种特殊状态的处理函数。
+- componentWillReceiveProps(object nextProps)：已加载组件收到新的参数时调用
+- shouldComponentUpdate(object nextProps, object nextState)：组件判断是否重新渲染时调用
+
+```js
+var Hello = React.createClass({
+  getInitialState: function() {
+    return {opacity: 1.o}
+  },
+  componentDidMount: function() {
+    this.timer = setInterval(function() {
+      var opacity = this.state.opacity
+      opacity -= 0.05
+      if(opacity < 0.1) {
+        opacity = 1.0
+      }
+      this.setState({opacity: opacity})
+    }.bind(this), 1000);
+  },
+  render: function() {
+    return (
+      <div style={{opacity: this.state.opacity}}>
+        Hello {this.props.name}
+      </div>
+    )
+  }
+});
+
+ReactDOM.render(
+  <Hello name="world" />,
+  document.body
+)
+```
+
+### Ajax
+组件的数据来源，通常是通过 Ajax 请求从服务器获取，可以使用 componentDidMount 方法设置 Ajax 请求，等到请求成功，再用 this.setState 方法重新渲染 UI
+
+```js
+var UserGist = React.createClass({
+  getInitialState: function() {
+    return {
+      username: '',
+      lastGistUrl: ''
+    }
+  },
+  componentDidMount: function() {
+    $.get(this.prop.source, function(result) {
+      var lastGist = result[0];
+      if(this.isMounted) {
+        this.setState({
+          username: lastGist.owner.login,
+          lastGistUrl: lastGist.html_url
+        })
+      }
+    }.bind(this))
+  },
+  render: function() {
+    return (
+      <div>
+        {this.state.username}'s last gist is
+        <a href={this.state.lastGistUrl}>here </a>
+      </div>
+    )
+  }
+});
+
+ReactDOM.render(
+  <UserGist source="https://api.github.com/users/octocat/gists" />,
+  document.body
+)
+```
+
+我们甚至可以把一个Promise对象传入组件
+
+```js
+ReactDOM.render(
+  <RepoList promise={$.getJSON('https://api.github.com/search/repositories?q=javascript&sort=stars')} />,
+  document.body
+)
+```
 redux
 ---
 参考[阮一峰的redux教程](http://www.ruanyifeng.com/blog/2016/09/redux_tutorial_part_one_basic_usages.html)，讲解的比较清楚。

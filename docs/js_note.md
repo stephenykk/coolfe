@@ -1,5 +1,84 @@
 # JS 知识点总结
 
+## let const
+let，const定义变量，即使在最外层也不会变成window的属性，只有var定义的变量才会成为window的属性。
+
+## String
+
+### str.replace
+`stringObject.replace(regexp/substr,replacement)`  
+replacement	必需。字符串 / 生成替换文本的函数  
+replacement 中的 $ 字符具有特定的含义。如下表所示，它说明从模式匹配得到的字符串将用于替换。
+
+字符  | 替换文本
+--- | ---
+$1、$2、...、$99	| 与 regexp 中的第 1 到第 99 个子表达式相匹配的文本。
+$&	| 与 regexp 相匹配的子串。
+$`	| 位于匹配子串左侧的文本。
+$'	| 位于匹配子串右侧的文本。
+$$	| 直接量符号。
+
+
+```js
+  name = "Doe, John";
+  name.replace(/(\w+)\s*, \s*(\w+)/, "$2 $1"); // John Doe
+
+  comic = 'one piece';
+  comic.replace(/\s/, '$&-$&') // one - piece
+  comic.replace(/\s/, "$'") // onepiecepiece
+  comic.replace(/\s/, "$`") // oneonepiece
+  comic.replace(/\s(\w)/, '-$1') // one-piece
+  comic.replace(/\s/, '$$') // one$piece
+```
+
+## 正则
+- `.`   匹配单个任意字符，除了换行和行结束符。
+
+- `|`   左右两边表达式之间 "或" 关系，匹配左边或者右边。  
+  ```js
+    "I'm Tom, he is Jack".match(/Tom|Jack/) // Tom
+  ```
+
+- `()`  用于定义捕获组，可以单独拿到捕获组匹配项，捕获组内的匹配模式也可以被整体修饰。
+  ```js
+    "Let's go go go!".match(/(go\s*){3}/) // go go go
+    RegExp.$1 //=>go
+
+    "＄10.9,￥20.5".match(/(￥)(\d+\.?\d*)/) // ￥20.5
+    RegExp.$1 //=> ￥
+    RegExp.$2 //=> 20.5
+  ```
+
+- `[]`  匹配任意包含在[]内的一系列字符中的任意一个，不是多个。
+  ```js
+    'fgo'.match(/[f-k]/) // fg
+  ```
+
+- `[^]` 匹配任意不包含在[]内的一系列字符中的任意一个，不是多个。
+  ```js
+    // [^abc]匹配 "a","b","c" 之外的任意一个字符，
+    // [^A-F0-3]匹配 "A"到"F","0"到"3" 之外的任意一个字符
+  ```
+- `n$` 匹配任何结尾为 n 的字符串。
+
+- `^n`  匹配任何开头为 n 的字符串。
+
+- `?=n` 匹配任何其后紧接指定字符串 n 的字符串。
+
+- `?!n` 匹配任何其后没有紧接指定字符串 n 的字符串。
+
+- `(?:n)`  表示不输出捕获组信息。
+
+- 捕获组与反向引用  
+  捕获组：`()`  用于定义捕获组 `<td>(.*?)</td>`  
+  反向引用：  
+    小括号包含的表达式所匹配到的字符串不仅是在匹配结束后才可以使用， 在匹配过程中也可以使用.  
+
+    引用方法: 第1个左括号`(`捕获的内容, 对应 `/1`; 第2个左括号`(`捕获的内容, 对应 `/2` ...
+    ```js
+      '"hello"'.match(/('|")(.*?)(\1)/) // "hello"
+    ```
+
 ## Array
 
 ### 高阶函数
@@ -59,6 +138,19 @@ Array.from(new Set([1, 2, 2, 1])); // => [1,2] 生成数组 去重
 ```
 
 ## Function
+
+### new 调用
+判断是否new func
+```js
+function Vue(options) {
+  if(!(this instanceof Vue)) {
+    warn('should use new Vue()')
+  }
+
+  this._init(options);
+}
+
+```
 
 ### IIF 立即执行函数
 
@@ -520,3 +612,203 @@ obj.__proto__; // 访问原型对象
 [setTimeout和setImmediate到底谁先执行，本文让你彻底理解Event Loop](https://juejin.im/post/5e782486518825490455fb17)
 
 [从Generator入手读懂co模块源码](https://www.cnblogs.com/dennisj/p/12744022.html)
+
+
+内存
+---
+[JavaScript的内存管理](https://juejin.im/post/5e2155cee51d4552455a8878)  
+
+JS有如下数据类型
+- 原始数据类型：String, Number, Boolean, Null, Undefined, Symbol
+- 引用数据类型：Object
+
+而存放这些数据的内存又可以分为两部分：栈内存（Stack）和堆内存（Heap）。
+
+> 原始数据类型存在栈中，引用类型存在堆中。
+
+### 栈内存
+后进先出
+
+### 堆内存
+JS中原始数据类型的内存大小是固定的，由系统自动分配内存。但是引用数据类型，比如Object, Array，他们的大小不是固定的，所以是存在堆内存的。
+
+JS不允许直接操作堆内存，我们在操作对象时，操作的实际是对象的引用，而不是实际的对象。可以理解为对象在栈里面存了一个内存地址，这个地址指向了堆里面实际的对象。
+
+
+### 垃圾回收
+
+垃圾回收就是找出那些不再继续使用的变量，然后释放其占用的内存，垃圾回收器会按照固定的时间间隔周期性执行这一操作。
+
+### 引用计数
+使用引用计数会有一个很严重的问题：循环引用。循环引用指的是对象A中包含一个指向对象B的指针，而对象B中也包含一个指向对象A的引用。
+```js
+function problem(){ 
+  var objectA = {};
+  var objectB = {}; 
+
+  objectA.a = objectB;
+  objectB.b = objectA; 
+}
+```
+
+在这个例子中，objectA 和 objectB 通过各自的属性相互引用；也就是说，这两个对象的引用次数都是 2。当函数执行完毕后，objectA 和 objectB 还将继续存在，因为它们的引用次数永远不会是 0。
+
+因为引用计数有这样的问题，现在浏览器已经不再使用这个算法了，这个算法主要存在于IE 8及以前的版本，现代浏览器更多的采用**标记-清除算法**
+
+
+在老版的IE中一部分对象并不是原生 JavaScript 对象。例如，其 BOM 和 DOM 中的对象就是使用 C++以 COM（Component Object Model，组件对象模型）对象的形式实现的，而 COM对象的垃圾 收集机制采用的就是引用计数策略。
+
+```js
+// dom对象 与 js对象 之间的循环引用
+// 即使dom对象从页面移除，它占用的内存也不会被回收
+var element = document.getElementById("some_element"); 
+var myObject = new Object();
+myObject.element = element; 
+element.someObject = myObject;
+
+// 断开引用
+myObject.element = null; 
+element.someObject = null;
+
+```
+> 为了解决上述问题，IE9把 BOM和 DOM对象都转换成了真正的 JavaScript对象。这样，就避免了两种垃圾收集算法并存导致的问题，也消除了常见的内存泄漏现象。
+
+### 标记-清除算法
+标记-清除算法就是当变量进入环境是，这个变量标记为“进入环境”；而当变量离开环境时，标记为“离开环境”，当垃圾回收时销毁那些带标记的值并回收他们的内存空间。
+
+这里说的环境就是执行环境，执行环境定义了变量或函数有权访问的数据。每个执行环境都有一个与之关联的变量对象（variable object），环境中所定义的所有变量和函数都保存在这个对象中。执行环境中所有代码执行完毕后，该环境及其变量对象被销毁。
+
+### 全局执行环境
+在浏览器中，全局环境是window，Node.js中是global对象。
+
+### 局部执行环境
+每个函数都有自己的执行上下文。当执行流进入一个函数时，函数的上下文(EC)会被推入一个执行上下文栈(EC stack)中。当这个函数执行之后，栈将其执行上下文弹出，把控制权返回给之前的执行上下文。
+
+造成内存泄漏的场景:
+
+1. 全局变量会存在于整个应用生命周期，应用不退出不会回收，使用严格模式可以避免这种情况
+2. 闭包因为自身特性，将函数内部变量暴露到了外部作用域，当其自身执行结束时，所暴露的变量并不会回收
+3. 没有clear的定时器
+
+
+### V8的内存管理
+V8是有内存限制的，因为它最开始是为浏览器设计的，不太可能遇到大量内存的使用场景。关键原因还是垃圾回收所导致的线程暂停执行的时间过长。
+
+Node.js是可以通过配置修改内存限制的，更好的做法是使用Buffer对象，因为Buffer的内存是底层C++分配的，不占用JS内存，所以他也就不受V8限制。
+
+V8采用了分代回收的策略，将内存分为两个生代：新生代和老生代
+
+
+函数式编程
+---
+[常用JS函数-数组扁平化，缓存函数，柯里化函数，防抖和节流函数](https://juejin.im/post/5e3ff97de51d4527214ba3c9)  
+[JavaScript中的compose函数和pipe函数](https://juejin.im/post/5e3ff92be51d4526f16e3b90)  
+[JavaScript中的函数式编程](https://juejin.im/post/5e3ff8c4f265da57503cb7a8)  
+
+与函数式编程相对的是命令式编程 如下:
+```js
+// 数组每个数字加一, 命令式编程
+let arr = [1, 2, 3, 4];
+let newArr = [];
+for(let i = 0; i < arr.length; i++){
+  newArr.push(arr[i] + 1);
+}
+
+console.log(newArr); // [2, 3, 4, 5]
+```
+
+函数式编程
+
+```js
+// 先拆加一出来
+let add1 = x => x +1;
+
+// 然后拆遍历方法出来，通过遍历返回一个操作后的新数组
+// fn是我们需要对每个数组想进行的操作
+let createArr = (arr, fn) => {
+  const newArr = [];
+  for(let i = 0; i < arr.length; i++){
+    newArr.push(fn(arr[i]));
+  }
+
+  return newArr;
+} 
+
+// 用这两个方法来得到我们期望的结果
+const arr = [1, 2, 3, 4];
+const newArr = createArr(arr, add1);
+console.log(newArr);  // [2, 3, 4, 5]
+
+
+let add = (a) => {
+  return (b) => {
+    return a + b;
+  }
+}
+
+let add1 = add(1); // 绑定部分参数的偏函数
+
+let res = add1(4); 
+console.log(res);  // 5
+
+```
+
+
+所以函数式编程就是将程序分解为一些更可重用、更可靠且更易于理解的部分，然后将他们组合起来，形成一个更易推理的程序整体。
+
+
+### 纯函数
+纯函数是指一个函数，如果它的调用参数相同，则永远返回相同的结果。
+
+> 纯函数 不依赖外部，不影响外部(没有副作用)
+
+```js
+const calPrice = (price, discount) => price * discount;
+```
+
+compose函数 and pip函数
+---
+[JavaScript中的compose函数和pipe函数](https://juejin.im/post/5e3ff92be51d4526f16e3b90)
+
+### compose函数
+compose函数可以将需要嵌套执行的函数平铺，嵌套执行就是一个函数的返回值将作为另一个函数的参数
+
+```js
+const add = x => x + 10;
+const multiply = x => x * 10;
+
+// add函数的返回值作为multiply函数的参数
+let res = multiply(add(10));
+console.log(res);    // 200
+
+```
+上面的计算方法就是函数的嵌套执行，而我们compose的作用就是将嵌套执行的方法作为参数平铺，嵌套执行的时候，里面的方法也就是右边的方法最开始执行，然后往左边返回
+
+```js
+// 参数从右往左执行，所以multiply在前，add在后
+let res = compose(multiply, add)(10);
+
+// compose 的实现
+function compose(...fns) {
+  return function(...args) {
+    return fns.reduceRight((lastRet, fn, i) => i === fns.length - 1 ? fn(...lastRet) : fn(lastRet), args)
+  }
+}
+compose(multiple, add)(10) // 200
+```
+
+Redux的中间件就是用compose实现的，webpack中loader的加载顺序也是从右往左，这是因为他也是compose实现的。
+
+### pipe函数
+pipe函数就是从左到右执行的compose
+
+```js
+// pipe 的实现
+function pipe(...fns) {
+  return function(...args) {
+    return fns.reduce((lastRet, fn, i) => i === 0 ? fn(...lastRet) : fn(lastRet), args);
+  }
+}
+pipe(add, multiply)(10) // 200
+
+```

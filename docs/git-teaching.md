@@ -42,6 +42,16 @@ git config --global push.default matching
 git config --global push.default simple
 
 
+#git 如何实现vimdiff
+git config --global diff.tool vimdiff
+git config --global difftool.prompt false
+# git 命令别名
+git config --global alias.d difftool
+
+# 然后使用 git d 打开对比代码，然后用 :wq 继续比较下一个文件。
+git d hashid
+
+
 ```
 
 
@@ -261,6 +271,9 @@ git config --global push.default simple
 ```bash
     git merge origin/master
     git rebase origin/master # 合并 orgin/master到当前分支
+    git merge dev # 合并dev分支到当前分支
+    git mergetool # 若有冲突，用mergetool(如 vimdiff)解决
+    # :diffget 2  # 当前差异点 采用buffer2的版本
 ```
 
 ## git branch

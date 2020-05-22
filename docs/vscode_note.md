@@ -156,6 +156,7 @@ ctrl + k, ctrl + t 选择主题
 - bracket select
 - Highlight Matching Tag
 - Quick and Simple Text Select
+- view-in-browser
 
 主题推荐
 ---

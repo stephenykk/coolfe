@@ -16,3 +16,11 @@ open
 weixinfnym
 
 scratch/mylittlefeather
+
+todo list
+---
+- react
+- typescript
+- webpack
+- nodejs
+- npm

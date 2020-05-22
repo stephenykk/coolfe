@@ -206,7 +206,10 @@ function stderrLog(msg) {
 var url = system.args[1];
 page.open(url, function(status) {
   if (status === "success") {
-    var result = page.evaluate(function getComponents() {
+    var outerArr = ["foo", "bar"]
+    var result = page.evaluate(function getComponents(outerArr) {
+      // can use outerArr here
+
       // evaluate callback 内的console.log是页面内的console.log, 通过 page.onConsoleMessage监听
       if (window.Topic && window.Vue) {
         Topic.install(Vue);
@@ -214,7 +217,7 @@ page.open(url, function(status) {
       } else {
         return { ok: false, msg: "没有全局变量Topic 或 Vue" };
       }
-    });
+    }, outerArr);
 
     if (result.ok) {
       stdoutLog(result.data);

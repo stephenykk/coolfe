@@ -63,4 +63,16 @@ exec('ls -al', function(err, stdout, stderr) {
 
 ### child_process.exeFile()
 跟child_process.exec()类似，不同点在于，没有创建一个新的shell, 效率要高一些。
+```js
+    // open.cmd ->
+    @echo off
+    echo %1 %2
+
+
+    var child_process = require('child_process')
+    child_process.execFile('open.cmd', ['hello', 'world'], function(err, stdout) {
+        if(err) throw err;
+        console.log('OPEN DONE ', stdout);
+    });
+```
 

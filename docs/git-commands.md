@@ -7,7 +7,7 @@ git clone
 复制远程代码库到本地
 
 ```bash
-    #clone 远端仓库的某个分支
+    #clone 远端仓库的某个分支2
     git clone -b <branch> <remote_repo> 
     #例: clone远端仓库的dev分支到本地 
     git clone -b dev git@github.com:stephenykk/test.git 

@@ -4,19 +4,20 @@ axios notes
 axios 的特点
 
 + 可用于浏览器端发起ajax请求
-+ 可用于node.js中，发起请求; *类似request or http.request*
-+ 支持promise接口
-+ request and response拦截器
-+ 转换 request and response data
++ 可用于服务端(nodejs)发起请求; 类似 `request` , `http.request`
++ 接口支持promise
++ 支持request and response拦截器
++ 转换 request and response data `transformRequest: [fn], transformResponse: [fn]`
 + 可取消请求
-+ 自动转换json数据
-+ 在浏览器端防范 XSRF(*跨站请求伪造*)
-
++ 自动转换json数据 `responseType: "json"`
++ 防范 XSRF(*跨站请求伪造*)攻击
++ 自定义请求适配器 *用其他工具取代XHR发起请求，如小程序 wx.request*
 
 使用示例
 ---------
-
-    //> get 请求
+```js
+    //> get 请求 直接url带参数
+    // axios.get(url).then(cb)
     axios.get('/user?id=12')
             .then(function(response) {
                 console.log(response);
@@ -24,12 +25,14 @@ axios 的特点
             .catch(function(error) {
                 console.log(error);
             });
-    // 同上
+    // 同上 params带参
+    // axios.get(url, {params}).then(cb)
     axios.get('/user', {params: {id: 12}})
             .then(function(res) { console.log(res); })
             .catch(function(err) { console.log(err)});
 
     //> post 请求
+    // axios.post(url, data).then(cb)
     axios.post('/user',  {fname: 'lin', lname: 'sindy'})
             .then(function(res) { console.log(res); })
             .catch(function(err) { console.log(err); });
@@ -43,18 +46,22 @@ axios 的特点
     function getUserPermissions() {
         return axios.get('/user/123/permissions'); // promise
     }
-
+    // axios.all()  => new promise
+    // axios.spread(cb) => new cb
+    // axios.all(promiseList).then(axios.spread(function(res1, res2,..)){})
     axios.all([getUserAccount(), getUserPermissions()])
-            .then(axios.spread(function(acc, perms) {
-                // do sth..
-            }));
+         .then(axios.spread(function(acc, perms) {
+             // do sth..
+         }));
+```
 
-
-axios api
+Axios API
 -----------
+**`axios`是一个函数，可直接用于发起请求**
 
 ### axios(config)
-
+```js
+    // cofig = {method, url, data, params, headers, baseURL, timeout, }
     axios({
         method: 'post',
         url: '/user/123',
@@ -63,30 +70,34 @@ axios api
             lname: 'lin'
         }
     });
-
+```
 
 ### axios(url, [config])
+只有url是必须参数，其他参数有默认值
 
+```js
     axios('/user/123', {method: 'get', data: {...}});
-
+```
 ### http动词别名方法
+http动词: `get`, `post`, `head`, `put`, `delete`, `patch`
 
 + axios.request(config);
 + axios.get(url, [config]);
-+ axios.delete(url, [config]);
-+ axios.head(url, [config]);
 + axios.post(url, [data], [config]);
++ axios.head(url, [config]);
++ axios.delete(url, [config]);
 + axios.put(url, [data], [config]);
 + axios.patch(url, [data], [config]);
 
 ### 并行的ajax请求
-
-    axios.all(promises);
-    axios.spread(callback);
-
+```js
+    axios.all(promiseList); // new promise
+    axios.spread(callback); // new callback
+```
 ### axios instance
 可以创建包含预定义配置的axios实例.
 
+```js
     // myAxios = axios.create(config);
     myAxios = axios.create({
         baseURL: 'http://example.com/api/',
@@ -95,14 +106,14 @@ axios api
             'X-Custom-Header': 'hello'
         }
     });
-
+```
 axios实例(*myAxios*)具有和axios相同的别名方法, 如: `myAxios.get(url, config)`, 实例方法的config会和实例化时传入的config 合并.
 
 
-request config
+Request Config 对象
 ----------------
 `config`对象，只有 `url`选项是必须的，`method` 默认为 *get*
-
+```js
     {
         url: '/user',
         method: 'get',
@@ -114,7 +125,8 @@ request config
             // do sth with response data
         }],
         headers: {// 可添加自定义请求头
-            'X-Request-With': 'XMLHttpRequest'
+            'X-Request-With': 'XMLHttpRequest',
+            'Content-Type': 'application/json'
         },
         params: {// url参数，需传plain object or URLSearchParam obj
             id: 123
@@ -161,51 +173,54 @@ request config
         },
         cancelToken: new CancelToken(function(cancel) {..})
     }
+```
 
+Response Shecma 对象
+-------------------
+```js
+    // axios(config).then(function(response) {...})
 
-    response shecma
-    -------------------
+    // respose object
+    {
+        data: {} // 服务端返回的数据
+        status: 200,
+        statusText: 'OK',
+        headers: {}, // 响应头
+        config: {}, // request config object
+    }
+```
 
-        // axios(config).then(function(response) {...})
-
-        // respose object
-        {
-            data: {} // 服务端返回的数据
-            status: 200,
-            statusText: 'OK',
-            headers: {}, // 响应头
-            config: {}, // request config object
-        }
-
-
-request config 设置默认选项
+Request Config 设置默认选项
 --------------------------
-通过axios设置全局的默认选项
-
+通过 `axios.defaults` 设置全局的默认选项
+```js
     axios.defaults.baseURL = 'http://example.com/api/';
-    axios.defaults.headers.common['Authorization'] = TOKEN;
+    axios.defaults.headers.common['Authorization'] = TOKEN; // common 表示针对所有请求方法
     axios.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded';
-
+```
 设置实例的默认选项
 
+```js
     var myAxios = axios.create({
         baseURL: 'http://bar.com/api/'
     });
     myAxios.defaults.header.common['X-Hello'] = 'test';
-
+```
 
 config的优先级: `calling config > instance config > global config`
-
-    axios.defaults.timeout = 1000;
+```js
+    axios.defaults.timeout = 1000; // global config
     myaxios = axios.create();
-    myaxios.defaults.timeout = 2000;
-    myaxios.get(url, {timeout: 3000});
+    myaxios.defaults.timeout = 2000; // instance config
+    myaxios.get(url, {timeout: 3000}); // calling config
+```
 
 拦截器
 --------
-拦截器可以让我们在 then/catch 之前，做一些处理
-
+拦截器 `axios.interceptors` 可以让我们在 then/catch 之前，做一些处理
+```js
     // 请求拦截器
+    // axios.interceptors.request.use(successCb, failCb)
     axios.interceptors.request.use(function(config) {
         // do sth before send request..
         return config;
@@ -222,12 +237,13 @@ config的优先级: `calling config > instance config > global config`
         // do sth with response error
         return Promise.reject(error);
     });
-
+```
 
 错误处理
 ----------
-`error.response`对象包含 response schema
+`error.response`对象包含 Response Schema
 
+```js
     axios.get('/user/123').catch(function(error) {
         if (error.response) {
             console.log(error.response.data);
@@ -239,34 +255,37 @@ config的优先级: `calling config > instance config > global config`
 
         console.log(error.config); // request config object
     });
-
+```
 自定义哪些status，触发错误回调
-
+```js
     axios.get('/user/123',  {
         validateStatus: function(status) {
             return status < 500;
         }
     });
-
+```
 
 使用 form-urlencoded 格式的请求体
 ---------------------
 默认地，axios会将data序列化为json; 要序列化为 form-urlencoded 格式，可以这样做:
 
 + in Browser
-            
-            // 注 URLSearchParams 不是所有浏览器都支持，需用 polyfill
-            var params = new URLSearchParams();
-            params.append('param1', 'value1');
-            params.append('param2', 'value2');
-            axios.post('/some/api', params);
+```js
+    // post data 要序列化为 form-urlencoded 格式
 
-            // 同上 使用 qs库
-            var qs = require('qs');
-            axios.post('/some/api', qs.stringify({bar: 123}));
+    // 1. 传入 URLSearchParams 实例
+    // 注: URLSearchParams 不是所有浏览器都支持，需用 polyfill
+    var searchParams = new URLSearchParams();
+    searchParams.append('param1', 'value1');
+    searchParams.append('param2', 'value2');
+    axios.post('/some/api', searchParams); 
 
+    // 2. 传入queryString
+    var qs = require('qs');
+    axios.post('/some/api', qs.stringify({bar: 123})); 
+```
 + in Node.js
-
-            var querystring = require('querystring');
-            axios.post('/some/api', querystring.stringify({foo: 'bar'}));
-
+```js
+    var querystring = require('querystring');
+    axios.post('/some/api', querystring.stringify({foo: 'bar'}));
+```

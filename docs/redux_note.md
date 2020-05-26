@@ -26,7 +26,7 @@ Store 就是保存数据的地方，你可以把它看成一个容器。整个�
 
 Redux 提供createStore这个函数，用来生成 Store。
 
-```
+```js
     import {createStore} from 'redux';
     const store = createStore(reducer);
 ```
@@ -38,7 +38,7 @@ Store对象包含所有数据。如果想得到某个时点的数据，就要对
 
 当前时刻的 State，可以通过 `store.getState()` 拿到。
 
-```
+```js
 import {createStore} from 'redux';
 const store = createStore(reducer);
 
@@ -53,7 +53,7 @@ State 的变化，会导致 View 的变化。但是，用户接触不到 State�
 
 Action 是一个对象。其中的type属性是必须的，表示 Action 的名称。其他属性可以自由设置，社区有一个规范可以参考。
 
-```
+```js
 const action = {
     type: 'ADD_TODO',
     payload: 'Learn Redux'
@@ -68,7 +68,7 @@ const action = {
 
 View 要发送多少种消息，就会有多少种 Action。如果都手写，会很麻烦。可以定义一个函数来生成 Action，这个函数就叫 Action Creator。
 
-```
+```js
 // 不用 actionCreator 的话
 const action1 = {
     type: 'ADD_TODO',
@@ -97,7 +97,7 @@ const action2 = addToDo('Learn Redux');
 ### store.dispatch()
 store.dispatch()是 View 发出 Action 的唯一方法。
 
-```
+```js
 import {createStore} from 'redux';
 const store = createStore(reducer);
 
@@ -117,7 +117,7 @@ Store 收到 Action 以后，必须给出一个新的 State，这样 View 才会
 
 Reducer 是一个函数，它接受 当前 State 和 Action 作为参数，返回一个新的 State。
 
-```
+```js
 const reducer = function(state, action) {
     // change state
     return newState
@@ -126,7 +126,7 @@ const reducer = function(state, action) {
 
 整个应用的初始状态，可以作为 State 的默认值。下面是一个实际的例子。
 
-```
+```js
 const defaultState = 0;
 const reducer = function(state = defaultState, action) {
     switch (action.type) {
@@ -146,7 +146,7 @@ store.dispatch方法会触发 Reducer 的自动执行。为此，Store 需要知
 
 为什么这个函数叫做 Reducer 呢？因为它可以作为数组的reduce方法的参数。请看下面的例子，一系列 Action 对象按照顺序作为一个数组。
 
-```
+```js
     const actions = [
       { type: 'ADD', payload: 0 },
       { type: 'ADD', payload: 1 },
@@ -163,7 +163,7 @@ Reducer 函数最重要的特征是，它是一个纯函数(相同的输入，�
 
 由于 Reducer 是纯函数，就可以保证同样的State，必定得到同样的 View。但也正因为这一点，Reducer 函数里面不能改变 State，必须返回一个全新的对象，请参考下面的写法。
 
-```
+```js
     // State 是一个对象
     function reducer(state, action) {
       return Object.assign({}, state, { thingToChange });
@@ -180,7 +180,7 @@ Reducer 函数最重要的特征是，它是一个纯函数(相同的输入，�
 ### store.subscribe()
 Store 允许使用store.subscribe方法设置监听函数，一旦 State 发生变化，就自动执行这个函数。
 
-```
+```js
     import {createStore} from 'redux';
     const store = createStore(reducer);
 
@@ -191,7 +191,7 @@ Store 允许使用store.subscribe方法设置监听函数，一旦 State 发生�
 
 store.subscribe方法返回一个函数，调用这个函数就可以解除监听。
 
-```
+```js
     var unsubscribe = store.subscribe(function() {
         console.log(store.getState());
     });
@@ -204,20 +204,20 @@ store.subscribe方法返回一个函数，调用这个函数就可以解除监�
 ---
 上一节介绍了 Redux 涉及的基本概念，可以发现 Store 提供了三个方法。
 
-```
+```js
     store.dispatch();
     store.getState();
     store.subscribe();
 ```
 
-```
+```js
     import {createStore} from 'redux';
     let {subscribe, getState, dispatch} = createStore(reducer);
 ```
 
 createStore方法还可以接受第二个参数，表示 State 的最初状态。这通常是服务器给出的。
 
-```
+```js
     let store = createStore(todoApp, window.STATE_FROM_SERVER)
 ```
 
@@ -226,7 +226,7 @@ createStore方法还可以接受第二个参数，表示 State 的最初状态�
 
 下面是createStore方法的一个简单实现，可以了解一下 Store 是怎么生成的。
 
-```
+```js
     const createStore = (reducer) => {
         let state;
         let listeners = [];
@@ -254,7 +254,7 @@ createStore方法还可以接受第二个参数，表示 State 的最初状态�
 
 Reducer 函数负责生成 State。由于整个应用只有一个 State 对象，包含所有数据，对于大型应用来说，这个 State 必然十分庞大，导致 Reducer 函数也十分庞大。
 
-```
+```js
     const chatReducer = (state = defaultState, action = {}) {
 
         var chatLogReducer = function(chatLog, action) {...};
@@ -273,7 +273,7 @@ Redux 提供了一个combineReducers方法，用于 Reducer 的拆分。你只�
 
 combineReduces 让代码更简单一点
 
-```
+```js
     import {combinReducer} from 'redux';
     const chatReducer = combinReducers({
         chatLog: chatLogReducer,
@@ -285,7 +285,7 @@ combineReduces 让代码更简单一点
 
 下面是combineReducer的简单实现。
 
-```
+```js
     const combinReducers = (reducers) => {
         return (state = {}, action = {}) => {
             return Object.keys(reducers).reduce((nextState, key) => {
@@ -298,7 +298,7 @@ combineReduces 让代码更简单一点
 
 可以把所有子 Reducer 放在一个文件里面，然后统一引入。
 
-```
+```js
     import {combinReducers, createStore} from 'redux';
     import * as reducers from './reducers';
     const reducer = combinReducers(reducers);
@@ -316,7 +316,7 @@ combineReduces 让代码更简单一点
 七. 简单示例
 ---
 
-```
+```js
     import {createStore} from 'redux';
     import ReactDOM from 'react-dom';
 
@@ -381,7 +381,7 @@ Action 发出以后，Reducer 立即算出 State，这叫做同步；Action 发�
 
 举例来说，要添加日志功能
 
-```
+```js
     let next = store.dispatch;
     store.dispatch = (action) => {
         console.log('dispatching', action);
@@ -395,7 +395,7 @@ Action 发出以后，Reducer 立即算出 State，这叫做同步；Action 发�
 ### 中间件的用法
 常用的中间件基本被别人都写好了，重点关注怎么使用
 
-```
+```js
     import {applyMiddleware, createStore} = 'redux';
     import createLogger from 'redux-logger';
     const logger = createLogger();
@@ -409,7 +409,7 @@ Action 发出以后，Reducer 立即算出 State，这叫做同步；Action 发�
 
 1. createStore方法可以接受整个应用的初始状态作为参数，那样的话，applyMiddleware就是第三个参数了。
 
-```
+```js
     const store = createStore(
       reducer,
       initial_state,
@@ -419,7 +419,7 @@ Action 发出以后，Reducer 立即算出 State，这叫做同步；Action 发�
 
 2. 中间件的次序有讲究。
 
-```
+```js
     const store = createStore(
       reducer,
       applyMiddleware(thunk, promise, logger)
@@ -434,7 +434,7 @@ applyMiddlewares这个方法到底是干什么的？
 
 它是 Redux 的原生方法，作用是将所有中间件组成一个数组，依次执行。下面是它的源码。
 
-```
+```js
     export default function applyMiddleware(...middlewares) {
       return (createStore) => (reducer, preloadedState, enhancer) => {
         var store = createStore(reducer, preloadedState, enhancer);
@@ -465,7 +465,7 @@ store.dispatch方法正常情况下，参数只能是对象，不能是函数。
 
 这时，就要使用中间件redux-thunk。
 
-```
+```js
     import { createStore, applyMiddleware } from 'redux';
     import thunk from 'redux-thunk';
     import reducer from './reducers';
@@ -487,7 +487,7 @@ store.dispatch方法正常情况下，参数只能是对象，不能是函数。
 
 这就需要使用redux-promise中间件。
 
-```
+```js
     import { createStore, applyMiddleware } from 'redux';
     import promiseMiddleware from 'redux-promise';
     import reducer from './reducers';
@@ -500,7 +500,7 @@ store.dispatch方法正常情况下，参数只能是对象，不能是函数。
 
 这个中间件使得store.dispatch方法可以接受 Promise 对象作为参数。这时，Action Creator 有两种写法。写法一，返回值是一个 Promise 对象。
 
-```
+```js
     const fetchPosts = 
       (dispatch, postTitle) => new Promise(function (resolve, reject) {
          dispatch(requestPosts(postTitle));
@@ -514,7 +514,7 @@ store.dispatch方法正常情况下，参数只能是对象，不能是函数。
 
 写法二，Action 对象的payload属性是一个 Promise 对象。这需要从redux-actions模块引入createAction方法，并且写法也要变成下面这样。
 
-```
+```js
     import { createAction } from 'redux-actions';
 
     class AsyncApp extends Component {
@@ -535,7 +535,7 @@ store.dispatch方法正常情况下，参数只能是对象，不能是函数。
 
 看一下redux-promise的源码，就会明白它内部是怎么操作的。
 
-```
+```js
     export default function promiseMiddleware({ dispatch }) {
       return next => action => {
         if (!isFSA(action)) { // isFluxStandardAction
@@ -556,6 +556,6 @@ store.dispatch方法正常情况下，参数只能是对象，不能是函数。
       };
     }
 
-```
+```js
 
 从上面代码可以看出，如果 Action 本身是一个 Promise，它 resolve 以后的值应该是一个 Action 对象，会被dispatch方法送出（action.then(dispatch)），但 reject 以后不会有任何动作；如果 Action 对象的payload属性是一个 Promise 对象，那么无论 resolve 和 reject，dispatch方法都会发出 Action。

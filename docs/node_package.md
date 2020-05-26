@@ -130,8 +130,8 @@ var fs = require('fs')
 // yaml.safeLoad(string [, option])
 // yaml.load(string [, option])
 try {
-  var doc = yaml.safeLoad(fs.readFileSync('/my/data/file.yml', 'utf8'))
-  console.log(doc)
+  var data = yaml.safeLoad(fs.readFileSync('/my/data/file.yml', 'utf8'))
+  console.log(data)
 }catch(e) {
   console.error(e)
 }

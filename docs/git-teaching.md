@@ -494,3 +494,7 @@ $ git grep -n [关键字]
 $ git grep --count [关键字]
 
 ```
+
+
+### 如何加速国内Github访问
+[如何加速国内Github访问](https://www.jianshu.com/p/66facbd8926a) *好像有点作用*

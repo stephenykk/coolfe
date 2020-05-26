@@ -153,6 +153,7 @@ ctrl + k, ctrl + t 选择主题
 - project manager
 - vetur
 - beautify
+- prettier
 - bracket select
 - Highlight Matching Tag
 - Quick and Simple Text Select

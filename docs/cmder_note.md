@@ -21,7 +21,12 @@ win10 下 cmder 很多命令 history pwd 无法使用，ls 字体也没有颜色
 2. 点击左上角标题，选择属性，勾选"使用旧版本控制台"
 3. 重新打开 cmder
 4. `alias` 可查看当前别名定义
-5. `win + alt + p` 打开设置，`Startup -- Environment` 可自定义别名 如: `alias kk=echo hello kk`
+5. `win + alt + p` 打开设置，`Startup -- Environment` 可自定义别名 
+    ```bash
+    alias kk=echo hello kk
+    alias gcm=git commit -am $1
+    alias gs=git status
+    ```
 
 
 ## 快捷键

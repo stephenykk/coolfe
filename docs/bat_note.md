@@ -108,7 +108,7 @@ echo goodbye
 ## 查找字符串
 
 ```bat
-REM find 命令 find string 注意这个 string 需要双引号
+REM find string 注意这个 string 需要双引号
 
 netstat -an > a.txt
 type a.txt | find "5355" && echo yes,you found the string
@@ -128,39 +128,27 @@ if "%1"=="help" goto usage
 
 :usage
 ECHO this is something about how to use bat
+```
+判断文件是否存在
 
+```bat
 REM 判断文件是否存在
 
 IF EXIST _.jpg DEL _.jpg
 
 :: IF NOT EXIST \*.jpg MKDIR pic
+```
 
-:: DOS 程序在运行完后都有返回码），如果和定义的错误码符合（这里定义的错误码为 1），则执行相应的操作（这里相应的操作为 pause & edit %1.asm 部分）
+FOR循环遍历
 
-::masm %1.asm
-
-::if not errorlevel 1 link %1.obj
-
-::pause & edit %1.asm
-
-:: ------------------------
-
-::masm %1.asm
-
-::if exist %1.obj link %1.obj
-
-::else pause & edit %1.asm
-
-REM IF [NOT] ERRORLEVEL number do command
-
-REM IF [NOT] string1==string2 do command
-
-REM IF [NOT] EXIST filename do command
-
+```bat
 :: 在批处理程序中使用 FOR 命令时，指定变量请使用 %%variable 而不要用 %variable。变量名称是区分大小写的，所以 %i 不同于 %I.
 
 FOR /F "usebackq delims==" %%i IN (`set`) DO @echo %%i
+```
+设置环境变量
 
+```bat
 :: 根据用户输入设置环境变量
 
 SET /p yourname=input your name:
@@ -169,23 +157,25 @@ SET /p yourname=input your name:
 SET yourname=alice
 ECHO %yourname%
 
-:: 读取文件内容设置环境变量 输入重定向
-SET /p yourname= < me.txt
-
+:: 以换行为分隔符
 FOR /F %%i in (me.txt) DO @SET yourname=%%i
+```
+延迟环境变量读取
 
+```bat
 :: 延迟环境变量读取
 
-1. 命令行中执行如下：
+:: 1. 命令行中执行如下：
 
 cmd /v:on ::延迟
 
 cmd /v:off ::不延迟
 
-2. 批处理中执行如下：
+:: 2. 批处理中执行如下：
 
+:: 打开
 setlocal EnableDelayedExpansion
-
+:: 关闭
 setlocal disableDelayedExpansion
 
 ~~设置命令行窗口的字符编码

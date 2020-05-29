@@ -2,16 +2,13 @@
 
 ## 简介
 
-[教程](https://www.w3cschool.cn/kqjhm/kqjhm-7z8a25wt.html)
+[canvas 基础教程](https://www.w3cschool.cn/kqjhm/kqjhm-7z8a25wt.html)
 
 ### 例子
 
+`<canvas>` 标签只有 `width` 和 `height` , 没有设置时，canvas 的默认大小为 300 像素 ×150 像素；也可用样式控制 canvas 的大小
+
 ```html
-<!-- 
-    <canvas> 标签只有两个属性—— width和height，这两个属性是可选的。
-    当我们没有定义时，Canvas 的默认大小为300像素×150像素
-    也可以通过样式控制canvas的大小
--->
 <canvas id="mycanvas" width="200" height="300">
   您的浏览器不支持canvas
 </canvas>
@@ -40,13 +37,13 @@ HTML 中的元素 canvas 只支持一种原生的图形绘制：矩形。所有�
 
 ```js
 // 绘制一个填充的矩形
-// fillRect( x ,y ,width, height)
+ctx.fillRect(x, y, width, height);
 
 // 绘制一个矩形的边框
-// strokeRect( x ,y ,width, height)
+ctx.strokeRect(x, y, width, height);
 
 // 清除指定矩形区域，让清除部分完全透明
-// clearRect( x ,y ,width, height)
+ctx.clearRect(x, y, width, height);
 
 var canvas = document.getElementById("mycanvas");
 if (canvas.getContext) {
@@ -75,17 +72,21 @@ if (canvas.getContext) {
   ```
 - 封闭路径。`ctx.closePath()`
 - 一旦路径生成，就能通过描边或填充路径区域来渲染图形。`ctx.stroke()` `ctx.fill()`
-  > 注意：当你调用 fill()函数时，所有没有闭合的形状都会自动闭合，所以你不需要调用 closePath()函数。但是调用 stroke()时不会自动闭合。
+
+> 注意：当你调用 fill()函数时，所有没有闭合的形状都会自动闭合，所以你不需要调用 closePath()函数。但是调用 stroke()时不会自动闭合。
 
 ### 弧线
 
-绘制圆弧或者圆，我们使用 arc()方法
+`ctx.arc(x, y, radius, startAngle, endAngle, anticlockwise)` 绘制圆弧或者圆
 
 ```js
-/* 
-画一个以（x,y）为圆心的以radius为半径的圆弧（圆），从startAngle开始到endAngle结束，参数anticlockwise 为一个布尔值。为true时，是逆时针方向，否则顺时针方向。
-
-注意：arc()函数中的角度单位是弧度，不是角度数。角度与弧度的转换:radians=(Math.PI/180)*degrees
+/*
+ * x, y 圆心
+ * radius 半径
+ * startAngle endAngle 开始/结束角度 单位 弧度
+ * anticlockwise 是否逆时针
+ *
+ * 角度转换为弧度:radians = (Math.PI/180) * degrees
  */
 ctx.arc(x, y, radius, startAngle, endAngle, anticlockwise);
 
@@ -106,16 +107,16 @@ ctx.arc(400, 70, 50, 0, Math.PI / 2, false);
 ctx.fill();
 ```
 
-###贝塞尔（bezier）以及二次贝塞尔
+### 贝塞尔（bezier）以及二次贝塞尔
 
 路径类型就是 贝塞尔曲线。二次以及三次贝塞尔曲线都十分有用，一般用来绘制复杂有规律的图形。
 
 ```js
 // 绘制二次贝塞尔曲线，x,y为结束点，cp1x,cp1y为控制点。
-quadraticCurveTo(cp1x, cp1y, x, y);
+ctx.quadraticCurveTo(cp1x, cp1y, x, y);
 
 // 绘制三次贝塞尔曲线，x,y为结束点，cp1x,cp1y为控制点一，cp2x,cp2y为控制点二。
-bezierCurveTo(cp1x, cp1y, cp2x, cp2y, x, y);
+ctx.bezierCurveTo(cp1x, cp1y, cp2x, cp2y, x, y);
 ```
 
 ### 矩形
@@ -131,7 +132,7 @@ new Path2D();     // 空的Path对象
 new Path2D(path); // 克隆Path对象
 new Path2D(d);    // 从SVG建立Path对象
 
-var path=new Path2D();
+var path = new Path2D();
 path.rect(120,120,50,50);
 ctx.stroke(path);
 
@@ -140,23 +141,29 @@ Path2D.addPath(path [, transform])​
 
 
 // 使用 SVG paths
-// 这条路径将先移动到点 (M10 10) 然后再水平移动80个单位 (h 80)，然后下移80个单位 (v 80)，接着左移80个单位 (h -80)，再回到起点处 (z)。
-var p = new Path2D("M10 10 h 80 v 80 h -80 Z");
+/* 这条路径将
+ * 先移动到点 (M10 10)
+ * 然后再水平移动80个单位 (h 80)
+ * 然后下移80个单位 (v 80)
+ * 接着左移80个单位 (h -80)
+ * 再回到起点处 (z)
+ */
+var path = new Path2D("M10 10 h 80 v 80 h -80 Z");
 ```
 
 ## 颜色、样式和阴影
 
-> 注意: 一旦您设置了 strokeStyle 或者 fillStyle 的值，那么这个新值就会成为新绘制的图形的默认值。如果你要给每个图形上不同的颜色，你需要重新设置 fillStyle 或 strokeStyle 的值。
+注意一旦您设置了 `strokeStyle` 或者 `fillStyle` 的值，那么这个新值就会成为新绘制的图形的默认值。  
+如果你要给每个图形上不同的颜色，你需要重新设置 `fillStyle` 或 `strokeStyle` 的值。
 
 ```js
-// 设置图形的填充颜色。
+// color 可以是表示 CSS 颜色值的字符串，渐变对象或者图案对象
+// 设置填充色
 ctx.fillStyle = color;
-
-// 设置图形轮廓的颜色。
+// 设置描边色
 ctx.strokeStyle = color;
 
-// color 可以是表示 CSS 颜色值的字符串，渐变对象或者图案对象
-
+// 渐变色板
 for (var i = 1; i < 6; i++) {
   for (var j = 1; j < 6; j++) {
     ctx.fillStyle =
@@ -172,7 +179,7 @@ for (var i = 1; i < 6; i++) {
 
 ### 线型的样式
 
-设置线条宽度。 `ctx.lineWidth = value`
+设置线条宽度 `ctx.lineWidth = value`
 
 ```js
 ctx.strokeStyle = "#e78170";
@@ -185,13 +192,13 @@ for (var i = 0; i < 10; i++) {
 }
 ```
 
-设置线条末端样式。`ctx.lineCap = {type}`
+设置线条末端样式。`ctx.lineCap = type`
 
 - butt 线段末端以方形结束。
 - round 线段末端以圆形结束。
 - square 线段末端以方形结束，但是增加了一个宽度和线段相同，高度是线段厚度一半的矩形区域
 
-设定线条与线条间接合处的样式。`ctx.lineJoin = {type}`
+设定线条与线条间接合处的样式。`ctx.lineJoin = type`
 
 - round 通过填充一个额外的，圆心在相连部分末端的扇形，绘制拐角的形状。 圆角的半径是线段的宽度。
 - bevel 在相连部分的末端填充一个额外的以三角形为底的区域， 每个部分都有各自独立的矩形拐角。
@@ -263,7 +270,7 @@ Type 必须是下面的字符串值之一：
 ```js
 var img = new Image();
 img.src = "diamond.png";
-img.onload = function() {
+img.onload = function () {
   var ptrn = ctx.createPattern(img, "repeat");
   ctx.fillStyle = ptrn;
   ctx.fillRect(250, 250, 80, 80);
@@ -279,7 +286,7 @@ img.onload = function() {
 ```js
 var img = new Image();
 img.src = "mm.jpg";
-img.onload = function() {
+img.onload = function () {
   ctx.shadowOffsetX = 10;
   ctx.shadowOffsetY = 10;
   ctx.shadowBlur = 8;
@@ -324,7 +331,7 @@ var img = new Image();
 
 img.src = "xx.jpg";
 
-img.onload = function() {
+img.onload = function () {
   // 等待图片加载完毕后再执行绘制
   ctx.drawImage(img, 0, 0);
 };
@@ -463,7 +470,7 @@ ctx.transform(Math.cos(θ*Math.PI/180)，Math.sin(θ*Math.PI/180), -Math.sin(θ*
 ```js
 var image = new Image();
 image.src = "comic_girl.png";
-image.onload = function() {
+image.onload = function () {
   ctx.beginPath();
   ctx.arc(100, 100, 50, 0, Math.PI * 2, true);
   ctx.clip(); // 裁剪路径
@@ -513,62 +520,64 @@ var newImageData = cxt.createImageData(imageData);
 
 ```js
 var img = new Image();
-img.src = 'comic_girl.png'
-img.onload = function() {
-    ctx.drawImage(img, 10, 10)
-    var imageData = ctx.getImageData(10, 10, 200, 300)
-    var data = imageData.data
-    for(var i =0; i<data.length; i+= 4) {
-        data[i] = 255 - data[i]
-        data[i+1] = 255 - data[i+1]
-        data[i+2] = 255 - data[i+2]
-        data[i+3] = 255
-    }
+img.src = "comic_girl.png";
+img.onload = function () {
+  ctx.drawImage(img, 10, 10);
+  var imageData = ctx.getImageData(10, 10, 200, 300);
+  var data = imageData.data;
+  for (var i = 0; i < data.length; i += 4) {
+    data[i] = 255 - data[i];
+    data[i + 1] = 255 - data[i + 1];
+    data[i + 2] = 255 - data[i + 2];
+    data[i + 3] = 255;
+  }
 
-    ctx.putImageData(imageData, 230, 100)
-}
+  ctx.putImageData(imageData, 230, 100);
+};
 ```
 
 在画布中写入像素数据
 
 `cxt.putImageData(imgData,x,y,dirtyX,dirtyY,dirtyWidth,dirtyHeight);`
 
-
 ## 保存文件
-用canvas.toDataURL()这个方法把canvas绘制的图形生成一幅图片
+
+用 canvas.toDataURL()这个方法把 canvas 绘制的图形生成一幅图片
 
 ```html
 <a id="download" download="foo.jpg">下载</a>
 <canvas id="mycanvas"></canvas>
 <script>
-    var $ = function(id) {return document.getElmentById(id)}
-    var canvas = $('mycanvas')
-    var a = $('download')
-    var dataUrl = canvas.toDataURL()
-    
-    a.setAttribute('download', 'comicGirl.jpg')
-    a.setAttribute('href', dataUrl)
-</script>
+  var $ = function (id) {
+    return document.getElmentById(id);
+  };
+  var canvas = $("mycanvas");
+  var a = $("download");
+  var dataUrl = canvas.toDataURL();
 
+  a.setAttribute("download", "comicGirl.jpg");
+  a.setAttribute("href", dataUrl);
+</script>
 ```
 
-
 ## 基础动画
-实现动画，我们首先想到的肯定是setTimeout和setInterval，这两个在这里就不细说了。
 
-除了这两个外，我们还可以使用window.requestAnimationFrame()这个方法。
+实现动画，我们首先想到的肯定是 setTimeout 和 setInterval，这两个在这里就不细说了。
 
-requestAnimationFrame 是专门为实现高性能的帧动画而设计的一个API
+除了这两个外，我们还可以使用 window.requestAnimationFrame()这个方法。
 
-> window.requestAnimationFrame()这个方法是用来在页面重绘之前，通知浏览器调用一个指定的函数，以满足开发者操作动画的需求。这个方法接受一个函数为参，该函数会在重绘前调用。   
-注意: 如果想得到连贯的逐帧动画，requestAnimationFrame(callback) callback函数中必须重新调用 requestAnimationFrame()。
+requestAnimationFrame 是专门为实现高性能的帧动画而设计的一个 API
+
+> window.requestAnimationFrame()这个方法是用来在页面重绘之前，通知浏览器调用一个指定的函数，以满足开发者操作动画的需求。这个方法接受一个函数为参，该函数会在重绘前调用。  
+> 注意: 如果想得到连贯的逐帧动画，requestAnimationFrame(callback) callback 函数中必须重新调用 requestAnimationFrame()。
 
 ```js
-var requestId = window.requestAnimationFrame(callback)
-window.cancelAnimationFrame(requestId)
+var requestId = window.requestAnimationFrame(callback);
+window.cancelAnimationFrame(requestId);
 ```
 
 抽奖例子
+
 ```js
 var canvas = document.getElementById("canvas");
 var ctx = canvas.getContext("2d");
@@ -577,27 +586,26 @@ var ctxHide = canvasHide.getContext("2d");
 
 canvasHide.width = canvasHide.height = 500;
 
-
 //加载多个图片
 function loadImages(urls, callback) {
   var promises = urls.map(
-    url =>
-      new Promise(function(resolve) {
+    (url) =>
+      new Promise(function (resolve) {
         var image = new Image();
-        image.onload = function() {
+        image.onload = function () {
           resolve(image);
         };
       })
   );
 
-  Promise.all(promises).then(function(images) {
+  Promise.all(promises).then(function (images) {
     callback(images);
   });
 }
 
 // 画背景
 function drawGameBg() {
-  loadImages(icons, function(images) {
+  loadImages(icons, function (images) {
     var x = (y = 0);
 
     for (var i = 0; i < icons.length; i++) {
@@ -621,51 +629,49 @@ function drawGameBg() {
 }
 
 // var icons = Array(10).fill(1).map(function(v, i) { return 'game/image/' + i + '.png' })
-var icons = Array.from({ length: 10 }, function(v, i) {
+var icons = Array.from({ length: 10 }, function (v, i) {
   return "game/image/" + i + ".png";
 });
 
 // 抽奖
-function lottery(){
-    var total = Math.floor(Math.random() * 10) + icons.length * 2;
-    
-    var count = 0;
-    
-    function move() {
-      var max = 400;
-    
-      var step = 100;
-    
-      if (x < max && y == 0) {
-        x += step;
-      } else if (x == max && y < max) {
-        y += step;
-      } else if (y == max && x > 0) {
-        x -= step;
-      } else if (x == 0 && y > 0) {
-        y -= step;
-      }
-    
-      ctx.clearRect(0, 0, 500, 500);
-    
-      ctx.drawImage(canvasHide, 0, 0, 500, 500);
-    
-      ctx.fillStyle = "rgba(0,0,0,.5)";
-    
-      ctx.fillRect(x, y, 100, 100);
-    
-      if (count > total) {
-        cancelAnimationFrame();
-      }
-    
-      count++;
-    
-      requestAnimationFrame(move);
+function lottery() {
+  var total = Math.floor(Math.random() * 10) + icons.length * 2;
+
+  var count = 0;
+
+  function move() {
+    var max = 400;
+
+    var step = 100;
+
+    if (x < max && y == 0) {
+      x += step;
+    } else if (x == max && y < max) {
+      y += step;
+    } else if (y == max && x > 0) {
+      x -= step;
+    } else if (x == 0 && y > 0) {
+      y -= step;
     }
 
+    ctx.clearRect(0, 0, 500, 500);
+
+    ctx.drawImage(canvasHide, 0, 0, 500, 500);
+
+    ctx.fillStyle = "rgba(0,0,0,.5)";
+
+    ctx.fillRect(x, y, 100, 100);
+
+    if (count > total) {
+      cancelAnimationFrame();
+    }
+
+    count++;
+
+    requestAnimationFrame(move);
+  }
 }
 
 drawGameBg();
 lottery();
 ```
-

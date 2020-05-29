@@ -30,11 +30,13 @@
 ## 命令组合
 
 `&&` 和 `||`
-> 类似 js 的短路径操作 `a&&b`, `a||b` 
 
-`&` 
+> 类似 js 的短路径操作 `a&&b`, `a||b`
+
+`&`
 
 > 类似 js 的 `,` 运算符 合并多条语句
+
 ```bat
     REM 组合命令和js的短路径操作类似
     DIR example.txt && ECHO found it too
@@ -46,30 +48,37 @@
     DIR foo.ttt & DIR foo.txt || ECHO can not see me
     DIR foo.txt & DIR foo.ttt || ECHO can see me
 ```
+
 ## 重定向
 
 输出重定向：`>`, `>>` , `|`  
 输入重定向: `<`
+
 ```bat
     ECHO hello > hi.txt
     REM 追加内容到文件
     ECHO not bad day >> exmple.txt
 
-    REM |(前一个命令的输出 作为后一个命令的输入) more 一屏一屏的显示后面的内容 Enter 1行， 空格 1屏
+    REM |(前一个命令的输出 作为后一个命令的输入)
+    REM more 一屏一屏的显示后面的内容 Enter 1行， 空格 1屏
     help | more
 
     more doc.txt
     more < doc.txt
 ```
+
 ## 打印文件内容
 
 `type`
+
 ```bat
     type longArticle.txt
 ```
+
 ## 调用其他批处理
 
 `call test.bat` 可以将功能模块化, 然后互相调用，通过 `%1`, `%2`, `...` 等形式接受入参
+
 ```bat
     REM call命令 从1个批处理调用另1个批处理 且接受入参
     call hi.bat sindy
@@ -77,6 +86,7 @@
     :: hi.bat
     echo hello, %1
 ```
+
 ## 提供选择项
 
 ```bat
@@ -113,6 +123,7 @@ REM find string 注意这个 string 需要双引号
 netstat -an > a.txt
 type a.txt | find "5355" && echo yes,you found the string
 ```
+
 ## if 命令 判断入参
 
 ```bat
@@ -129,284 +140,224 @@ if "%1"=="help" goto usage
 :usage
 ECHO this is something about how to use bat
 ```
+
 判断文件是否存在
 
 ```bat
 REM 判断文件是否存在
 
 IF EXIST _.jpg DEL _.jpg
-
-:: IF NOT EXIST \*.jpg MKDIR pic
 ```
 
-FOR循环遍历
+FOR 循环遍历
 
 ```bat
 :: 在批处理程序中使用 FOR 命令时，指定变量请使用 %%variable 而不要用 %variable。变量名称是区分大小写的，所以 %i 不同于 %I.
 
 FOR /F "usebackq delims==" %%i IN (`set`) DO @echo %%i
 ```
+
 设置环境变量
 
 ```bat
 :: 根据用户输入设置环境变量
-
 SET /p yourname=input your name:
 
-:: 直接设置环境变量
+:: 从文件读取值代替输入
+set /p num=what number? < number.txt
+echo the num is: %num%
+
+:: 直接设置环境变量 等号两边不能有空格
 SET yourname=alice
 ECHO %yourname%
 
 :: 以换行为分隔符
 FOR /F %%i in (me.txt) DO @SET yourname=%%i
 ```
+
+设置命令行窗口的字符编码
+
+```bat
+:: utf-8 编码
+chcp 65001
+
+:: 命令行窗口属性-->字体-->Lucida console
+
+:: 恢复默认的 GBK 编码
+
+REM gbk 的 codepage==936
+chcp 936
+```
+
+`if .. else` 流程控制
+
+```bat
+@echo off
+
+:: 输出空白行
+echo.
+
+if exist foo.ttt (
+    echo yes
+    echo welll done
+) else (
+    echo no
+    echo check your input
+)
+
+echo the end!
+
+:: 暂停执行
+pause
+
+```
+
+读取文件数值 做数学运算
+
+```bat
+@echo off
+
+set /p num= < number.txt
+echo.
+echo.
+echo current num is : %num%
+echo.
+
+set /a sum=%num%+1
+echo %sum% > number.txt
+
+
+REM 自增运算 +=
+set count=%sum%
+set /a count+=10
+echo count is %count%
+
+pause
+
+```
+
 延迟环境变量读取
 
 ```bat
-:: 延迟环境变量读取
+:: 命令行中 打开/关闭
+:: cmd /v:on
+:: cmd /v:off
 
-:: 1. 命令行中执行如下：
+:: 批处理中 打开/关闭
+:: setlocal EnableDelayedExpansion
+:: setlocal disableDelayedExpansion
 
-cmd /v:on ::延迟
-
-cmd /v:off ::不延迟
-
-:: 2. 批处理中执行如下：
-
-:: 打开
-setlocal EnableDelayedExpansion
-:: 关闭
-setlocal disableDelayedExpansion
-
-~~设置命令行窗口的字符编码
-
-1. chcp 65001 // utf-8 编码
-
-2. 命令行窗口属性-->字体-->Lucida console
-
-恢复默认的 GBK 编码
-
-chcp 936 //gbk 的 codepage==936
-
-~~ if .. else .. 并且可以使用括号包括多条命令
 
 @echo off
-echo.
-:: can we use if condition () else () syntax?
-if exist foo.ttt (
-echo yes,found it
-) else (
-echo no, missing
-)
-
-echo the end..
-
-pause
-
-```set读取文件内容 并数学运算+1
-
-@echo off
-@echo number + 1 for each time call this bat
-set /p num= < number.txt
-@echo.
-@echo.
-@echo current number is: %num%
-@echo.
-
-set /a sum=%num%+1
-@echo %sum% > number.txt
-
-:: set /a sum+=1
-
-pause
-
-
-
-~~变量延迟
-
-@echo off
-
 setlocal enabledelayedexpansion
 
-::great , can use brackets like this, so if can follow multiplte cmd
-set VAR=before
-if "%VAR%" == "before" (
-::set pro
-echo cmd one
-echo cmd two
-set VAR=after
-if "%VAR%" == "after" @echo you won't see this, when var not delayed
-echo %VAR%
+set val=before
+if %val% == before (
+    echo before one
+    echo before two
+
+    set val=after
+    if %val% == after echo you won't see this, when var not delayed
+    if !val! == after echo you will see this, var has been delayed
 )
 
 pause
-
-set VAR2=before2
-if "%VAR2%" == "before2" (
-echo command one
-echo command two
-set VAR2=after2
-echo command three
-if "!VAR2!" == "after2" @echo var has been delayed
-echo !VAR2!
-)
 
 endlocal
+```
 
 
-pause
+`set` 命令详解
 
-----------------------------------------
-
-set 命令
-----------------------------------------
-
+```bat
 SET [variable=[string]]
 SET /P variable=[promptString]
 SET /A expression
 
-
-
-示例1:
+:: 显示所有的变量的值
 @echo off
 set
-pause
-显示所有的变量的值
 
-示例2:
+:: 设置环境变量
 @echo off
 set var=我是值
 echo %var%
-pause
-请看 set var=我是值 ,这就是BAT直接在批处理中设置变量的方法!
-set 是命令 var是变量名 =号右边的"我是值"是变量的值
-在批处理中我们要引用这个变量就把var变量名用两个%(百分号)扩起来,如%var%
 
-
-
+:: 用户输入环境变量值
 @echo off
 set /p var=请输入你的名字:
 echo 您的名字是:%var%
-pause
-set /p 是命令语法 var是变量名 =号右边的"请输入变量的值: ",这个是提示语,不是变
-量的值了!
-运行后,我们在提示语后面直接输入robin,就会显示一行您” 您的名字是:robin”
 
-
-
-set的/A参数就是让SET可以支持数学符号进行加减等一些数学运算!
-
+:: 数学运算
 set /a var=1 + 1
-set /a var=2 - 1 结果是多少呢?如果你看不到结果就echo %var%.....
-set /a var=2 * 2 乘法运算
-set /a var=2 / 2 除法运算
-set /a var=(1+1) + (1+1) 结果等于4 看得懂吧!
-
-@echo off
+set /a var=2 - 1
+set /a var=2 * 2
+set /a var=2 / 2
+:: 支持括号
+set /a var=(1+1) + (1+1)
+:: 多条赋值语句
 set /a a=1+1,b=2+1,c=3+1
-echo %a% %b% %c%
-
+:: 复合赋值
 set /a var+=1
-set /a var*=2
+set /a var\*=2
+```
 
- ---------------
+选取字符串片段
 
-获取日期和时间
+```bat
+rem 关于提取 date,time 输出结果的一个批处理
 
-rem CODE BY t0nsha
-rem 关于提取date,time输出结果的一个批处理
-rem “:”（冒号）和“~”波浪号必不可少！
-rem “~”后的数字：为正数表示舍弃输出结果的前几位；直接跟负数表示取到输出结果的后第几位。
-rem “,”后的数字：为正数表示取到输出结果的前第几位；为负数表示舍弃输出结果的后几位。
+:: 选取字符片段
+:: 语法 %var:~start,end% 参考 js str.slice(start, end)
+
+:: date time 是内置环境变量
 echo %date%
 echo %date:~4%
-::下行表示舍弃前0位，取到第10位（即取输出结果的前10位）
+
 echo %date:~0,10%
 echo %date:~4,-5%
-pause
+
 echo %time%
 echo %time:~-3%
-echo %time:~2,-3%
-pause
 echo %date:~4% %time:~0,-3%
-pause
+```
 
------------------------------------------------
-环境变量 替换或删除匹配字符
+字符串查找替换
+
+```bat
+:: 字符串查找替换
+:: 语法 %var:targetStr=repStr%
+:: 查找等号左边的字符，替换为右边指定的字符
 
 @echo off
 echo.
 REM 设置环境变量为空格
-SET "space= "
-ECHO Your%space%role%space%is%space%coder
-ECHO\
+SET "s= "
+ECHO Your%s%role%s%is%s%coder
 
 REM 环境变量的值进行字符串替换
-SET "VAR=he doesn't care about the exam result"
-::find=rep 查找等号左边的字符，替换为右边指定的字符
-ECHO %VAR: =_%
+set "var=he don't care about"
+echo %var: =_%
+
+
+:: 等号右边无指定字符，即删除匹配的字符
+ECHO %var: =%
 ECHO.
 
-::当等号右边无指定字符，则删除匹配的字符
-ECHO %VAR: =%
+::可用通配符*, %var:*'=R%
+ECHO %var:*'=KK%
 ECHO.
 
-::可以用通配符*, %var:*'=R% *'匹配第一个'和它之前的内容
-ECHO %VAR:*'=removed,%
-ECHO.
+```
 
-PAUSE
+备份数据
+```bat
+:: set aFile=bak-%DATE:~4,4%%DATE:~9,2%%DATE:~12,2%
 
--------------------------------------------------------
-
-
-BTW
-
-使用批处理产生日期（时间）文件、文件夹 帮别人整Sql     server自动备份
-发现无法使用网络映射驱动器作为备份文件存放路径
-而本机磁盘空间实在是不够
-于是决定在本机只备份最新2天数据
-再写个批处理，做成系统调度
-每周将备份数据复制到网络驱动器上存档
-
-从网上搜到批处理产生日期文件的办法
-下面是实现的比较好的
-
-批处理文件：
-@echo off
-set aFile=bak-%DATE:~4,4%%DATE:~9,2%%DATE:~12,2%
-set bFile=bak-%TIME:~0,2%%TIME:~3,2%%TIME:~6,2%
-set cFile=bak-%DATE%
-echo Afile=%aFile%
-echo Bfile=%bFile%
-echo Cfile=%cFile%
-
-输出:
-Afile=bak-20061219
-Bfile=bak-113202
-Cfile=bak-星期二 2006-12-19
-
-于是备份bat就好写了
 @echo off
 echo 正在备份数据到网络驱动器。。。
 set folder=%DATE%
 md "y:/%folder%"
-copy d:/DataBak/*.BAK "y:/%folder%"
+copy d:/DataBak/\*.BAK "y:/%folder%"
 echo 备份完毕。
-
-------------------------------------------------------------------------------------------------------
-@echo off
-set AFile=bak-%DATE:~4,4%%DATE:~9,2%%DATE:~12,2%
-set BFile=bak-%TIME:~0,2%%TIME:~3,2%%TIME:~6,2%
-echo AFile=%AFile%.rar
-echo BFile=%BFile%.rar
-
-
-运行此批处理的结果：
-AFile=bak-20060109.rar ------- 年月日 -- 8位
-BFile=bak-140650.rar ---------- 时分秒 -- 6位
-
-另：如果小时数只有一位数字，造成中间有空格而出错的问题，请使用如下方法补0
-set hh=%time:~0,2%
-if /i %hh% LSS 10 (set hh=0%time:~1,1%)
 ```

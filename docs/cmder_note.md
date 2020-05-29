@@ -48,7 +48,7 @@ win10 下 cmder 很多命令 history pwd 无法使用，ls 字体也没有颜色
 
 ## 设置默认打开目录
 
-1. `win + alt + p` 打开设置 `startup` 看看 `specifiied named task` 是哪个
+1. `win + alt + p` 打开设置 `startup` 看看 `specified named task` 是哪个
 2. 修改对应task的命令
     ```bash
     # %USERPROFILE% 换成自己的目录

@@ -16,6 +16,12 @@ demo.coffee
 ```coffee
     # 函数调用 不用括号
     console.log 'hello world'
+    # 箭头函数 and 变量声明不用var
+    hello = -> console.log('so simple')
+    # 没有参数函数调用 要有括号
+    hello()
+    # 带参函数 声明 参数列表用括号 调用 参数间用逗号
+
 ```
 
 编译执行

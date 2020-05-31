@@ -14,19 +14,24 @@
 ```
 
 ## @ 抑制本行的输出
-
+```bat
     :: 不显示 echo 语句，只显示 echo 语句的执行结果
     @ECHO OFF
-
+```
 ## 逻辑和比较运算符
 
-`EXIST`, `NOT`, `==`
+> 比较郁闷的是 bat 没有 `and` `or` 之类的逻辑运算符，只能用 嵌套if 代替
 
+`EXIST`, `NOT`, `==`
+```bat
     REM 判断文件是否存在
     IF EXIST example.txt ECHO found it
     IF NOT EXIST example.exe ECHO not found it
     IF 2 == 2 ECHO TRUE
 
+    :: 实际是嵌套的if
+    IF %1 == soft IF %2 == dev explorer d:/soft/dev
+```
 ## 命令组合
 
 `&&` 和 `||`

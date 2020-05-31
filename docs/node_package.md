@@ -1,15 +1,14 @@
-常用的nodejs模块
-===
+# 常用的 nodejs 模块
 
-fs-extra
----
+## fs-extra
+
 ### 简介
-可以完全替代原生模块 fs, fs-extra提供的方法都支持promise(*如果没传入callback, 则返回promise*)
 
-### 文档 
+可以完全替代原生模块 fs, fs-extra 提供的方法都支持 promise(_如果没传入 callback, 则返回 promise_)
+
+### 文档
 
 `npm home fs-extra`
-
 
 ### 常用方法
 
@@ -118,27 +117,27 @@ example(dir)
 
 ```
 
-js-yaml
----
-解析或导出yaml文件的工具
+## js-yaml
+
+解析或导出 yaml 文件的工具
 
 ### 常用方法
+
 ```js
-var yaml = require('js-yaml')
-var fs = require('fs')
+var yaml = require("js-yaml");
+var fs = require("fs");
 
 // yaml.safeLoad(string [, option])
 // yaml.load(string [, option])
 try {
-  var data = yaml.safeLoad(fs.readFileSync('/my/data/file.yml', 'utf8'))
-  console.log(data)
-}catch(e) {
-  console.error(e)
+  var data = yaml.safeLoad(fs.readFileSync("/my/data/file.yml", "utf8"));
+  console.log(data);
+} catch (e) {
+  console.error(e);
 }
 
 // yaml.dump(object [,option])
 // yaml.safeDump(object [,option])
-let yamldoc = yaml.dump(data)
+let yamldoc = yaml.dump(data);
 console.log(yamldoc);
-
 ```

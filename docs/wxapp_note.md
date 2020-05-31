@@ -1,8 +1,7 @@
-小程序文档
-==========
+# 小程序文档
 
-体验
----
+## 体验
+
 apis
 
     wx.getStorageSync('logs');
@@ -53,7 +52,7 @@ apis
             path: '/pages/index/index?id=123' // 跳转页面
         }
     }
-    
+
     wx.navigateTo({url, success, fail, complete});
     <navigator open-type="navigateTo" url=".." />
     wx.redirectTo({url, success, fail, complete});
@@ -61,24 +60,25 @@ apis
     wx.switchTab({url});
     wx.reLaunch({url});
 
-框架
----
+## 框架
+
 weixinJSbridge -> JSSDK -> 小程序
-​网页开发渲染线程和脚本线程是互斥的，小程序中逻辑层和视图层工作在不同的线程，不互斥?
-逻辑层运行在JSCore中，没有DOM,BOM API, 与nodejs环境也不尽相同
+​ 网页开发渲染线程和脚本线程是互斥的，小程序中逻辑层和视图层工作在不同的线程，不互斥?
+逻辑层运行在 JSCore 中，没有 DOM,BOM API, 与 nodejs 环境也不尽相同
 
-运行环境 | 逻辑层 | 渲染层
--------|--------|--------
-ios | javascriptCore | WKwebview
-android | V8 | chromium定制内核
-小程序开发工具 | NWJS | chrome webview
+| 运行环境       | 逻辑层         | 渲染层            |
+| -------------- | -------------- | ----------------- |
+| ios            | javascriptCore | WKwebview         |
+| android        | V8             | chromium 定制内核 |
+| 小程序开发工具 | NWJS           | chrome webview    |
 
-![小程序通信模型](https://res.wx.qq.com/wxdoc/dist/assets/img/4-1.ad156d1c.png, '小程序通信')
+![小程序通信模型](https://res.wx.qq.com/wxdoc/dist/assets/img/4-1.ad156d1c.png, "小程序通信")
 
-+ 视图层 `wxml` `wxss`
-+ 逻辑层 `js`
+- 视图层 `wxml` `wxss`
+- 逻辑层 `js`
 
 ### 响应式的数据绑定
+
 数据改变，自动更新视图; 视图通过事件将用户的交互反馈给逻辑层
 
     // demo.wxml
@@ -96,14 +96,13 @@ android | V8 | chromium定制内核
         }
     });
 
-文件结构
----
-有描述程序整体的app(*app.json, app.wxss, app.js*) 和 描述页面的page(*page.js, page.json, page.wxss, page.wxml*) 组成。
+## 文件结构
 
-配置
----
+有描述程序整体的 app(_app.json, app.wxss, app.js_) 和 描述页面的 page(_page.js, page.json, page.wxss, page.wxml_) 组成。
 
-`app.json` 配置页面的路径，窗口外观，网络超时和多tab等..
+## 配置
+
+`app.json` 配置页面的路径，窗口外观，网络超时和多 tab 等..
 
     {
         "pages": [ // 不用后缀名
@@ -147,7 +146,7 @@ android | V8 | chromium定制内核
         "debug": true // console面板打印调试信息
     }
 
-`page.json`配置本页的窗口表现，会覆盖`app.json`中的window配置.
+`page.json`配置本页的窗口表现，会覆盖`app.json`中的 window 配置.
 
     {
         "navigationBarTextStyle": "#ffffff",
@@ -156,14 +155,13 @@ android | V8 | chromium定制内核
         disableScroll: false // 设置不能滚动
     }
 
-
 工具配置 project.config.json
 小程序开发者工具在每个项目的根目录都会生成一个 project.config.json，你在工具上做的任何配置都会写入到这个文件，当你重新安装工具或者换电脑工作时，你只要载入同一个项目的代码包，开发者工具就自动会帮你恢复到当时你开发项目时的个性化配置
 
-逻辑层
----
+## 逻辑层
 
 ### 注册程序
+
 App()函数用于注册程序, 如:
 
     App({
@@ -203,21 +201,19 @@ tap
 longtap
 longpress
 
-
 capture-bind:xx
 capture-catch:xx
 
-*BaseEvent:*
+_BaseEvent:_
 type
 timestamp
 target: {id, tagName, dataset}
 currentTarget
 
-*CustomEvent extends BaseEvent:*
+_CustomEvent extends BaseEvent:_
 detail 自定义事件所带的数据
 
-
-*TouchEvent extends BaseEvent:*
+_TouchEvent extends BaseEvent:_
 touches: [{identifier, pageX, pageY, clientX, clientY}, canvasTouch = {identifier, x, y}]
 changedTouches: [{...}]
 
@@ -233,15 +229,15 @@ canvas no bubble stage event
 
 ---
 
-*import and include*
-import 有作用域的概念，即只会 import 目标文件中定义的 template，而不会 import 目标文件 import 的 template。   
+_import and include_
+import 有作用域的概念，即只会 import 目标文件中定义的 template，而不会 import 目标文件 import 的 template。
 
-include 可以将目标文件除了 `<template/>`  `<wxs/> `外的整个代码引入
-    
-    item.wxml:
-    <template name="itemTpl">
-        <text>{{text}}</text>
-    </template>
+include 可以将目标文件除了 `<template/>` `<wxs/>`外的整个代码引入
+  
+ item.wxml:
+<template name="itemTpl">
+<text>{{text}}</text>
+</template>
 
     index.wxml:
     <import src="item.wxml" />
@@ -306,10 +302,8 @@ include 可以将目标文件除了 `<template/>`  `<wxs/> `外的整个代码�
     c.wxml
         <wxs src="./a.wxs" module="a"></wxs>
 
+## Number
 
-
-Number
-------
 n.toString()
 n.toLocaleString()
 n.valueOf()
@@ -317,8 +311,8 @@ n.toExponential()
 n.toFixed(n)
 n.toPrecision(n)
 
-String
------
+## String
+
 s.valueOf()
 s.localCompare(str)
 s.toString()
@@ -338,8 +332,8 @@ s.toLowerCase()
 s.toUpperCase()
 s.trim()
 
-Array
---------
+## Array
+
 arr.toString()
 arr.concat()
 arr.join()
@@ -360,8 +354,8 @@ arr.filter()
 arr.reduce()
 arr.reduceRight()
 
-Date
---------------
+## Date
+
 dt = getDate('150000303')
 dt = getDate('2017-7-12')
 dt = getDate(2017,5,12, 20, 33, 22);
@@ -380,9 +374,8 @@ dt.getFullYear()
 dt.getUTCFullYear()
 ...
 
+## Regexp
 
-Regexp
-----
 re = getRegExp(pattern, [flags])
 re = getRegExp('x', 'img');
 re.source
@@ -394,16 +387,15 @@ re.exec()
 re.test()
 re.toString()
 
-数据类型判断
----
+## 数据类型判断
+
 数据类型判断，可根据 `constructor` 属性
-[].constructor === 'Array' // 被修改的constructor属性
+[].constructor === 'Array' // 被修改的 constructor 属性
 typeof [] === 'array';
 typeof dt === 'object'
-typeof re === 'object'; // 同js
+typeof re === 'object'; // 同 js
 
-基础类库
----
+## 基础类库
 
 console (console.log)
 
@@ -426,21 +418,20 @@ Math.floor()
 Math.ceil()
 ...
 
-JSON
----
+## JSON
+
 JSON.stringify()
 JSON.parse()
 
+## Number
 
-Number
----
 Number.MAX_VALUE
 Numbber.MIN_VALUE
 Number.NEGATIVE_INFINITY
 Number.POSITIVE_INFINITY
 
-Global
----
+## Global
+
 NaN
 isNaN()
 undefined
@@ -451,36 +442,37 @@ isFinite()
 decodeURI() / encodeURI()
 decodeURIComponent() / encodeURIComponent()
 
+wxss 的扩展特性:
 
-wxss的扩展特性:
-- 尺寸单位 `rpx` // 屏幕宽度1/750作为1个单位大小 和 vw单位无异
+- 尺寸单位 `rpx` // 屏幕宽度 1/750 作为 1 个单位大小 和 vw 单位无异
 - 样式导入 `@import 'common.wxss';`
 
 组件的样式:
+
 - style 设动态的样式 `<view style="color:{{color}} />`
 - class 设静态的样式 `<view class="normal" />`
 
 支持的选择器:
 **基本上支持大多数的选择器，可以放心使用**
+
 - .class
 - \#id
 - element
 - element, element
-- ::after  / ::before
+- ::after / ::before
 
 全局样式和局部样式:
+
 - app.wxss 全局
 - pageX.wxss 局部
 
-基础组件
----
+## 基础组件
 
+## 基础库
 
-基础库
----
 基础库与客户端的关系, 要对应版本才能跑起来
-`wx.getSystemInfo()  / wx.getSystemInfoSync()` 获取基础库的版本号
-`wx.canIUse()` 判断api、组件是否可用
+`wx.getSystemInfo() / wx.getSystemInfoSync()` 获取基础库的版本号
+`wx.canIUse()` 判断 api、组件是否可用
 
 ### 接口兼容
 
@@ -506,51 +498,48 @@ wxss的扩展特性:
     Page({
         data: {
             canIUse: wx.canIUse('button.open-type.contact')
-        }    
+        }
     });
     <button wx:if="{{canIUse}}" open-type="contact">客服消息<button>
     <contact-button wx:else><contact-button>
 
-运行机制
----
+## 运行机制
 
-- 冷启动 *首次/销毁后打开*
-- 热启动 *后台->前台*
+- 冷启动 _首次/销毁后打开_
+- 热启动 _后台->前台_
 
-性能
----
+## 性能
+
 提供性能分析工具和优化建议
 
-page对象
----
+## page 对象
+
 `Page.prototype.route` (page.route) 可以获得当前页面的路径  
-`Page.prorotype.setData(data, [callback])` , 更新数据，把数据发送到视图层，是异步操作。  
+`Page.prorotype.setData(data, [callback])` , 更新数据，把数据发送到视图层，是异步操作。
 
 > setData 函数用于将数据从逻辑层发送到视图层（异步），同时改变对应的 this.data 的值（同步）。
 
-页面的数据对象较大时，属性访问路径会很深，所以setData方法做了些友好的处理，如：  
-    this.setData({'a.b.c.d': {foo: 'good'}});
-    this.setData({'friends[1].name', 'coco'});
-    this.data.msg = 'hello'; // 这样并不能更新数据
-    this.setData({msg: this.data.msg+'!!'}); // 应该类似这样去更新
+页面的数据对象较大时，属性访问路径会很深，所以 setData 方法做了些友好的处理，如：  
+ this.setData({'a.b.c.d': {foo: 'good'}});
+this.setData({'friends[1].name', 'coco'});
+this.data.msg = 'hello'; // 这样并不能更新数据
+this.setData({msg: this.data.msg+'!!'}); // 应该类似这样去更新
 
-page生命周期
----
-视图层 和 逻辑层 各自初始化，逻辑层初始化后，触发onLoad, onShow, 并等待视图层通知(视图层初始化完啦)，收到通知后，发送初始数据到视图层，视图层进行首次渲染, 逻辑层等待视图层通知(视图层渲染完啦),  收到通知后，触发onReady(表示初次渲染完成，可与视图层进行交互), 然后等待用户交互事件， 收到事件通知执行setData, 触发视图层重新渲染; 页面切换时，可能触发 onHide, onShow, onUnload.
+## page 生命周期
 
+视图层 和 逻辑层 各自初始化，逻辑层初始化后，触发 onLoad, onShow, 并等待视图层通知(视图层初始化完啦)，收到通知后，发送初始数据到视图层，视图层进行首次渲染, 逻辑层等待视图层通知(视图层渲染完啦), 收到通知后，触发 onReady(表示初次渲染完成，可与视图层进行交互), 然后等待用户交互事件， 收到事件通知执行 setData, 触发视图层重新渲染; 页面切换时，可能触发 onHide, onShow, onUnload.
 
-页面栈
----
-小程序框架管理页面路由，应时刻关注页面栈的变化，`getCurrentPages()` , 栈顶的为当前页. 
+## 页面栈
 
-+ `wx.redirectTo({url:..})` 替换当前页面，页面栈元素不增加
-+ `wx.switchTab({url: ..})` tab切换时，清空页面栈，栈中只有当前页面
-+ `wx.reLaunch({url: ..})` 重启小程序，清空，只保留指定的新页面
-+ `wx.navigateTo({url: ..})` push新页面到栈中
+小程序框架管理页面路由，应时刻关注页面栈的变化，`getCurrentPages()` , 栈顶的为当前页.
 
+- `wx.redirectTo({url:..})` 替换当前页面，页面栈元素不增加
+- `wx.switchTab({url: ..})` tab 切换时，清空页面栈，栈中只有当前页面
+- `wx.reLaunch({url: ..})` 重启小程序，清空，只保留指定的新页面
+- `wx.navigateTo({url: ..})` push 新页面到栈中
 
-模块化
----
+## 模块化
+
 采用类 cmd 模块方案，不过不会自动从 `node_modules` 查找模块，**只支持相对路径**。
 
     // util/common.js
@@ -568,8 +557,7 @@ page生命周期
     // pageA.js
     var common = require('./util/common.js');
 
-视图层
----
+## 视图层
 
     <!-- 数据绑定 -->
     <view> {{message}} </view>
@@ -598,7 +586,8 @@ page生命周期
     </block>
 
 ### 模板
-WXML提供模板（template），可以在模板中定义代码片段，然后在不同的地方调用。  
+
+WXML 提供模板（template），可以在模板中定义代码片段，然后在不同的地方调用。  
 模板拥有自己的作用域，只能使用 data 传入的数据以及模版定义文件中定义的 `<wxs />` 模块。
 
     <!--wxml-->
@@ -613,7 +602,8 @@ WXML提供模板（template），可以在模板中定义代码片段，然后�
     <template is="{{friendName}}" data="{{...friendData}}"></template>
 
 ### 事件
-事件是视图层到逻辑层的通讯方式。事件对象可以携带额外信息，如 id, dataset, touches。   
+
+事件是视图层到逻辑层的通讯方式。事件对象可以携带额外信息，如 id, dataset, touches。
 
     <view id="tapTest" data-hi="wechat" bindtap="tapName"> Click me! </view>
 
@@ -625,24 +615,24 @@ WXML提供模板（template），可以在模板中定义代码片段，然后�
       }
     })
 
-事件分为冒泡事件和非冒泡事件  
+事件分为冒泡事件和非冒泡事件
 
-冒泡事件: 
+冒泡事件:
 
-+ touchstart touchmove touchend touchcancel 
-+ tap longtap longpress
-+ transitionend 
-+ animationstart animationend animationiteration
-+ touchforcechange
+- touchstart touchmove touchend touchcancel
+- tap longtap longpress
+- transitionend
+- animationstart animationend animationiteration
+- touchforcechange
 
 非冒泡事件:
 
-+ submit
-+ input
-+ scroll
+- submit
+- input
+- scroll
 
-bind事件绑定不会阻止事件向上冒泡，catch事件绑定可以阻止冒泡事件向上冒泡。
-冒泡阶段事件绑定: bind  catch(不再向上冒泡);  
+bind 事件绑定不会阻止事件向上冒泡，catch 事件绑定可以阻止冒泡事件向上冒泡。
+冒泡阶段事件绑定: bind catch(不再向上冒泡);  
 捕获阶段事件绑定: capture-bind, capture-catch(不再向下传递)
 
     <view bind:tap="handler1">hello</view>
@@ -658,10 +648,10 @@ bind事件绑定不会阻止事件向上冒泡，catch事件绑定可以阻止�
       }
     })
 
-自定义组件
----
-基础版本库1.6.3+, 支持组件化开发  
-类似于页面，一个自定义组件由 json wxml wxss js 4个文件组成。  
+## 自定义组件
+
+基础版本库 1.6.3+, 支持组件化开发  
+类似于页面，一个自定义组件由 json wxml wxss js 4 个文件组成。
 
     // acom.json
     {
@@ -709,14 +699,14 @@ bind事件绑定不会阻止事件向上冒泡，catch事件绑定可以阻止�
     </view>
 
 ### 组件样式
+
 组件样式的支持有限，需要注意以下问题:
 
-+ 组件和引用组件的页面不能使用id选择器（#a）、属性选择器（[a]）和标签名选择器，请改用class选择器。
-+ 继承样式，如 font 、 color ，会从组件外继承到组件内。 *继承样式能穿透到组件内，其他样式无效*
-+ 除继承样式外， app.wxss 中的样式、组件所在页面的的样式对自定义组件无效。
+- 组件和引用组件的页面不能使用 id 选择器（#a）、属性选择器（[a]）和标签名选择器，请改用 class 选择器。
+- 继承样式，如 font 、 color ，会从组件外继承到组件内。 _继承样式能穿透到组件内，其他样式无效_
+- 除继承样式外， app.wxss 中的样式、组件所在页面的的样式对自定义组件无效。
 
 ### 外部样式类
-
 
     /* 组件 custom-component.js */
     Component({
@@ -726,7 +716,7 @@ bind事件绑定不会阻止事件向上冒泡，catch事件绑定可以阻止�
     <!-- 组件 custom-component.wxml -->
     <custom-component class="my-class">这段文本的颜色由组件外的 class 决定</custom-component>
 
-### Component构造器
+### Component 构造器
 
     Component({
         properties: {
@@ -807,24 +797,24 @@ bind事件绑定不会阻止事件向上冒泡，catch事件绑定可以阻止�
         }
       }
 
-    })    
+    })
 
-component实例的属性：
+component 实例的属性：
 
-+ this.is // 组件的文件路径
-+ this.id //节点id
-+ this.dataset // 节点dataset
-+ this.data // 包括内部数据和属性值
+- this.is // 组件的文件路径
+- this.id //节点 id
+- this.dataset // 节点 dataset
+- this.data // 包括内部数据和属性值
 
-component实例的方法：
+component 实例的方法：
 
-+ this.setData() 
-+ this.hasBehavior()
-+ this.triggerEvent()
-+ this.createSelectorQuery()
-+ this.selectComponent()
-+ this.selectAllComponents()
-+ this.getRelationNodes()
+- this.setData()
+- this.hasBehavior()
+- this.triggerEvent()
+- this.createSelectorQuery()
+- this.selectComponent()
+- this.selectAllComponents()
+- this.getRelationNodes()
 
 组件事件
 
@@ -839,7 +829,6 @@ component实例的方法：
       }
     })
 
-
 触发事件
 
     Component({
@@ -851,11 +840,10 @@ component实例的方法：
           this.triggerEvent('myevent', myEventDetail, myEventOption)
         }
       }
-    })    
-
+    })
 
 behavior  
-类似mixin, 组件间代码复用的方式
+类似 mixin, 组件间代码复用的方式
 
     Behavior({
         behaviors: [],
@@ -865,13 +853,13 @@ behavior
         methods: {} // merge cmp-first
     })
 
-内置的behaviors
+内置的 behaviors
 
     Component({
         behaviors: ['wx://form-field']
     })
 
-组件间关系  
+组件间关系
 
     <custom-ul>
       <custom-li> item 1 </custom-li>
@@ -923,8 +911,7 @@ behavior
       }
     })
 
-> 注意：必须在两个组件定义中都加入relations定义，否则不会生效。
-
+> 注意：必须在两个组件定义中都加入 relations 定义，否则不会生效。
 
 抽象节点  
 实现动态组件
@@ -950,9 +937,8 @@ behavior
     </view>
     <selectable-group generic:selectable="my-radio" />
 
+## 插件
 
-插件
----
 新建插件项目， 包含目录 `plugin` , `miniprogram`
 
     + miniprogram
@@ -964,7 +950,6 @@ behavior
         - index.js
         - plugin.json
 
-
 配置文件 plugin.json
 
     {
@@ -975,7 +960,7 @@ behavior
     }
 
 插件对外接口  
-插件可以对外提供 JS方法 和 组件
+插件可以对外提供 JS 方法 和 组件
 
     // pageA.js
     var WS = require('wsplugin');
@@ -987,23 +972,21 @@ behavior
         }
     }
 
-
 上传和发布  
 插件需要像小程序一样预览和上传, 没有体验版，但可以多个版本在线
 
 插件请求签名  
-插件在使用`wx.request`等网络api时，需加请求头 `X-WECHAT-HOSTSIGN`, 用于验证请求来源于小程序插件
+插件在使用`wx.request`等网络 api 时，需加请求头 `X-WECHAT-HOSTSIGN`, 用于验证请求来源于小程序插件
 
     X-WECHAT-HOSTSIGN: {noncestr, timestamp, signature}
     // appid 小程序的appid, token 插件的token 都可在设置中找到
     signature = sha1(APPID + noncestr + timestamp + token);
 
+## 分包
 
-分包
----
 对小程序进行分包，可以优化小程序首次启动的下载时间，以及在多团队共同开发时可以更好的解耦协作.
 
-分包/主包 都不能大于2M，所有包加起来不能大于4M
+分包/主包 都不能大于 2M，所有包加起来不能大于 4M
 
 `subPackages`字段声明分包, 首页必须在主包内。 分包之间资源互相独立，不能引用。
 
@@ -1029,9 +1012,9 @@ behavior
       ]
     }
 
-多线程
----
-worker线程和主线程通过`worker.postMessage()`, `worker.onmessage`通信，worker线程运行于独立的全局上下文，参考 web worker.
+## 多线程
+
+worker 线程和主线程通过`worker.postMessage()`, `worker.onmessage`通信，worker 线程运行于独立的全局上下文，参考 web worker.
 
     // app.json
     {
@@ -1051,10 +1034,10 @@ worker线程和主线程通过`worker.postMessage()`, `worker.onmessage`通信�
     // 只能有1个worker线程，结束worker用
     worker.terminate();
 
-兼容处理
----
-+ 版本号比较 `compareVersion`
-+ 兼容api `wx.methodName`
+## 兼容处理
+
+- 版本号比较 `compareVersion`
+- 兼容 api `wx.methodName`
 
         if(wx.openBluetoothAdapter) {
             wx.openBluetoothAdapter()
@@ -1065,7 +1048,7 @@ worker线程和主线程通过`worker.postMessage()`, `worker.onmessage`通信�
             })
         }
 
-+ 兼容参数 `wx.canIUse()`
+- 兼容参数 `wx.canIUse()`
 
         wx.showModal({
             success(res) {
@@ -1075,7 +1058,7 @@ worker线程和主线程通过`worker.postMessage()`, `worker.onmessage`通信�
             }
         })
 
-+ 兼容组件 `wx.canIUse()`
+- 兼容组件 `wx.canIUse()`
 
         Page({
             data: {

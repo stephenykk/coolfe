@@ -1,6 +1,6 @@
 # linux 命令行
 
-[每天一个linux命令](https://yelog.org/2016/12/01/linux-command%EF%BC%881%EF%BC%89-ls/)
+[每天一个 linux 命令](https://yelog.org/2016/12/01/linux-command%EF%BC%881%EF%BC%89-ls/)
 
 ## 快捷键
 
@@ -13,14 +13,15 @@ shift + pageUp # 向上滚动bash命令行的内容
 shift + pageDown # 向下滚动bash命令行的内容
 ```
 
-
 ## 查看帮助
+
 ```bash
-info shutdown 
-man shutdown 
+info shutdown
+man shutdown
 ```
 
 ## 开/关机
+
 ```bash
 sudo init 0 # 关机
 sudo shutdown -h now
@@ -182,7 +183,7 @@ rm file # 删除文件
 rm -rf dir # 删除文件夹 (注意:无法恢复)
 
 # 批量删除时，排除个别文件
-shopt -s extglob  # 开启extglob  -s 开启 -u 关闭   
+shopt -s extglob  # 开启extglob  -s 开启 -u 关闭
 rm -rf !(dist.rar|node_modules)
 ```
 
@@ -237,8 +238,8 @@ nginx -v # 显示 nginx 版本
 sudo nginx -t # 测试配置文件的设置，可看到配置文件路径
 ```
 
-
 ## 安装和查看程序
+
 ```bash
 sudo apt-get update
 sudo apt-get install curl
@@ -248,11 +249,12 @@ which nginx # 同上
 ```
 
 ## 环境变量
+
 ```bash
 echo $PATH # 查看环境变量 PATH (注意:区分大小写)
 
 #仅当前终端生效
-export PATH=/usr/local/mongodb/bin:$PATH # 临时配置 
+export PATH=/usr/local/mongodb/bin:$PATH # 临时配置
 
 #全局配置 /etc/profile
 # vi /etc/profile , 添加 export PATH=/usr/local/mongodb/bin:$PATH 全局配置
@@ -264,13 +266,14 @@ vim /etc/environment # 全局配置 直接修改环境变量配置文件
 #当前用户生效
 vim ~/.bashrc , 添加 export PATH=/usr/local/mongodb/bin:$PATH
 ```
+
 ## 磁盘
+
 ```bash
-df -h #查看磁盘剩余空间 
+df -h #查看磁盘剩余空间
 df -m #同上 文件大小m为单位
 df -k #同上 文件大小k为单位
 
 # super + A 输入 disks ,打开 disks 工具
 # sudo hdparm -I /dev/sdb 查看硬盘参数
 ```
-

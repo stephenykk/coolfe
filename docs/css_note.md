@@ -64,7 +64,7 @@ css notes
 .parent {
     height: 200px;
     display: table-cell;
-    vertical-align: center;
+    vertical-align: middle;
 }
 
 
@@ -94,8 +94,8 @@ css notes
     align-items: center;
 }
 
-// 内联元素居中 (::after vertical-align: center)
-// :: inline-block vertical-align: center
+// 内联元素居中 (::after vertical-align: middle)
+// :: inline-block vertical-align: middle
 .container {
     height: 100px;
     &::after {
@@ -103,7 +103,7 @@ css notes
         display: inline-block;
         height: 100%;
         width: 0;
-        vertical-align: center;
+        vertical-align: middle;
     }
 }
 ```

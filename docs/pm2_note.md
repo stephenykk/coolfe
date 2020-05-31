@@ -1,12 +1,11 @@
-pm2
-===
-[pm2入门指南](https://www.cnblogs.com/chyingp/p/pm2-documentation.html)
+# pm2
 
-用法
----
+[pm2 入门指南](https://www.cnblogs.com/chyingp/p/pm2-documentation.html)
 
-        $ npm install pm2 -g     # 命令行安装 pm2 
-        $ pm2 start app.js -i 4 #后台运行pm2，启动4个app.js 
+## 用法
+
+        $ npm install pm2 -g     # 命令行安装 pm2
+        $ pm2 start app.js -i 4 #后台运行pm2，启动4个app.js
                                         # 也可以把'max' 参数传递给 start
                                         # 正确的进程数目依赖于Cpu的核心数目
         $ pm2 start app.js --name my-api # 命名进程
@@ -37,8 +36,7 @@ pm2
         $ pm2 start my-bash-script.sh    -x --interpreter bash
         $ pm2 start my-python-script.py -x --interpreter python
 
-
-通过配置文件方式指定选项,  `pm2 start app.yml`
+通过配置文件方式指定选项, `pm2 start app.yml`
 
         // app.yml
         apps:

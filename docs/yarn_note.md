@@ -1,4 +1,9 @@
 # yarn notes
+<<<<<<< HEAD
+=======
+
+## 安装
+>>>>>>> 124efc54297a09178fd738a975595fd3c7b50426
 
 ## 安装
 有以下几种方式:
@@ -9,7 +14,11 @@
 `yarn --version` 能输出版本号，说明安装成功.
 
 ## 用法
+<<<<<<< HEAD
 ```shell
+=======
+
+>>>>>>> 124efc54297a09178fd738a975595fd3c7b50426
     # 初始化项目, 问答的方式生成 package.json, 同 npm init
     yarn init
 
@@ -40,8 +49,13 @@
     yarn install  # 同上
 
     # 发布包
+<<<<<<< HEAD
 yarn publish # 在项目根目录下执行
 ```
+=======
+    yarn publish # 在项目根目录下执行
+
+>>>>>>> 124efc54297a09178fd738a975595fd3c7b50426
 ## CLI 命令
 
 ### yarn add

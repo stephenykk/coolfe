@@ -1,6 +1,6 @@
 # phantomjs 教程
 
-[不错的phantomjs教程](http://www.phperz.com/special/45.html)
+[不错的 phantomjs 教程](http://www.phperz.com/special/45.html)
 
 ## 简介
 
@@ -58,11 +58,11 @@ var phantomjs = require("phantomjs-prebuilt");
 
 // child = phantomjs.exec(jsfile, arg1, arg2,..)
 var childProcess = phantomjs.exec("hello.js");
-childProcess.stdout.on("data", function(data) {
+childProcess.stdout.on("data", function (data) {
   // data is buffer
   console.log("GOT:", data.toString());
 });
-childProcess.stderr.on("data", function(data) {
+childProcess.stderr.on("data", function (data) {
   console.error("GOT ERR:", data.toString());
 });
 
@@ -80,7 +80,7 @@ var system = require("system");
 if (system.args.length === 1) {
   console.log("Try to pass some args when invoking this script!");
 } else {
-  system.args.forEach(function(arg, i) {
+  system.args.forEach(function (arg, i) {
     console.log(i + ": " + arg);
   });
 }
@@ -103,7 +103,7 @@ if (!url) {
   phantom.exit(1);
 }
 
-page.open(url, function(status) {
+page.open(url, function (status) {
   var diff = Date.now() - start;
   if (status == "success") {
     console.log("use ", diff, " ms");
@@ -111,11 +111,11 @@ page.open(url, function(status) {
     page.pageSize = {
       format: "A4",
       orientation: "portrait",
-      border: "1cm"
+      border: "1cm",
     };
     page.viewportSize = {
       width: 750,
-      height: 1000
+      height: 1000,
     };
 
     page.render("baidu.png"); // 整个页面的截图 不仅仅首屏
@@ -141,7 +141,7 @@ if (!url) {
   phantom.exit();
 }
 
-page.open(url, function(status) {
+page.open(url, function (status) {
   if (status === "success") {
     console.log(page.content); // 打印页面html
   } else {
@@ -166,8 +166,8 @@ if (!url) {
   phantom.exit();
 }
 
-page.open(url, function(status) {
-  var title = page.evaluate(function() {
+page.open(url, function (status) {
+  var title = page.evaluate(function () {
     console.log("log:", document.title); // evaluate回调内document可用
 
     window === this; // true
@@ -182,7 +182,7 @@ page.open(url, function(status) {
   phantom.exit();
 });
 
-page.onConsoleMessage = function(msg) {
+page.onConsoleMessage = function (msg) {
   // 页面控制台的输出都会打印
   console.log("MSG:", msg);
 };
@@ -204,9 +204,9 @@ function stderrLog(msg) {
 }
 
 var url = system.args[1];
-page.open(url, function(status) {
+page.open(url, function (status) {
   if (status === "success") {
-    var outerArr = ["foo", "bar"]
+    var outerArr = ["foo", "bar"];
     var result = page.evaluate(function getComponents(outerArr) {
       // can use outerArr here
 
@@ -232,30 +232,30 @@ page.open(url, function(status) {
 });
 
 // callGetCmps.js
-var callGetCmps = async function() {
-    let topicUrl = `${this.config.assetsDomain}/topic/page/pantest.html`;
-    let result = await new Promise(resolve => {
-      let prog = phantomjs.exec(
-        path.join(__dirname, "../utils/getTopicCmps.js"),
-        topicUrl
-      );
-    
-      prog.stdout.on("data", async data => {
-        data = data.toString();
-        // let cmplist = JSON.parse(data)
-        resolve({ ok: true, data });
-      });
-    
-      prog.stderr.on("data", data => {
-        data = data.toString();
-        this.logger.error(data);
-        resolve({ ok: false, msg: data });
-      });
-    });
-    console.log("result:", result);
-}
+var callGetCmps = async function () {
+  let topicUrl = `${this.config.assetsDomain}/topic/page/pantest.html`;
+  let result = await new Promise((resolve) => {
+    let prog = phantomjs.exec(
+      path.join(__dirname, "../utils/getTopicCmps.js"),
+      topicUrl
+    );
 
-callGetCmps()
+    prog.stdout.on("data", async (data) => {
+      data = data.toString();
+      // let cmplist = JSON.parse(data)
+      resolve({ ok: true, data });
+    });
+
+    prog.stderr.on("data", (data) => {
+      data = data.toString();
+      this.logger.error(data);
+      resolve({ ok: false, msg: data });
+    });
+  });
+  console.log("result:", result);
+};
+
+callGetCmps();
 
 // > node getCmp.js
 ```
@@ -274,18 +274,18 @@ if (!url) {
   phantom.exit();
 }
 
-page.open(url, function(status) {
+page.open(url, function (status) {
   if (status === "success") {
     page.includeJs(
       "https://cdn.bootcss.com/lodash.js/4.17.15/lodash.js",
-      function() {
-        var result = page.evaluate(function() {
+      function () {
+        var result = page.evaluate(function () {
           // dom 操作
           $("#kw").val("cnblogs");
           $("#su").submit();
 
           // 使用外部js
-          var arr = _.map(["hello", "world", "me"], function(v) {
+          var arr = _.map(["hello", "world", "me"], function (v) {
             return v + "-m";
           });
 
@@ -296,7 +296,7 @@ page.open(url, function(status) {
 
         page.viewportSize = { width: 750, height: 1200 };
         // 等待搜索结果
-        setTimeout(function() {
+        setTimeout(function () {
           page.render("cnblogs.png");
 
           phantom.exit();
@@ -322,11 +322,11 @@ if (!url) {
   phantom.exit();
 }
 
-page.onResourceRequested = function(req) {
+page.onResourceRequested = function (req) {
   console.log("request:", JSON.stringify(req, null, 4));
 };
 
-page.onResourceReceived = function(res) {
+page.onResourceReceived = function (res) {
   console.log("response:", JSON.stringify(res, null, 4));
 };
 
@@ -371,11 +371,11 @@ phantom.exit();
 - phantom.onError  
    当页面存在 js 错误，且没有被 page.onError 处理，则会被此 handler 捕获。
   ```js
-  phantom.onError = function(msg, trace) {
+  phantom.onError = function (msg, trace) {
     var msgStack = ["PHANTOM ERROR: " + msg];
     if (trace && trace.length) {
       msgStack.push("TRACE:");
-      trace.forEach(function(t) {
+      trace.forEach(function (t) {
         msgStack.push(
           " -> " +
             (t.file || t.sourceURL) +
@@ -426,7 +426,7 @@ page 对象的 api:
   ```js
   page.customHeaders = {
     "X-Test": "foo",
-    DNT: "1"
+    DNT: "1",
   };
   ```
 - page.libraryPath String  
@@ -452,8 +452,8 @@ page 对象的 api:
    如下例：
 
   ```js
-  page.open("http://m.bing.com", function(status) {
-    var title = page.evaluate(function(s) {
+  page.open("http://m.bing.com", function (status) {
+    var title = page.evaluate(function (s) {
       return document.querySelector(s).innerText;
     }, "title");
     console.log(title);
@@ -470,7 +470,7 @@ page 对象的 api:
 
   ```js
   var page = require("webpage").create();
-  page.open("http://github.com/", function() {
+  page.open("http://github.com/", function () {
     page.render("github.png");
     phantom.exit();
   });
@@ -487,7 +487,7 @@ page 对象的 api:
     top: 14,
     left: 3,
     width: 400,
-    height: 300
+    height: 300,
   };
   ```
 
@@ -535,22 +535,22 @@ page 对象的 api:
   ```js
   var webPage = require("webpage");
   var page = webPage.create();
-  page.onAlert = function(msg) {
+  page.onAlert = function (msg) {
     console.log("ALERT: " + msg);
   };
-  page.onPrompt = function(msg, defaultVal) {
+  page.onPrompt = function (msg, defaultVal) {
     if (msg === "What's your name?") {
       return "PhantomJS";
     }
     // 返回值就是prompt得到的值
     return defaultVal;
   };
-  page.onConfirm = function(msg) {
+  page.onConfirm = function (msg) {
     console.log("CONFIRM: " + msg);
     // 返回true相当于点击“确定”，返回false相当于点击“取消”
     return true;
   };
-  page.onConsoleMessage = function(msg, lineNum, sourceId) {
+  page.onConsoleMessage = function (msg, lineNum, sourceId) {
     console.log(
       "CONSOLE: " + msg + " (from line #" + lineNum + ' in "' + sourceId + '")'
     );
@@ -562,7 +562,7 @@ page 对象的 api:
 - page.onNavigationRequested
 
   ```js
-  page.onNavigationRequested = function(url, type, willNavigate, main) {
+  page.onNavigationRequested = function (url, type, willNavigate, main) {
     console.log("Trying to navigate to: " + url);
     console.log("Caused by: " + type);
     console.log("Will actually navigate: " + willNavigate);
@@ -592,7 +592,7 @@ page 对象的 api:
 - page.onResourceRequested：当页面请求一个资源时触发的事件，
 
   ```js
-  page.onResourceRequested = function(requestData, networkRequest) {
+  page.onResourceRequested = function (requestData, networkRequest) {
     /*
           requestData == {
               id: 资源请求编号
@@ -614,7 +614,7 @@ page 对象的 api:
 - page.onResourceReceived： 当一个资源请求的响应接收到后触发此事件
 
   ```js
-  page.onResourceReceived = function(response) {
+  page.onResourceReceived = function (response) {
     /*
           response == {
               id: 资源请求编号
@@ -635,7 +635,7 @@ page 对象的 api:
 - page.onResourceError：当资源加载失败时，触发此事件。
 
   ```js
-  page.onResourceError = function(resourceError) {
+  page.onResourceError = function (resourceError) {
     console.log(
       "Unable to load resource (#" +
         resourceError.id +
@@ -654,7 +654,7 @@ page 对象的 api:
 
 - page.onResourceTimeout：请求资源超时会触发此事件
   ```js
-  page.onResourceTimeout = function(timeoutError) {
+  page.onResourceTimeout = function (timeoutError) {
     /*
           timeoutError == {
               id : 资源请求编号

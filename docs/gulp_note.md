@@ -1,23 +1,19 @@
-gulp notes
-===
+# gulp notes
 
-入门指南
-－－－
+## 安装
 
-1. 全局安装
-  `npm i -g gulp`
-
-2. 本地安装
-  `npm i gulp --save-dev
-
-3. 创建`gulpfile.js`
-
+```bash
+  npm i -g gulp # 全局安装
+  npm i gulp -save-dev
 ```
+
+## gulpfile.js
+
+```js
 var gulp = require('gulp')
 gulp.task('default', function() {
   // do sth
 })
 ```
-
-4. 执行 `gulp`
-
+## 执行
+命令行切换到项目根目录，执行 `gulp` 即可

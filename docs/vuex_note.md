@@ -1,34 +1,31 @@
-vuex2.x
-============
+# vuex2.x
 
-安装
-----
+## 安装
 
-+ cdn引用
+- cdn 引用
 
         <script src="path/to/vue.js"></script>
         <script src="path/to/vuex.js"></script>
 
-+ npm安装
+- npm 安装
 
         npm i vuex --save
         yarn add vuex
 
         Vue.use(Vuex);
 
+## 简介
 
-简介
-----
 为**vuejs**专门设计的集中式状态管理架构，借鉴了 **flux** 和 **redux** 的设计思想
 
-通常整个应用的状态散落在各个组件的内部, 当需要把一部分状态"发送"给其他组件时，通常用自定义事件的方式(*vm.$dispatch, pvm.$broadcast*)，大应用中比较难跟踪和调试。
+通常整个应用的状态散落在各个组件的内部, 当需要把一部分状态"发送"给其他组件时，通常用自定义事件的方式(_vm.$dispatch, pvm.$broadcast_)，大应用中比较难跟踪和调试。
 
-大应用中，把状态分为 **组件本地状态** 和 **应用级的状态**, 集中式的状态管理，更容易的记录和观察状态变化(*mutation*).
+大应用中，把状态分为 **组件本地状态** 和 **应用级的状态**, 集中式的状态管理，更容易的记录和观察状态变化(_mutation_).
 
-Vuex应用的核心是**store**, store是状态的容器，和全局对象有以下不同:
+Vuex 应用的核心是**store**, store 是状态的容器，和全局对象有以下不同:
 
-1. store存储的状态是响应式的 (*store中状态改变，依赖该状态的组件会得到更新*)
-2. 不能直接修改store中的状态 (**只能**通过派发action的方式 `dispatch action` , `action commit mutation` ，修改store的状态)
+1. store 存储的状态是响应式的 (_store 中状态改变，依赖该状态的组件会得到更新_)
+2. 不能直接修改 store 中的状态 (**只能**通过派发 action 的方式 `dispatch action` , `action commit mutation` ，修改 store 的状态)
 
 示例：
 
@@ -51,13 +48,11 @@ Vuex应用的核心是**store**, store是状态的容器，和全局对象有以
     store.commit('INCREMENT'); // or  store.commit({type: 'INCREMENT'});
     console.log(store.state.count); //-> 1
 
+## State
 
-State
----
+`vuex`使用单一状态树，整个应用只有一个 store 实例。
 
-`vuex`使用单一状态树，整个应用只有一个store实例。
-
-组件是如何使用store实例的状态的？
+组件是如何使用 store 实例的状态的？
 
     import Vue from 'vue';
     import Vuex from 'vuex';
@@ -69,10 +64,10 @@ State
         el: '#app',
         // 通过store选项 把store实例注入到每个子组件中,
         // 子组件通过 this.$store获取
-        store, 
+        store,
         components: {
             MyComponent
-        }    
+        }
     });
 
     //> MyComponent.js
@@ -104,8 +99,7 @@ State
         computed: mapState(['count'])
     }
 
-getter
-----
+## getter
 
 Vuex 允许我们在 `store` 中定义 `getters` (可以认为是 store 的计算属性)
 
@@ -138,7 +132,6 @@ Vuex 允许我们在 `store` 中定义 `getters` (可以认为是 store 的计�
         }
     }
 
-
 ### 辅助函数 mapGetters 类似 mapState
 
     import {mapGetters} from 'vuex';
@@ -152,9 +145,9 @@ Vuex 允许我们在 `store` 中定义 `getters` (可以认为是 store 的计�
         }
     }
 
-mutations
-----
-更改 Vuex 的 store 中的状态的唯一方法是提交 `mutation` 。 Vuex 中的 `mutation` 非常类似于事件：每个 `mutation` 都有一个字符串的 *事件类型* (type) 和 一个 *回调函数* (handler)
+## mutations
+
+更改 Vuex 的 store 中的状态的唯一方法是提交 `mutation` 。 Vuex 中的 `mutation` 非常类似于事件：每个 `mutation` 都有一个字符串的 _事件类型_ (type) 和 一个 _回调函数_ (handler)
 
     const store = new Vuex.Store({
       state: {
@@ -172,9 +165,11 @@ mutations
     this.$store.commit({type: 'increment', amount: 10}); // 对象语法
 
 ### Mutation 必须是同步函数
+
 因为任何在回调函数中进行的的状态的改变都是不可追踪的。
 
-### 辅助函数 mapMutations 
+### 辅助函数 mapMutations
+
 通常我们在组件的方法中，提交变更 (`this.$store.commit('some_mutation')`), `mapMutations`让我们更方便地创建相关方法.
 
     import { mapMutations } from 'vuex'
@@ -194,8 +189,8 @@ mutations
       }
     }
 
-actions
-----
+## actions
+
 `action` 主要是用来 commit mutations 的， action 可以包含异步操作.
 
     const store = new Vuex.Store({
@@ -256,7 +251,8 @@ actions
     }
 
 ### 组合 Action
-`this.$store.dispatch('some-action')` 返回的是一个promise
+
+`this.$store.dispatch('some-action')` 返回的是一个 promise
 
     actions: {
       actionA ({ commit }) {
@@ -286,8 +282,8 @@ actions
       }
     }
 
-modules
-----
+## modules
+
 使用单一状态树，应用的所有状态会集中到一个比较大的对象, Vuex 允许我们将 store 分割成模块（module）。每个模块拥有自己的 state、mutation、action、getter、甚至是嵌套子模块——从上至下进行同样方式的分割
 
     const moduleA = {
@@ -314,7 +310,8 @@ modules
     store.state.b // -> moduleB 的状态
 
 ### 模块的局部状态
-对于模块内部的 mutation 和 getter，接收的第一个参数是 *模块的局部状态对象*。
+
+对于模块内部的 mutation 和 getter，接收的第一个参数是 _模块的局部状态对象_。
 
     const moduleA = {
       state: { count: 0 },
@@ -357,6 +354,7 @@ modules
     }
 
 ### 命名空间
+
 默认情况下，模块内部的 action、mutation 和 getter 是注册在全局命名空间的——这样使得多个模块能够对同一 mutation 或 action 作出响应。
 
 如果希望你的模块具有更高的封装度和复用性，你可以通过添加 namespaced: true 的方式使其成为命名空间模块。当模块被注册后，它的所有 getter、action 及 mutation 都会自动根据模块注册的路径调整命名。
@@ -484,25 +482,22 @@ modules
     store.registerModule(['nested', 'myModule'], {
       // ...
     })
-    
 
-localStorage持久化vuex
----
+## localStorage 持久化 vuex
+
 ```js
-const handleStore = store => {
-  if (localStorage.store) store.replaceState(JSON.parse(localStorage.store))  // 初始化store
+const handleStore = (store) => {
+  if (localStorage.store) store.replaceState(JSON.parse(localStorage.store)); // 初始化store
   store.subscribe((mutation, state) => {
-      localStorage.setItem("store",  JSON.stringify(state))
-  })
-}
-
+    localStorage.setItem("store", JSON.stringify(state));
+  });
+};
 
 // 然后在new Vuex的时候进行调用
 
 const store = new Vuex.Store({
   state,
   mutations,
-  plugins: [handleStore]
-})
-
+  plugins: [handleStore],
+});
 ```

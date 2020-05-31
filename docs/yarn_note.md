@@ -1,19 +1,15 @@
-yarn notes
-==========
+# yarn notes
 
-安装
-------
-
+## 安装
+有以下几种方式:
 1. 下载 `.msi` 安装包
 2. 安装 `chocolatey` , 然后 `choco install yarn`
 3. `npm i -g yarn`
 
 `yarn --version` 能输出版本号，说明安装成功.
 
-
-用法
----------
-
+## 用法
+```shell
     # 初始化项目, 问答的方式生成 package.json, 同 npm init
     yarn init
 
@@ -40,20 +36,18 @@ yarn notes
     yarn remove [package]
 
     # 在项目目录下，安装package.json中列出的依赖包 同 npm install
-    yarn 
+    yarn
     yarn install  # 同上
 
     # 发布包
-    yarn publish # 在项目根目录下执行
-
-
-CLI命令
-------------
+yarn publish # 在项目根目录下执行
+```
+## CLI 命令
 
 ### yarn add
 
     # 通过 npm registry 安装指定的包
-    yarn add vue  
+    yarn add vue
     yarn add vue@2.x
     yarn add vue@beta
 
@@ -85,13 +79,11 @@ CLI命令
     yarn add <package> [--tilde/-T]
     yarn add foo@1.2.3 --tilde # 将会安装 foo@1.2.9
 
-
 ### yarn bin
+
 查看当前目录下的 `yarn bin` 目录(可执行文件的存放目录), 同 `npm bin`
 
-
 ### yarn cache
-
 
     # Yarn 会在用户目录下创建缓存文件夹，保存下载过的包, `yarn cache ls` 列出所有缓存的包
     yarn cache ls
@@ -108,22 +100,8 @@ CLI命令
     # 为命令指定缓存目录
     yarn <command> --cache-folder <path> # eg: yarn add vue --cache-folder /my-yarn-cache
 
-
 ### yarn check
-校验当前项目的 `package.json` 文件里的依赖版本和 `yarn.lock `文件中列出的版本是否匹配
 
-`yarn check --integrity`  检验包是否被篡改..
+校验当前项目的 `package.json` 文件里的依赖版本和 `yarn.lock`文件中列出的版本是否匹配
 
-
-
-
-
-
-
-
-
-
-
-
-
-
+`yarn check --integrity` 检验包是否被篡改..

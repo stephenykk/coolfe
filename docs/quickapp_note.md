@@ -1,77 +1,75 @@
-快应用文档
-===
+# 快应用文档
 
-简介
----
-2018年3月份，由小米，OPPO，VIVO，华为等10家国内主流厂商成立了快应用联盟，从技术规范层面做了统一，并保证了开发者开发的快应用可以直接在所有的联盟内厂商的手机设备上运行。
+## 简介
 
-开发环境
----
+2018 年 3 月份，由小米，OPPO，VIVO，华为等 10 家国内主流厂商成立了快应用联盟，从技术规范层面做了统一，并保证了开发者开发的快应用可以直接在所有的联盟内厂商的手机设备上运行。
 
-1. 安装nodejs 8.0+
+## 开发环境
+
+1. 安装 nodejs 8.0+
 2. 手机安装调试器[资源下载](https://www.quickapp.cn/docCenter/post/69)
 3. 手机系统比较旧的话，可能还需安装**平台预览版** (小程序框架运行时)
-4. 安装toolkit, `npm  i -g hap-toolkit`, `hap -v`, 更新 `hap update --force`
+4. 安装 toolkit, `npm i -g hap-toolkit`, `hap -v`, 更新 `hap update --force`
 5. 创建项目 `hap init <projectName>`
 6. 安装项目依赖 `cd <projectFolder>`, `npm i`
 7. 运行项目代码 `npm run watch`, `npm run server`
 8. 手机打开调试器，扫描返回的二维码,预览页面
 
+## 编译项目
 
-编译项目
----
-
-`npm run build` 编译打包，生成 rpk 包   
+`npm run build` 编译打包，生成 rpk 包
 
 编译打包成功后，项目根目录下会生成文件夹：build、dist
 
-+ build：临时产出，包含编译后的页面 js，图片等
-+ dist：最终产出，包含 rpk 文件。其实是将 build 目录下的资源打包压缩为一个文件，后缀名为rpk，这个rpk文件就是项目编译后的最终产出
+- build：临时产出，包含编译后的页面 js，图片等
+- dist：最终产出，包含 rpk 文件。其实是将 build 目录下的资源打包压缩为一个文件，后缀名为 rpk，这个 rpk 文件就是项目编译后的最终产出
 
-**自动编译项目**  
+**自动编译项目**
 
 `npm run watch` 修改代码，自动重新编译项目
 
-安装 rpk 包
----
+## 安装 rpk 包
+
 编译项目产出了 rpk 包后，请打开手机调试器
 
 > 确保手机与 PC 在同一局域网, 如果手机与 PC 不在同一局域网，可以使用 USB 在线更新和本地安装预览运行效果
 
 1. 启动 HTTP 服务器  
-    项目的根目录运行如下命令，启动本地服务器
-    ```
-        npm run server
-        npm run server -- --port 8090 # 自定义端口
-    ```
+   项目的根目录运行如下命令，启动本地服务器
 
-2. 在手机上扫码安装  
-    - 手机打开快应用调试器 --> 关闭"开启USB调试"
-    - 点击"扫码安装"，扫描终端窗口中的二维码即可完成配置（若扫描不成功，可在浏览器中打开页面：http://localhost:<your port>，扫描页面中的二维码）
-    - 点击在线更新唤起平台运行 rpk 包
+   ```
+       npm run server
+       npm run server -- --port 8090 # 自定义端口
+   ```
 
-编译打包工程
----
-`npm run build`   编译后的工程目录在/build  生成的应用路径为/dist/.rpk
+2. 在手机上扫码安装
+   - 手机打开快应用调试器 --> 关闭"开启 USB 调试"
+   - 点击"扫码安装"，扫描终端窗口中的二维码即可完成配置（若扫描不成功，可在浏览器中打开页面：http://localhost:<your port>，扫描页面中的二维码）
+   - 点击在线更新唤起平台运行 rpk 包
 
-增加 release 签名
----
-通过 openssl 命令等工具生成签名文件private.pem、certificate.pem
-``` 
+## 编译打包工程
+
+`npm run build` 编译后的工程目录在/build 生成的应用路径为/dist/.rpk
+
+## 增加 release 签名
+
+通过 openssl 命令等工具生成签名文件 private.pem、certificate.pem
+
+```
     openssl req -newkey rsa:2048 -nodes -keyout private.pem -x509 -days 3650 -out certificate.pem
 ```
 
-发布程序包
----
-发布程序包前需要增加release签名, 生成的应用路径为/dist/.release.rpk
+## 发布程序包
+
+发布程序包前需要增加 release 签名, 生成的应用路径为/dist/.release.rpk
+
 ```
     npm run release
     npm run release -- --debug #临时使用debug签名
 ```
 
+## 项目结构
 
-项目结构
----
 ```
 ├── sign                      rpk包签名模块
 │   └── debug                 调试环境
@@ -87,9 +85,8 @@
 └── package.json              定义项目需要的各种模块及配置信息
 ```
 
-
-
 ### 配置信息
+
 ```
 {
   "package": "com.application.demo", // 包名
@@ -153,7 +150,9 @@
 ```
 
 ### 依赖引入
-快应用中支持ES6的module标准，使用import引入js依赖，也支持CommonJs规范
+
+快应用中支持 ES6 的 module 标准，使用 import 引入 js 依赖，也支持 CommonJs 规范
+
 ```
 // 首先在 `manifest.json` 中配置 `fetch` 接口
 
@@ -175,6 +174,7 @@ import fetch from '@system.fetch'
 ```
 
 通过`<import>`标签引入自定义组件
+
 ```
 <import name="my-component" src="./myComponent"></import>
 
@@ -186,12 +186,12 @@ import fetch from '@system.fetch'
 </script>
 ```
 
-
-调试
----
+## 调试
 
 ### 日志
-manifest.json中修改日志级别
+
+manifest.json 中修改日志级别
+
 ```
 {
   "config": {
@@ -201,36 +201,40 @@ manifest.json中修改日志级别
 ```
 
 ### 查看日志
-开发者可以使用 Android Studio 的 Android Monitor 输出来查看日志，还有下文主要介绍的通过 chrome devtools 调试界面 调试手机app端的页面
+
+开发者可以使用 Android Studio 的 Android Monitor 输出来查看日志，还有下文主要介绍的通过 chrome devtools 调试界面 调试手机 app 端的页面
 
 ### 远程调试
+
 远程调试准备
 远程调试指的是通过快应用调试器、hap-toolkit 的远程调试命令 、chrome devtools 调试界面，来调试手机 app 端的页面
 
 远程调试依赖 chrome 浏览器 ，chrome devtools 会与手机上调试工具建立 socket 连接，实时获取修改应用运行数据，进行调试
 
-#### WIFI调试 (手机和PC在同一局域网)
-1. `npm run server`
-2. 手机快应用调试器关闭 *开启USB调试*
-3. 手机快应用调试器点击 *扫码安装*按钮, 安装rpk文件
-4. 手机快应用调试器点击*开始调试*按钮, 会在手机打开应用，并在电脑激活chrome devtools
+#### WIFI 调试 (手机和 PC 在同一局域网)
 
-### USB调试 (手机和PC可不在同一局域网)
 1. `npm run server`
-2. 手机设置 -- 开发者选项 -- USB调试
-3. 手机快应用调试器选中 *开启USB调试*，手机通过USB数据线连接PC
-4. 手机快应用调试器点击*在线更新*按钮，安装rpk文件
-5. 手机快应用调试器点击 *开始调试* 按钮 **注意需要在电脑上安装手机的驱动**
+2. 手机快应用调试器关闭 _开启 USB 调试_
+3. 手机快应用调试器点击 *扫码安装*按钮, 安装 rpk 文件
+4. 手机快应用调试器点击*开始调试*按钮, 会在手机打开应用，并在电脑激活 chrome devtools
 
-框架
----
+### USB 调试 (手机和 PC 可不在同一局域网)
+
+1. `npm run server`
+2. 手机设置 -- 开发者选项 -- USB 调试
+3. 手机快应用调试器选中 _开启 USB 调试_，手机通过 USB 数据线连接 PC
+4. 手机快应用调试器点击*在线更新*按钮，安装 rpk 文件
+5. 手机快应用调试器点击 _开始调试_ 按钮 **注意需要在电脑上安装手机的驱动**
+
+## 框架
+
 ### 页面生命周期
+
 页面的生命周期：onInit、onReady、onShow、onHide、onDestroy、onBackPress、onMenuPress
 APP 的生命周期：onCreate、onDestroy
 
-
-- `onInit`   
-表示ViewModel的数据已经准备好，可以开始使用页面中的数据
+- `onInit`  
+  表示 ViewModel 的数据已经准备好，可以开始使用页面中的数据
 
 ```
 private: {
@@ -252,7 +256,7 @@ onInit () {
 ```
 
 - `onReady`  
-表示ViewModel的模板已经编译完成，可以开始获取 DOM 节点（如：this.$element(idxxx)）
+  表示 ViewModel 的模板已经编译完成，可以开始获取 DOM 节点（如：this.\$element(idxxx)）
 
 ```
 onReady () {
@@ -264,7 +268,8 @@ onReady () {
 ```
 
 - `onShow`, `onHide`
-判断页面的显示状态，可以调用ViewModel的$visible属性 
+  判断页面的显示状态，可以调用 ViewModel 的\$visible 属性
+
 ```
 onShow () {
   this.lcList.push('onShow')
@@ -281,9 +286,9 @@ onHide () {
 ```
 
 - `onDestroy`  
-页面被销毁时调用，被销毁的可能原因有：用户从当前页面返回到上一页，或者用户打开了太多的页面，框架自动销毁掉部分页面，避免占用资源
+  页面被销毁时调用，被销毁的可能原因有：用户从当前页面返回到上一页，或者用户打开了太多的页面，框架自动销毁掉部分页面，避免占用资源
 
-判断页面是否处于被销毁状态，可以调用ViewModel的$valid属性
+判断页面是否处于被销毁状态，可以调用 ViewModel 的\$valid 属性
 
 ```
 onDestroy () {
@@ -295,12 +300,13 @@ onDestroy () {
 }
 ```
 
-*setTimeout之类的异步操作绑定在了当前页面上，因此当页面销毁之后异步调用不会执行*
+_setTimeout 之类的异步操作绑定在了当前页面上，因此当页面销毁之后异步调用不会执行_
 
 - `onBackPreess`  
-当用户点击返回实体按键、左上角返回菜单、调用返回API时触发该事件
+  当用户点击返回实体按键、左上角返回菜单、调用返回 API 时触发该事件
 
-如果事件响应方法最后返回true表示不返回，自己处理业务逻辑（完毕后开发者自行调用 API router.back() 返回）；否则：不返回数据，或者返回其它数据：表示遵循系统逻辑：返回到上一页
+如果事件响应方法最后返回 true 表示不返回，自己处理业务逻辑（完毕后开发者自行调用 API router.back() 返回）；否则：不返回数据，或者返回其它数据：表示遵循系统逻辑：返回到上一页
+
 ```
 onBackPress () {
   console.info(`触发：onBackPress`)
@@ -310,18 +316,18 @@ onBackPress () {
 }
 ```
 
-
 - `onMenuPress`  
-点击标题栏右侧的`...`菜单按钮
+  点击标题栏右侧的`...`菜单按钮
 
 ### 页面状态
-- 显示 this.$visible
-- 隐藏 this.$visible
-- 销毁 this.$valid
 
+- 显示 this.\$visible
+- 隐藏 this.\$visible
+- 销毁 this.\$valid
 
-### App的生命周期
-`onCreate` and `onDestroy` 
+### App 的生命周期
+
+`onCreate` and `onDestroy`
 
 ```
 import { natives } from './util/asyncNatives'
@@ -345,38 +351,42 @@ export default {
 }
 ```
 
-在app.ux中，开发者可以做一些独立于页面的操作。比如：引入公共的 JS 资源，然后暴露给所有页面
+在 app.ux 中，开发者可以做一些独立于页面的操作。比如：引入公共的 JS 资源，然后暴露给所有页面
 
-在app.ux中，通过this.$def访问app.ux中定义的数据和方法
+在 app.ux 中，通过 this.\$def 访问 app.ux 中定义的数据和方法
 
-
-### 关于$app 与$app.$def
+### 关于$app 与$app.\$def
 
 $app 与$app.$def（后面简称$def）是两个不同的对象；
 
 前者代表框架暴露给开发者的 APP 对象；后者代表开发者在 app.ux 中导出的对象，放置业务相关的全局数据和方法；
 
-前者对象拥有 onCreate, onDestroy 生命周期；当应用启动时会执行 onCreate 方法，里面执行 this.variable1 的赋值是在$app 对象上；
+前者对象拥有 onCreate, onDestroy 生命周期；当应用启动时会执行 onCreate 方法，里面执行 this.variable1 的赋值是在\$app 对象上；
 
 后者对象中的 onCreate, onDestroy 方法并不会执行，作用仅仅只是把方法复制到前者对象上而已；
 
 这些全局方法在页面中：既可以通过 this.$app.method1()调用，也可以通过 this.$app.$def.method1()调用；不同之处在于前者可以取到之前赋值的 variable1 变量，而后者不可以取到（因为之前的赋值是在$app 对象上执行的）；
 
 ### 页面样式和布局
+
 #### 盒模型
+
 框架使用 border-box 模型，暂不支持 content-box 模型与 box-sizing 属性
 
-### 长度单位  
+### 长度单位
+
 支持`px` 和 '%' 单位.  
 在这里, `px`是已适配手机屏幕，类似`rem`的单位
 
-> 项目基准宽度的设置在 `manifest.json`中的config.designWidth, 默认750; *即默认750分之1作为1个单位*
+> 项目基准宽度的设置在 `manifest.json`中的 config.designWidth, 默认 750; _即默认 750 分之 1 作为 1 个单位_
 
 ### 设置样式
-- 内联样式  *动态样式*
-- 外部样式 *静态样式*
+
+- 内联样式 _动态样式_
+- 外部样式 _静态样式_
 
 ### 支持选择器
+
 - tag
 - id
 - class
@@ -384,8 +394,9 @@ $app 与$app.$def（后面简称$def）是两个不同的对象；
 - .parent > .child
 - .parent .son
 
-### flex布局
-div 常用作flex容器，text, a, span, label 常作为文本容器, 其他组件不能直接放置文本
+### flex 布局
+
+div 常用作 flex 容器，text, a, span, label 常作为文本容器, 其他组件不能直接放置文本
 
 ```
 <template>
@@ -421,10 +432,10 @@ div 常用作flex容器，text, a, span, label 常作为文本容器, 其他组�
 </style>
 ```
 
-
 ### 动态修改样式
-- 修改class
-- 修改内联样式 *(styleObj/styleStr/styleAttrVal)*
+
+- 修改 class
+- 修改内联样式 _(styleObj/styleStr/styleAttrVal)_
 
 ```
 <template>
@@ -483,7 +494,8 @@ div 常用作flex容器，text, a, span, label 常作为文本容器, 其他组�
 </script>
 ```
 
-### 引入less
+### 引入 less
+
 需安装`less` , `less-loader`
 
 ```
@@ -508,14 +520,16 @@ div 常用作flex容器，text, a, span, label 常作为文本容器, 其他组�
 </style>
 ```
 
-### 用postcss解析css
+### 用 postcss 解析 css
+
 1. 安装 `postcss-loader` 和 `precss`
-2. 加配置文件`postcss.config.js`  
-    ```
-    module.exports = {
-        plugins: [require('precss')]
-    }
-    ```
+2. 加配置文件`postcss.config.js`
+
+   ```
+   module.exports = {
+       plugins: [require('precss')]
+   }
+   ```
 
 3. 例子
 
@@ -533,9 +547,8 @@ div 常用作flex容器，text, a, span, label 常作为文本容器, 其他组�
 </style>
 ```
 
+## 框架指令
 
-框架指令
----
 ### for
 
 ```
@@ -582,7 +595,6 @@ div 常用作flex容器，text, a, span, label 常作为文本容器, 其他组�
 </script>
 ```
 
-
 ### if and show
 
 `if/elif/else` 控制是否渲染组件, `show`控制是否显示组件
@@ -626,7 +638,9 @@ div 常用作flex容器，text, a, span, label 常作为文本容器, 其他组�
 ```
 
 ### block
-block组件表达逻辑区块，本身不会渲染任何内容
+
+block 组件表达逻辑区块，本身不会渲染任何内容
+
 ```
 <template>
   <div class="tutorial-page">
@@ -642,6 +656,7 @@ block组件表达逻辑区块，本身不会渲染任何内容
 ```
 
 ### slot
+
 调用自定义组件时，注入自己的内容
 
 ```
@@ -689,15 +704,14 @@ block组件表达逻辑区块，本身不会渲染任何内容
 </script>
 ```
 
-
-页面传参
----
+## 页面传参
 
 ### 页面跳转
-- a组件
-- router对象
 
-### a组件跳转
+- a 组件
+- router 对象
+
+### a 组件跳转
 
 ```
 <template>
@@ -727,7 +741,7 @@ block组件表达逻辑区块，本身不会渲染任何内容
 </template>
 ```
 
-a组件传参
+a 组件传参
 
 ```
 <template>
@@ -740,11 +754,11 @@ a组件传参
 </template>
 ```
 
+### router 对象跳转
 
-### router对象跳转
-router接口使用，需先导入模块, `router.push()`, `router.replace()`, `router.back()` , `router.clear()`
+router 接口使用，需先导入模块, `router.push()`, `router.replace()`, `router.back()` , `router.clear()`
 
-> 注： router接口不能调起电话 短信和邮箱
+> 注： router 接口不能调起电话 短信和邮箱
 
 ```
 <template>
@@ -805,7 +819,8 @@ router接口使用，需先导入模块, `router.push()`, `router.replace()`, `r
 </script>
 ```
 
-router接口传参
+router 接口传参
+
 ```
 <script>
   // 导入模块
@@ -837,10 +852,11 @@ router接口传参
 ```
 
 ### 接收参数
+
 页面对象的`protected`属性定义要接收的参数
 
 - protected 内定义的属性，允许被应用内部页面请求传递的数据覆盖，不允许被应用外部请求传递的数据覆盖
-- 若希望参数允许被应用外部请求传递的数据覆盖，请在页面的 ViewModel 的public属性中声明使用的属性
+- 若希望参数允许被应用外部请求传递的数据覆盖，请在页面的 ViewModel 的 public 属性中声明使用的属性
 
 ```
 <template>
@@ -875,7 +891,8 @@ router接口传参
 ```
 
 ### 回传参数
-借助app缓存数据
+
+借助 app 缓存数据
 
 ```
 <script>
@@ -925,7 +942,6 @@ router接口传参
 </script>
 ```
 
-
 ```
 <!-- pageB -->
 <template>
@@ -968,16 +984,16 @@ router接口传参
 </script>
 ```
 
-事件监听和触发
----
+## 事件监听和触发
+
 - 监听与移除监听事件：$on()、$off
-- 触发ViewModel事件：$emit()
+- 触发 ViewModel 事件：\$emit()
 - 监听原生组件事件
-- 触发原生组件事件：$emitElement()
+- 触发原生组件事件：\$emitElement()
 
-### $on(evtName, handler)
+### \$on(evtName, handler)
 
-在当前页面注册监听事件， 可监听$emit()、 $dispatch()、 $broadcast()等触发的自定义事件，不能用于注册组件节点的事件响应
+在当前页面注册监听事件， 可监听$emit()、 $dispatch()、 \$broadcast()等触发的自定义事件，不能用于注册组件节点的事件响应
 
 ```
 export default {
@@ -993,7 +1009,8 @@ export default {
 }
 ```
 
-### $off(evtName, [handler])
+### \$off(evtName, [handler])
+
 移除事件监听，参数 fnHandler 为可选，传递仅移除指定的响应函数，不传递则移除此事件的所有监听
 
 ```
@@ -1007,8 +1024,10 @@ export default {
 }
 ```
 
-### $emit(eventName, evtDetail)
-触发当前实例监听事件函数，与 $on() 配合使用
+### \$emit(eventName, evtDetail)
+
+触发当前实例监听事件函数，与 \$on() 配合使用
+
 ```
 export default {
   emitEvent() {
@@ -1020,6 +1039,7 @@ export default {
 > 注意：$emit() 目前只触发 $on 所监听的事件
 
 ### 监听原生组件事件
+
 原生组件支持一系列事件，如通用事件（如：click, disappear）、组件专有事件（如：focus）
 
 通用事件简写
@@ -1062,9 +1082,10 @@ export default {
 ```
 
 ### 触发原生组件事件
+
 - 用户手动触发 如 点击
-- 脚本触发 `this.$emitElement(evtName, evtDetail, id)`   
-    触发指定组件 id 事件，通过evt.detail获取传递的参数；该方法对自定义组件无效
+- 脚本触发 `this.$emitElement(evtName, evtDetail, id)`  
+   触发指定组件 id 事件，通过 evt.detail 获取传递的参数；该方法对自定义组件无效
 
 ```
 <template>
@@ -1107,8 +1128,8 @@ export default {
 </script>
 ```
 
-
 ### 使用原生组件的冒泡功能
+
 1040+ 版本对某些通用事件开放了冒泡功能
 
 ```
@@ -1188,9 +1209,8 @@ export default {
 </script>
 ```
 
+## 父子组件通信
 
-父子组件通信
----
 ### 编写自定义组件
 
 ```
@@ -1216,11 +1236,11 @@ export default {
 </script>
 ```
 
-自定义组件比页面组件的不同之处在于多了一个props属性，用于声明该组件可接受的外部数据传递；props是一个数组，数组中每个元素是暴露的属性名称(驼峰风格 同vue)
+自定义组件比页面组件的不同之处在于多了一个 props 属性，用于声明该组件可接受的外部数据传递；props 是一个数组，数组中每个元素是暴露的属性名称(驼峰风格 同 vue)
 
 ### 使用自定义组件
 
-`<import name="comp-part1" src="./part1"></import>`  name指定标签名
+`<import name="comp-part1" src="./part1"></import>` name 指定标签名
 
 ```
 <import name="comp-part1" src="./part1"></import>
@@ -1261,8 +1281,9 @@ export default {
 ```
 
 ### 传递数据与数据改造
+
 - 父子组件通信 props
-- 子组件对传入数据修改  $watch(props, changeOwnData)
+- 子组件对传入数据修改 \$watch(props, changeOwnData)
 
 ```
 <script>
@@ -1297,8 +1318,10 @@ export default {
 </script>
 ```
 
-### props默认值
-props同vue，可以为数组或对象
+### props 默认值
+
+props 同 vue，可以为数组或对象
+
 ```
 <script>
   // 子组件
@@ -1316,7 +1339,8 @@ props同vue，可以为数组或对象
 </script>
 ```
 
-### props校验
+### props 校验
+
 1. 必填检查
 2. 类型检查
 3. 函数检查
@@ -1344,10 +1368,12 @@ props同vue，可以为数组或对象
 ```
 
 ### 父子组件间的数据交互
-- 父组件传对象prop，子组件可直接修改prop内的属性, 父组件能获取修改值
+
+- 父组件传对象 prop，子组件可直接修改 prop 内的属性, 父组件能获取修改值
 - 父组件$broadcast()触发事件，向下传递，子组件$on()监听
 - 子组件$dispatch()触发事件，并冒泡, 父组件$on()监听
-- 子组件$emit()触发节点绑定的事件，执行父组件的回调方法
+- 子组件\$emit()触发节点绑定的事件，执行父组件的回调方法
+
 ```
 <script>
   // 子组件
@@ -1383,8 +1409,9 @@ props同vue，可以为数组或对象
 ```
 
 ### 兄弟组件间的交互
+
 - 发布/订阅(Pub/Sub)模式 (eventBus)
-- 互相持有对方的vm
+- 互相持有对方的 vm
 
 ```
 <!-- 订阅端 -->
@@ -1451,7 +1478,6 @@ props同vue，可以为数组或对象
 </script>
 ```
 
-
 ```
 <import name="comp-part2" src="./part2"></import>
 <import name="comp-part3" src="./part3"></import>
@@ -1489,11 +1515,10 @@ props同vue，可以为数组或对象
 </script>
 ```
 
+## 使用 async
 
-使用async
----
-支持async，需注入polyfill  
-把@babel/runtime/regenerator注入到app.ux中，因为这个文件是所有页面脚本执行前都会执行的
+支持 async，需注入 polyfill  
+把@babel/runtime/regenerator 注入到 app.ux 中，因为这个文件是所有页面脚本执行前都会执行的
 
 ```
 <script>
@@ -1523,9 +1548,9 @@ props同vue，可以为数组或对象
 ```
 
 ### native 接口中使用 async
+
 Native 接口直接返回 Promise 1010+
 该方法仅支持 platformVersion 1010+ 的异步接口。
-
 
 ### Native 接口返回 callback
 
@@ -1556,7 +1581,6 @@ const natives = {
 export { natives }
 ```
 
-
 ```
 <script>
   export default {
@@ -1583,20 +1607,21 @@ export { natives }
 </script>
 ```
 
+## 优化技巧
 
-优化技巧
----
 ### 函数共享
+
 应用是多页面共享同一个 V8 Context，而 H5 页面通常是一个页面一个 V8 Context
 
 开发者需要了解页面与 APP 之间，页面与页面之间的共享方式。
 
-可以通过使用框架API实现函数共享, `this.$app.$def.myMethod`
+可以通过使用框架 API 实现函数共享, `this.$app.$def.myMethod`
 
 ### 性能优化
-- 简化viewModel数据, *同样是getter,setter改造方案？对象数组，精简不需要的字段*
-- 合理使用后代选择器, 减少节点匹配的性能损耗 *少用tag, 少层级, class名专指度高*
-- 懒加载 推迟不可见区域的渲染 *图片懒加载 组件懒加载, list-item滚动加载更多，tab点击才渲染*
+
+- 简化 viewModel 数据, _同样是 getter,setter 改造方案？对象数组，精简不需要的字段_
+- 合理使用后代选择器, 减少节点匹配的性能损耗 _少用 tag, 少层级, class 名专指度高_
+- 懒加载 推迟不可见区域的渲染 _图片懒加载 组件懒加载, list-item 滚动加载更多，tab 点击才渲染_
 
 ### 错误处理
 
@@ -1624,7 +1649,7 @@ export default {
 }
 ```
 
-装饰JSON.parse方法, 避免JSON.parse() 解析报错
+装饰 JSON.parse 方法, 避免 JSON.parse() 解析报错
 
 ```
 export function parseProxy() {
@@ -1640,7 +1665,7 @@ export function parseProxy() {
 }
 ```
 
-页面出栈，viewModel上的数据也会跟着销毁, 回调里方法vm的数据报错, 应该用$valid判断页面状态, 或者如下
+页面出栈，viewModel 上的数据也会跟着销毁, 回调里方法 vm 的数据报错, 应该用\$valid 判断页面状态, 或者如下
 
 ```
 /**
@@ -1675,7 +1700,6 @@ export default {
 }
 ```
 
-
 堆栈溢出例子
 
 ```
@@ -1706,19 +1730,18 @@ export default {
 
 因为赋值为 vm 属性，会触发大规模的数据驱动变化，导致内部出现异常循环，从而引发堆栈溢出报错，在未来版本中将会予以修复；
 
-只要不将 $element('id') 获取到内容，赋值给成员变量，即可规避堆栈溢出问题；
+只要不将 \$element('id') 获取到内容，赋值给成员变量，即可规避堆栈溢出问题；
 
-###  结构优化
+### 结构优化
 
 结构优化的目的是减小页面以及整体 rpk 包的体积，减少冗余代码
 
 整合常用 JS 库到 app.ux 中
-在app.ux中引入常用的 JS 库，并暴露给每个页面使用；可以避免每个页面在打包时对 JS 的重复定义
+在 app.ux 中引入常用的 JS 库，并暴露给每个页面使用；可以避免每个页面在打包时对 JS 的重复定义
 
+## 长列表渲染
 
-长列表渲染
-----
-为了得到流畅的列表滚动体验，推荐开发者使用list组件替代div组件实现长列表布局，因为 Native 会复用相同type属性的list-item
+为了得到流畅的列表滚动体验，推荐开发者使用 list 组件替代 div 组件实现长列表布局，因为 Native 会复用相同 type 属性的 list-item
 
 ```
 <template>
@@ -1746,21 +1769,21 @@ export default {
   </list>
 </template>
 ```
-要实现 DOM 片段的复用，要求相同type属性的 DOM 结构完全相同。所以，设置相同type属性的list-item是优化列表滚动性能的关键
 
-- list-item内不能再嵌套list
-- list-item的type属性为必填属性
-- list-item内部需谨慎使用if指令或for指令，因为相同type属性的list-item的 DOM 结构必须完全相同，而使用if指令或for指令会造成 DOM 结构差异
+要实现 DOM 片段的复用，要求相同 type 属性的 DOM 结构完全相同。所以，设置相同 type 属性的 list-item 是优化列表滚动性能的关键
 
-tabs 组件
----
+- list-item 内不能再嵌套 list
+- list-item 的 type 属性为必填属性
+- list-item 内部需谨慎使用 if 指令或 for 指令，因为相同 type 属性的 list-item 的 DOM 结构必须完全相同，而使用 if 指令或 for 指令会造成 DOM 结构差异
 
-tabs中封装了常见功能和效果：页签支持横向滚动，支持手势滑动切换内容页等  
-tabs内部仅支持子组件tab-bar和tab-content，也可以只包含一个子组件，使用说明如下
+## tabs 组件
 
-- tab-bar组件用来包含所有页签的标题，属性mode用来配置是否可滚动，：组件 -> 容器组件 -> tab-bar
-- tab-content组件用来包含所有页签的内容，详情请参考文档：组件 -> 容器组件 -> tab-content
-- tab-bar组件的第 n 个直接子节点对应tab-content中第 n 个直接子节点，具有联动效果
+tabs 中封装了常见功能和效果：页签支持横向滚动，支持手势滑动切换内容页等  
+tabs 内部仅支持子组件 tab-bar 和 tab-content，也可以只包含一个子组件，使用说明如下
+
+- tab-bar 组件用来包含所有页签的标题，属性 mode 用来配置是否可滚动，：组件 -> 容器组件 -> tab-bar
+- tab-content 组件用来包含所有页签的内容，详情请参考文档：组件 -> 容器组件 -> tab-content
+- tab-bar 组件的第 n 个直接子节点对应 tab-content 中第 n 个直接子节点，具有联动效果
 
 ```
 <template>
@@ -1787,7 +1810,6 @@ tabs内部仅支持子组件tab-bar和tab-content，也可以只包含一个子�
   </div>
 </template>
 ```
-
 
 页签内容使用自定义子组件
 
@@ -1852,20 +1874,20 @@ tabs内部仅支持子组件tab-bar和tab-content，也可以只包含一个子�
 </script>
 ```
 
-Deeplink
----
+## Deeplink
 
 - `http://hapjs.org/app/<package>/[path][?key=value]`
 - `https://hapjs.org/app/<package>/[path][?key=value]`
 - `hap://app/<package>/[path][?key=value]`
 
 参数说明：
+
 - package: 应用包名，必选
 - path: 应用内页面的 path，可选，默认为首页
 - key-value: 希望传给页面的参数，可选，可以有多个
 
-H5跳快应用
----
+## H5 跳快应用
+
 URL 跳转配置是指在 H5 页面中可以通过调用接口跳转到应用。
 
 ```
@@ -1896,4 +1918,3 @@ URL 跳转配置是指在 H5 页面中可以通过调用接口跳转到应用。
 </body>
 </html>
 ```
-

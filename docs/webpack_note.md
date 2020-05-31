@@ -1,3 +1,1 @@
-webpack notes
-==============
-
+# webpack note

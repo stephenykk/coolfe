@@ -10,13 +10,14 @@
 ```
 
 ## git config
-git有三级配置文件，分别为:  
 
-- local   项目文件夹/.git/config
-- system  /etc/gitconfig
+git 有三级配置文件，分别为:
+
+- local 项目文件夹/.git/config
+- system /etc/gitconfig
 - global ~/.gitconfig
 
-> local配置的内容优先级最高, 显示配置列表或编辑配置时，可指定配置文件级别(如: git config -l --global)
+> local 配置的内容优先级最高, 显示配置列表或编辑配置时，可指定配置文件级别(如: git config -l --global)
 
 ```bash
 # 显示当前的Git配置
@@ -53,7 +54,6 @@ git d hashid
 
 
 ```
-
 
 ## git clone
 
@@ -113,13 +113,14 @@ git d hashid
     git fetch -p
 ```
 
-## git checkout 
+## git checkout
+
 ```bash
     # 基于当前分支创建新分支
-    git checkout -b newBranch 
+    git checkout -b newBranch
 
     # 基于远程分支(origin/master)创建新分支
-    # 基于远程分支创建的分支都会自动追踪远程分支 
+    # 基于远程分支创建的分支都会自动追踪远程分支
     # git remote show origin 查看追踪关系
     git checkout -b newBranch origin/master
 
@@ -127,7 +128,7 @@ git d hashid
     git checkout -
 
     # 切换分支
-    git checkout <branch_name> 
+    git checkout <branch_name>
 
     # 恢复暂存区的所有文件到工作区
     git checkout .
@@ -144,6 +145,7 @@ git d hashid
 ```
 
 ## git add
+
 ```bash
     # 添加指定文件到暂存区
     git add [file1] [file2] ...
@@ -159,7 +161,9 @@ git d hashid
     git add -p
 
 ```
+
 ## git commit
+
 ```bash
     # 提交暂存区到仓库区
     git commit -m [message]
@@ -190,7 +194,6 @@ git d hashid
 
 ```
 
-
 ## git rm
 
 ```bash
@@ -202,7 +205,6 @@ git d hashid
     git rm --cached [file]
 
 ```
-
 
 ## git log
 
@@ -265,7 +267,6 @@ git d hashid
     git reflog
 ```
 
-
 ## git merge
 
 ```bash
@@ -297,16 +298,16 @@ git d hashid
     # 列出所有还没有合并到当前分支的分支
     git branch --no-merged
 
-    # 删除远程分支 
+    # 删除远程分支
     # 仅在本地仓库删除 git pull还是会拉回来
     git branch -dr origin/test
 
     # 新建一个分支，与指定的远程分支建立追踪关系
-    git branch --track [branch] [remote-branch]    
+    git branch --track [branch] [remote-branch]
 
     # 建立追踪关系
-    git branch (--set-upstream-to=<upstream> | -u <upstream>) [<branchname>] 
-    
+    git branch (--set-upstream-to=<upstream> | -u <upstream>) [<branchname>]
+
     # 手动建立追踪关系
     # 不指定分支的话，则默认为当前分支建立追踪关系
     # git branch --set-upstream-to=origin/{branch} <local_branch>?
@@ -321,7 +322,7 @@ git d hashid
 ```bash
     # git pull <远程主机名> <远程分支>:<本地分支>
     # 取回origin主机的next分支，与本地的master分支合并
-    git pull origin next:master 
+    git pull origin next:master
 
     # 取回origin/next分支，再与当前分支合并
     # 注意是和当前分支合并，不是和本地的next分支
@@ -335,7 +336,7 @@ git d hashid
     # 比如，在git clone的时候，所有本地分支默认与远程主机的同名分支，建立追踪关系
 
     # git也允许手动建立追踪关系。见 git push, git branch
-    
+
 
     # 如果当前分支与远程分支存在追踪关系，git pull就可以省略远程分支名。
     git pull origin
@@ -363,7 +364,7 @@ git d hashid
 
 ```bash
     # 推送的同时，建立追踪关系
-    git push -u origin master:next 
+    git push -u origin master:next
     # 本地master分支推送到远程仓库master分支，并建立追踪关系
     git push -u origin master
 
@@ -391,7 +392,6 @@ git d hashid
     git push [remote] --all
 
 ```
-
 
 ## git tag
 
@@ -430,6 +430,7 @@ git d hashid
 ```
 
 ## git reset
+
 ```bash
 
     # 重置暂存区的指定文件，与上一次commit保持一致，但工作区不变
@@ -450,7 +451,8 @@ git d hashid
 
 ```
 
-## git revert 
+## git revert
+
 ```bash
     # 新建一个commit，用来撤销指定commit
     # 后者的所有变化都将被前者抵消，并且应用到当前分支
@@ -458,15 +460,16 @@ git d hashid
 ```
 
 ## git stash
+
 ```bash
     # 暂时将未提交的变化移除，稍后再移入
     git stash
     git stash pop
 
     # 查看stash列表
-    git stash list 
+    git stash list
     # 同 git stash pop
-    git stash apply stash@{0} 
+    git stash apply stash@{0}
 
     # 删除stash@{2}的存储
     git stash drop stash@{2}
@@ -474,6 +477,7 @@ git d hashid
 ```
 
 ## git clean
+
 ```bash
     # 移除工作目录中所有未跟踪的文件及目录，
     # 默认不会移除.gitiignore忽略的文件
@@ -485,7 +489,8 @@ git d hashid
     git clean -df
 ```
 
-## git grep 
+## git grep
+
 ```bash
 # 搜索你工作目录的文件，输出包含关键字的文件名和关键字所在行号
 $ git grep -n [关键字]
@@ -495,6 +500,6 @@ $ git grep --count [关键字]
 
 ```
 
+### 如何加速国内 Github 访问
 
-### 如何加速国内Github访问
-[如何加速国内Github访问](https://www.jianshu.com/p/66facbd8926a) *好像有点作用*
+[如何加速国内 Github 访问](https://www.jianshu.com/p/66facbd8926a) _好像有点作用_

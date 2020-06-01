@@ -1,5 +1,7 @@
 # echarts 官方文档摘要
 
+[Echart文档](https://echarts.apache.org/zh/tutorial.html#5%20%E5%88%86%E9%92%9F%E4%B8%8A%E6%89%8B%20ECharts)
+
 ## 简单实例
 
 ```html
@@ -29,24 +31,4 @@
     </script>
   </body>
 </html>
-```
-
-## itemStyle
-
-itemStyle 都会有`normal` 和 `emphasis`两个选项，分别表示常态和 hover 态的样式.
-
-```js
-series: [
-  {
-    itemStyle: {
-      normal: {
-        shadowBlur: 20,
-        shadowOffsetX: 0,
-        shadowOffsetY: 0,
-        shadowColor: "rgba(0,0,0,0.5)",
-      },
-      emphasis: { shadowColor: "rgba(200,0,0,0.5)" },
-    },
-  },
-];
 ```

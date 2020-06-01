@@ -165,6 +165,10 @@ ctrl + k, ctrl + t 选择主题
 - Monokai 经典
 - Boxy Tommorrow 柔和
 
+## 字体推荐
+- Fira Code
+
+
 ## emmet
 
 [emmet 语法示例](https://docs.emmet.io/cheat-sheet/)

@@ -4,18 +4,18 @@
 
 ## 简介
 
-Egg 提供 web 开发的核心功能和插件机制，并非大而全的框架。
+Egg 提供 web 开发的**核心功能和插件机制**，并非大而全的框架。
 
 Egg 的插件机制具有高灵活性，**一个插件只做一件事件\*** ， 如 `egg-view-nunjucks`, `egg-mysql`, Egg 通过框架聚合各种插件，使得应用的开发成本变低。
 
-Egg 提倡约定优于配置（_优点在于 减少学习和沟通成本_），类似 CI，Egg 是在 koa 基础上的增强和扩展。约定不等于扩展性差，使用 **loader** 可为不同环境定义默认配置，还可以覆盖 Egg 的默认约定
+Egg 提倡**约定优于配置**（_优点在于 减少学习和沟通成本_），类似 CI，**Egg 是在 koa 基础上的增强和扩展**。约定不等于扩展性差，使用 **loader** 可为不同环境定义默认配置，还可以覆盖 Egg 的默认约定
 
 ## 与其他框架的对比
 
-- Express
+- Express  
   Express 简单且扩展性强，在社区使用广泛，非常适合个人项目；但缺少约定，MVC 模型会有各种奇怪的写法
 
-- Sails
+- Sails  
   同样遵循 **约定优于配置** 的框架， 大集市模式，框架本身包含了其他功能
 
 ## 特性
@@ -28,9 +28,9 @@ Egg 提倡约定优于配置（_优点在于 减少学习和沟通成本_），�
 
 ## Egg 与 Koa
 
-Node.js 是一个异步的世界，官方 api 都是 callback 形式的异步编程模型。callback 的主要问题在于，回调嵌套，错误捕获和非线性执行，代码逻辑不直观；所以最终胜出的异步方案是 Promise, 结合 Generator 提供的切换上下文的能力，实现 async/await 语法糖（*nodejs8*原生支持），就是最优的异步方案。
+Node.js 是一个异步的世界，官方 api 都是 callback 形式的异步编程模型。callback 的主要问题在于，回调嵌套，错误捕获和非线性执行，代码逻辑不直观；所以最终胜出的异步方案是 Promise, 结合 Generator 提供的切换上下文的能力，实现 `async/await` 语法糖（*nodejs8原生支持*），就是最优的异步方案。
 
-**async/await**
+**async/await**  
 同步书写，异步执行，堪称完美
 
 ```js
@@ -39,6 +39,7 @@ const fn = async function () {
   const posts = await fetchPosts(user.id);
   return { user, posts };
 };
+
 fn()
   .then((res) => console.log(res))
   .catch((err) => console.error);
@@ -50,23 +51,37 @@ Koa 和 Express 的设计风格非常类似，底层也共用一套 HTTP 基础�
 
 > Koa 由 Express 的原班人马打造
 
-**Middleware**
-Koa 的中间件和 Express 不同，Koa 是洋葱圈模型(_层层深入，层层退出_)；Express 是管道式模型(_一个接一个_)
+**Middleware**  
+Koa 的中间件和 Express 不同，Koa 是**洋葱圈模型**(_层层深入，层层退出_)；Express 是**管道式模型**(_一个接一个_)
 
 ![中间件执行顺序图](https://raw.githubusercontent.com/koajs/koa/a7b6ed0529a58112bac4171e4729b8760a34ab8b/docs/middleware.gif)
 
-**Context**
-Express 只有 request 和 response 两个对象，Koa 增加 Context 对象,作为这次请求的上下文对象(_koa1 是中间件的 this, koa2 作为中间件第一个参数_)
+**Context**  
+Express 只有 `request` 和 `response` 两个对象，Koa 增加 `Context` 对象,作为这次请求的上下文对象(_koa1 是中间件的 this, koa2 作为中间件第一个参数_)
 
 Context 对象上也挂载了`request`和`response`对象,它们提供了很多便捷的方法和属性:
 
-- get request.query
-- get request.hostname
-- set response.body
-- set response.status
+```js
+ctx = {
+  request: {},
+  response: {},
+  get query() {
+    return this.request.query
+  },
+  get hostname() {
+    return this.request.hostname
+  },
+  set body(data) {
+    this.response.body = data
+  },
+  set status(status) {
+    this.response.status = status
+  }
+}
+```
 
-**异常处理**
-`try/catch`就能够捕获`async/await`抛出的异常,所以在最外层设置一个异常处理的中间件，就能捕获的其他地方抛出的异常
+**异常处理**  
+`try/catch` 就能够捕获 `async/await` 抛出的异常,所以在最外层设置一个异常处理的中间件，就能捕获的其他地方抛出的异常
 
 ```js
 async function onerror(ctx, next) {
@@ -90,6 +105,15 @@ Egg 对 Koa 进行了扩展和增强
 
 例如： 增加 js 文件 `app/extend/context.js`
 
+支持扩展的对象包括:
+- application
+- context
+- request
+- response
+- helper
+
+> 注意 框架不支持扩展 controller 和 service
+
 ```js
 // app/extend/context.js
 module.exports = {
@@ -101,14 +125,14 @@ module.exports = {
 
 // 使用扩展的属性
 // app/controller/home.js
-exports.handler = (ctx) => {
+exports.index = (ctx) => {
   ctx.body = ctx.isIOS ? "is ios" : "not ios";
 };
 ```
 
 ## 插件
 
-Express 和 Koa 中，通常会引入许多的中间件来提供各种功能，如 `koa-session` 提供 session 支持, `koa-bodyparser`解析请求的 body
+`Express` 和 `Koa` 中，通常会引入许多的中间件来提供各种功能，如 `koa-session` 提供 session 支持, `koa-bodyparser`解析请求的 body
 
 Egg 提供了更强大的插件机制，让独立的功能模块更容易编写
 
@@ -138,7 +162,7 @@ Egg 1.x 基于 Koa 1.x 开发，Egg 后来全面支持 `async/await` , 对 Koa2.
 
 ### 快速初始化
 
-使用脚手架`egg-init`
+使用脚手架 `egg-init`
 
 ```shell
     npm i egg-init -g
@@ -160,27 +184,26 @@ Egg 内置 `static` 插件，默认映射 `/public/* --> app/public/*` 目录
 1.  安装对应的模板引擎插件，如： `npm i egg-view-nunjucks --save`
 2.  开启插件
 
-    ````js
+  ```js
     // config/plugin.js
     exports.nunjucks = {
-    enable: true,
-    package: 'egg-view-nunjucks'
+      enable: true,
+      package: 'egg-view-nunjucks'
     };
 
-            // config/config.default.js
-            exports.keys = {your cookie sign}
-            exports.view = {
-                defaultViewEngine: 'nunjucks',
-                mapping: {
-                    '.tpl': 'nunjucks'
-                },
-                root: ['/data/act-static', path.join(__dirname, 'app/view')].join(',') // 查找模板文件的目录列表 逗号分隔
-            }
-        ```
+    // config/config.default.js
+    exports.keys = {your cookie sign}
+    exports.view = {
+        defaultViewEngine: 'nunjucks',
+        mapping: {
+            '.tpl': 'nunjucks'
+        },
+        // 查找模板文件的目录列表 逗号分隔
+        root: ['/data/act-static', path.join(__dirname, 'app/view')].join(',') 
+    }
+  ```
 
-    > **注意是 config 目录，不是 app/config 目录**
-
-    ````
+  > 注意是 config 目录，不是 app/config 目录
 
 3.  编写模板文件，放到 `app/view`
     ```html

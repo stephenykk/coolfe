@@ -6,7 +6,7 @@ Docker 是一个开源的应用容器引擎，基于 Go 语言 并遵从 Apache2
 
 Docker 可以让开发者打包他们的应用以及依赖包到一个轻量级、可移植的容器中，然后发布到任何流行的 Linux 机器上，也可以实现虚拟化。
 
-容器是完全使用沙箱机制，相互之间不会有任何接口（类似 iPhone 的 app）,更重要的是容器性能开销极低。
+容器是完全使用沙箱机制，相互之间不会有任何接口（类似 iPhone 的 app）,更重要的是**容器性能开销极低**。
 
 ## Docker 架构
 
@@ -20,7 +20,8 @@ Docker 使用客户端-服务器 (C/S) 架构模式，使用远程 API 来管理
 
 Docker 容器通过 Docker 镜像来创建。
 
-容器与镜像的关系类似于面向对象编程中的对象与类。
+> 容器与镜像的关系类似于面向对象编程中的对象与类。  
+
 ![Docker 架构](https://www.runoob.com/wp-content/uploads/2016/04/576507-docker1.png)
 
 | 概念                   | 说明                                                                                                                                                                                                                                                                                                                                                                                                                                         |
@@ -81,7 +82,9 @@ sudo docker run ubuntu:15.10 /bin/echo "hello world"
 
 ### 运行交互式的容器
 
-通过 docker 的两个参数 -i(_允许你对容器内的标准输入 (STDIN) 进行交互_) -t(_在新容器内指定一个伪终端或终端_)，让 docker 运行的容器实现"对话"的能力
+通过 docker 的两个参数，让 docker 运行的容器实现"对话"的能力
+- `-i` 允许你对容器内的标准输入 (STDIN) 进行交互
+- `-t` 在新容器内指定一个伪终端或终端，
 
 ```shell
 sudo docker run -i -t ubuntu:15.10 /bin/bash
@@ -89,7 +92,7 @@ sudo docker run -i -t ubuntu:15.10 /bin/bash
 
 ### 启动容器（后台模式）
 
-使用 -d(_守护进程方式_) 参数创建一个以进程方式运行的容器
+使用 `-d` (_守护进程方式_) 参数创建一个以进程方式运行的容器
 
 > -P 将容器内部使用的网络端口映射到我们使用的主机上
 
@@ -115,7 +118,8 @@ sudo docker restart <container_id or container_name>
 
 ```
 
-**Docker 客户端**
+**Docker 客户端**  
+
 直接输入 `docker` , 返回 docker 命令的帮助信息  
 `docker <command> --help` 查看具体命令的帮助信息 (如: `docker ps --help`)
 

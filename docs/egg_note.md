@@ -238,23 +238,23 @@ Egg 内置 `static` 插件，默认映射 `/public/* --> app/public/*` 目录
 5.  添加 controller
 
     ```js
-        //  app/controller/news.js
-        const Controller = require('egg').Controller;
+      //  app/controller/news.js
+      const Controller = require('egg').Controller;
 
-        class NewsController extends Controller {
-            async list() {
-                const dataList = {
-                    list: [
-                        { id: 1, title: 'this is news 1', url: '/news/1' },
-                        { id: 2, title: 'this is news 2', url: '/news/2' },
-                    ]
-                }；
+      class NewsController extends Controller {
+          async list() {
+              const dataList = {
+                  list: [
+                      { id: 1, title: 'this is news 1', url: '/news/1' },
+                      { id: 2, title: 'this is news 2', url: '/news/2' },
+                  ]
+              }；
 
-                await this.ctx.render('news/list.tpl', dataList);
-            }
-        }
+              await this.ctx.render('news/list.tpl', dataList);
+          }
+      }
 
-        module.exports = NewsController
+      module.exports = NewsController
     ```
 
 6.  访问 http://localhost:7001/news 预览
@@ -274,18 +274,19 @@ Egg 内置 `static` 插件，默认映射 `/public/* --> app/public/*` 目录
         const { serverUrl, pageSize } = this.config.news;
         // use build-in http client to GET hacker-news api
         // curl get or post 都通过 data 传数据（get data === query)
-        // result = await ctx.curl(url, options) // options => {method, data, datType: 'json'}
+        // result = await ctx.curl(url, options) 
+        // options => {method, data, datType: 'json'}
         /* result => {
-                    status: 200, 
-                    data: {},  
-                    headers: {'server', 'content-type', 'content-length', 'date', 'etag'}, 
-                    res: {// 这里包含更多的信息
-                        statusCode: 200, 
-                        statusMessage: 'OK', 
-                        headers: {'server', 'content-type', 'content-length', 'date', 'etag'}, 
-                        data: {}
-                    }
-                } */
+            status: 200, 
+            data: {},  
+            headers: {'server', 'content-type', 'content-length', 'date', 'etag'}, 
+            res: {// 这里包含更多的信息
+                statusCode: 200, 
+                statusMessage: 'OK', 
+                headers: {'server', 'content-type', 'content-length', 'date', 'etag'}, 
+                data: {}
+            }
+        } */
         const { data: idList } = await this.ctx.curl(
           `${serverUrl}/topstories.json`,
           {
@@ -332,7 +333,8 @@ Egg 内置 `static` 插件，默认映射 `/public/* --> app/public/*` 目录
     await ctx.render("news/list.tpl", { list: newsList });
     ```
 
-10. 编写扩展 _(扩展对象包括: application, context, request, response, helper)_ **注意: 不扩展 controller service, 需自行实现**
+10. 编写扩展 _(扩展对象包括: application, context, request, response, helper)_   
+  **注意: 不会扩展 controller service, 需自行实现**
 
     ```js
         // app/extend/helper.js
@@ -347,71 +349,74 @@ Egg 内置 `static` 插件，默认映射 `/public/* --> app/public/*` 目录
 11. 编写 middleware  
     假设编写一个禁止爬虫的 middleware
 
-    ````js
-    // app/middleware/robot.js
-    // options === app.config.robot
-    module.exports = (options, app) => {
-    return async function robotMiddleware(ctx, next) {
-    const source = ctx.get('user-agent') || ''
-    const math = options.ua.some(ua => ua.test(source))
-    if(match) {
-    ctx.status = 404;
-    ctx.message = 'Go away, robot'
-    }else {
-    await next();
-    }
-    }
-    }
-    // config/config.default.js add middleware robot
-    exports.middleware = ['robot']
+    ```js
+      // app/middleware/robot.js
+      // options === app.config.robot
+      module.exports = (options, app) => {
 
-            // robot config
-            exports.robot = {
-                ua: [/baiduspider/i]
-            }
-        ```
+        return async function robotMiddleware(ctx, next) {
+          const source = ctx.get('user-agent') || ''
+          const math = options.ua.some(ua => ua.test(source))
 
-    `curl http://localhost:7001/news -A "baiduspider"` 预览结果
+              if(match) {
+                  ctx.status = 404;
+                  ctx.message = 'Go away, robot'
+              }else {
+                  await next();
+              }
+          }
 
-    ````
+      }
 
-12. 配置文件
-    写业务时候，不可避免的需要配置文件，框架提供了强大的配置合并功能
+      // config/config.default.js add middleware robot
+      exports.middleware = ['robot']
 
-- 支持根据环境变量(EGG_SERVER_ENV)加载对应配置，如 `config.local.js`, `config.prod.js`
+      // robot config
+      exports.robot = {
+          ua: [/baiduspider/i]
+      }
 
-  ```js
-  config.env === "local"; //默认
-  // 执行 npm script: cross-env EGG_SERVER_ENV=pro egg-bin dev
-  // 则会加载 config.pro.js  config.env === 'pro'
-  ```
+      // 预览结果
+      // curl http://localhost:7001/news -A "baiduspider" 
+    ```
 
-- 应用、插件、框架都可以有自己的配置，将按顺序合并
+12. 配置文件  
+  写业务时候，不可避免的需要配置文件，框架提供了强大的配置合并功能
+
+  - 支持根据环境变量(`EGG_SERVER_ENV`)加载对应配置，如 `config.local.js`, `config.prod.js`
+
+    ```js
+    config.env === "local"; //默认
+    // 执行 npm script: cross-env EGG_SERVER_ENV=pro egg-bin dev
+    // 则会加载 config.pro.js  config.env === 'pro'
+    ```
+
+  - 应用、插件、框架都可以有自己的配置，将按顺序合并
 
 ### 单元测试
 
 单元测试很重要，框架提供了`egg-bin` 帮助开发者编写测试  
 测试文件应放到 test 目录下，以`*.test.js`形式命名
 
-    ```js
-        // test/app/middleware/robot.test.js
-        const {app, mock, assert}  = require('egg-mock/bootstrap');
-        describe('test/app/middleware/robot.test.js', function() {
-            it('should block robot', function() {
-                return app.httpRequest().get('/').set('User-Agent', 'baiduspider').expect(404)
-                })
-            })
-    ```
+```js
+// test/app/middleware/robot.test.js
+const {app, mock, assert}  = require('egg-mock/bootstrap');
+describe('test/app/middleware/robot.test.js', function() {
+    it('should block robot', function() {
+        return app.httpRequest().get('/').set('User-Agent', 'baiduspider').expect(404)
+        })
+    })
+```
 
 `npm i egg-mock`, 然后配置 `npm scripts`
 
-    ```js
-        {
-            scripts: {
-                test: 'egg-bin test'
-            }
-        }
-    ```
+```js
+  {
+      scripts: {
+          test: 'egg-bin test'
+      }
+  }
+```
 
 ## 基础功能
 

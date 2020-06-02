@@ -473,9 +473,9 @@ describe('test/app/middleware/robot.test.js', function() {
 
 #### Application 的事件
 
-- server http 服务启动完后触发，一个 worker 进程只会触发一次
-- error 运行时异常被 onerror 插件捕获后触发, 可以自定义日志上报
-- request 和 response 应用接受请求和响应请求时触发，
+- `server` http 服务启动完后触发，一个 worker 进程只会触发一次
+- `error` 运行时异常被 `onerror` 插件捕获后触发, 可以自定义日志上报
+- `request` 和 `response` 应用接受请求和响应请求时触发，
 
 ```js
 // app.js
@@ -519,7 +519,7 @@ module.exports = function (app) {
 
 ## Context
 
-请求级别的对象，继承自 Koa.Context; 每收到一个请求，框架会实例化一个 context 对象， ctx 对象封装了该次用户请求的信息，提供了便捷方法获取请求信息或设置响应如： `ctx.query`, `ctx.status`, `ctx.body`, `ctx.service`
+请求级别的对象，继承自 `Koa.Context`; 每收到一个请求，框架会实例化一个 `context` 对象， ctx 对象封装了该次用户请求的信息，提供了便捷方法获取请求信息或设置响应如： `ctx.query`, `ctx.status`, `ctx.body`, `ctx.service`
 
 ```js
 // koa1.x middleware
@@ -548,7 +548,7 @@ class PostsService extends Service {
 
 ## Request and Response
 
-同样是请求级别的对象，分别继承自 Koa.Request, Koa.Response, 封装了原生的 http.request 对象和 http.response 对象，提供一些更便捷的方法
+同样是请求级别的对象，分别继承自 `Koa.Request`, `Koa.Response`, 封装了原生的 `http.request` 对象和 `http.response` 对象，提供一些更便捷的方法
 
 ```js
 // ctx.request  and ctx.response
@@ -560,7 +560,7 @@ class UserController extends Controller {
     ctx.response.body = app.cache.get(id);
   }
 }
-// koa会在context上代理一部分request和response对象上的方法和属性
+// context上代理了部分request和response对象上的方法和属性
 ctx.query === ctx.request.query;
 ctx.request.body; // 获取请求体
 ctx.body === ctx.response.body; // 设置响应体
@@ -571,17 +571,16 @@ ctx.status === ctx.response.status;
 
 Controller 基类拥有如下属性
 
-- ctx (ctx.helper)
-- app (app.config Controller Service)
-- config (同 app.config)
-- service 应用所有的 service
-- logger 为当前 controller 封装的 logger 对象
+- `ctx` (ctx.helper)
+- `service` 应用所有的 service
+- `logger` 为当前 controller 封装的 logger 对象
+- `app` (config Controller Service)
+- `config` (同 app.config)
 
 Controller 基类的获取方式
 
 ```js
-// app/controller/user.js
-// egg上获取 require('egg').Controller
+// 1.
 const Controller = require("egg").Controller;
 class UserController extends Controller {
   //todo
@@ -589,8 +588,7 @@ class UserController extends Controller {
 // 返回控制器类
 module.exports = UserController;
 
-// app上获取 app.Controller
-// 返回会返回控制器类的函数
+// 2.
 module.exports = (app) => {
   return class UserController extends app.Controller {
     // todo
@@ -609,7 +607,7 @@ Helper 提供实用工具函数，Helper 自身也是一个类，拥有和 Contr
 helper 的获取方式
 
 ```js
-// app/controller/user.js
+// 1. ctx.helper
 class UserController extends Controller {
     async fetch() {
         const {app, ctx} = this;
@@ -618,73 +616,75 @@ class UserController extends Controller {
         ctx.body = ctx.helper.formatUser(user); // ctx.helper
     }
 }
-// 模板中 可直接使用helper
+// 2. 模板中 可直接使用helper
 <div>{{helper.formatUser(user)}}<\/div>
 ```
 
 ## Config
 
-开发中，应当坚持配置和代码分离的原则，所有框架、插件和应用级别的配置都可以通过 config 对象获取到
+开发中，应当坚持配置和代码分离的原则，所有框架、插件和应用级别的配置都可以通过 `config` 对象获取到
 
-获取方式  
-通过`app.config`获取应用配置，也可在`Controller`, `Service`, `Helper`上通过 `this.config`获取到 config 对象
+访问 `config` 的方式:
+1. `app.config`
+2. `this.config` this is controller service helper
 
-    ```js
-        // 访问配置的方式
-        app.config
-        this.config // controller service helper 中访问config
+配置加载: 
+1. `config.default.js`  默认配置  
+    各个运行环境都会加载
+1. `config.dev.js` 开发环境配置  
+    执行 npm script 时, 需要指定环境变量 `EGG_SERVER_ENV`, 如: `cross-env EGG_SERVER_ENV=dev egg-bin dev`
 
-        // config.default.js默认配置 各个运行环境都会加载
-        // config.dev.js 开发环境配置 (执行npm script时 需要指定环境  cross-env EGG_SERVER_ENV=dev  egg-bin dev)
+常用配置
 
-        // 修改默认端口  config.default.js
-        config.cluster = {
-            listen: {
-                path: '',
-                port: 8000,
-                hostname: '0.0.0.0',
-            }
-        };
-
-        // 指定调用中间件
-        config.middleware = ['robot', 'access']
-        // 配置中间件选项
-        config.robot = {blackList: [/baiduspider/i]}
-
-        // 配置logger
-        config.logger = {
-            "dir": path.join(__dirname, '../logs'),  // 日志文件目录
-            "encoding": "utf8",
-            "env": "dev",
-            "level": "INFO", // 日志级别  logger.debug(msg) debug日志不会记录
-            "consoleLevel": "INFO",
-            "disableConsoleAfterReady": true, // false 允许console.log输出到 stdout
-            "outputJSON": false,
-            "buffer": true,
-            "appLogName": "topic-api-web.log",
-            "coreLogName": "egg-web.log",
-            "agentLogName": "egg-agent.log",
-            "errorLogName": "common-error.log",
-            "coreLogger": {},
-            "allowDebugAtProd": false,
-            "type": "application"
+```js
+    // 修改默认端口  config.default.js
+    config.cluster = {
+        listen: {
+            path: '',
+            port: 8000,
+            hostname: '0.0.0.0',
         }
+    };
 
-        // 自定义logger
-        config.customLogger = {
-            access: {file: path.join(__dirname, '../logs/access.log')}
-        }
+    // 指定调用中间件
+    config.middleware = ['robot', 'access']
+    // 配置中间件选项
+    config.robot = {blackList: [/baiduspider/i]}
 
-        // 配置session egg内置session插件
-        config.session = {
-            key: 'EGG_SESS',
-            maxAge: 24 * 3600 * 1000, // 1 天
-            httpOnly: true,
-            encrypt: true,
-            renew: true, // 延迟session的有效期
-        };
+    // 配置logger
+    config.logger = {
+        "dir": path.join(__dirname, '../logs'),  // 日志文件目录
+        "encoding": "utf8",
+        "env": "dev",
+        "level": "INFO", // 日志级别  logger.debug(msg) debug日志不会记录
+        "consoleLevel": "INFO",
+        "disableConsoleAfterReady": true, // false 允许console.log输出到 stdout
+        "outputJSON": false,
+        "buffer": true,
+        "appLogName": "topic-api-web.log",
+        "coreLogName": "egg-web.log",
+        "agentLogName": "egg-agent.log",
+        "errorLogName": "common-error.log",
+        "coreLogger": {},
+        "allowDebugAtProd": false,
+        "type": "application"
+    }
 
-    ```
+    // 自定义logger
+    config.customLogger = {
+        access: {file: path.join(__dirname, '../logs/access.log')}
+    }
+
+    // 配置session egg内置session插件
+    config.session = {
+        key: 'EGG_SESS',
+        maxAge: 24 * 3600 * 1000, // 1 天
+        httpOnly: true,
+        encrypt: true,
+        renew: true, // 延迟session的有效期
+    };
+
+```
 
 ## session
 
@@ -709,27 +709,6 @@ exports.logger = {
   consoleLevel: "INFO",
   dir: path.join(__dirname, "../logs"),
 };
-
-/* 
-    {
-        "dir": "C:\\Users\\username\\logs\\topic-api",
-        "encoding": "utf8",
-        "env": "dev",
-        "level": "INFO",
-        "consoleLevel": "INFO",
-        "disableConsoleAfterReady": true, // disableConsoleAfterReady: false 允许输出到 stdout
-        "outputJSON": false,
-        "buffer": true,
-        "appLogName": "topic-api-web.log",
-        "coreLogName": "egg-web.log",
-        "agentLogName": "egg-agent.log",
-        "errorLogName": "common-error.log",
-        "coreLogger": {},
-        "allowDebugAtProd": false,
-        "type": "application"
-    }
-
-     */
 
 // 自定义logger
 config.customLogger = {
@@ -758,13 +737,13 @@ logger.info("num: %d, str: %s, data: %j", 10, "hello", { go: "good" });
 
 - App Logger  
    通过`app.logger`访问，用于记录一些应用级别的日志，如：启动信息
-- App CoreLogger
+- App CoreLogger  
   通过`app.coreLogger`访问，用于插件或框架打印日志，应用开发不应该使用它
-- Context Logger
+- Context Logger  
   通过`ctx.logger`访问，打印请求相关的日志，日志会自动加上请求 api 作为前缀，方便串联查看
-- Context CoreLogger
+- Context CoreLogger  
   通过`ctx.coreLogger`访问，也是仅用于插件和框架
-- Controller Logger and Servie Logger
+- Controller Logger and Servie Logger  
   在 controller 和 service 中，通过`this.logger`访问，本质上是 Context Logger, 但是会加上文件路径信息，方便定位日志的输出位置
 
 ## Subscription
@@ -926,32 +905,29 @@ class UserController extends Controller {
 ```
 
 > Koa 会在 Context 上代理一部分 Request 和 Response 上的方法和属性，参见 Koa.Context。
-> 如上面例子中的 ctx.request.query.id 和 ctx.query.id 是等价的，ctx.response.body= 和 ctx.body= 是等价的。
+> 如上面例子中的 `ctx.request.query.id` 和 `ctx.query.id` 是等价的，`ctx.response.body=` 和 `ctx.body=` 是等价的。
 
-> **需要注意的是，获取 POST 的 body 应该使用 ctx.request.body，而不是 ctx.body。**
+> **需要注意的是，获取 POST 的 body 应该使用 `ctx.request.body`，而不是 ctx.body。**
 
 ### Controller
 
 框架提供了一个 Controller 基类，并推荐所有的 Controller 都继承于该基类实现。这个 Controller 基类有下列属性：
 
-- ctx - 当前请求的 Context 实例。
-- app - 应用的 Application 实例。
-- config - 应用的配置。
-- service - 应用所有的 service。
-- logger - 为当前 controller 封装的 logger 对象。
-  在 Controller 文件中，可以通过两种方式来引用 Controller 基类：
+- `ctx` 当前请求的 Context 实例。
+- `service` 应用所有的 service
+- `logger` 为当前 controller 封装的 logger 对象。
+- `app` 应用的 Application 实例。
+- `config` 应用的配置。
 
 ```js
-// app/controller/user.js
-
-// 从 egg 上获取（推荐）
+// 1. 从 egg 上获取（推荐）
 const Controller = require("egg").Controller;
 class UserController extends Controller {
   // implement
 }
 module.exports = UserController;
 
-// 从 app 实例上获取
+// 2. 从 app 实例上获取
 module.exports = (app) => {
   return class UserController extends app.Controller {
     // implement
@@ -965,37 +941,15 @@ module.exports = (app) => {
 
 Service 基类的属性和 Controller 基类属性一致，访问方式也类似：
 
-```js
-// app/service/user.js
-
-// 从 egg 上获取（推荐）
-const Service = require('egg').Service;
-class UserService extends Service {
-    let {app, ctx, config, service, logger} = this
-    // implement
-}
-module.exports = UserService;
-
-// 从 app 实例上获取
-module.exports = app => {
-  return class UserService extends app.Service {
-    // implement
-  };
-};
-```
-
 ### Helper
 
 Helper 用来提供一些实用的 utility 函数。
 
 Helper 自身是一个类，有和 Controller 基类一样的属性，它也**会在每次请求时进行实例化**，因此 Helper 上的所有函数也能获取到当前请求相关的上下文信息。
 
-### 获取方式
-
-可以在 Context 的实例上获取到当前请求的 Helper(ctx.helper) 实例。
+访问方式：`ctx.helper`
 
 ```js
-// app/controller/user.js
 class UserController extends Controller {
   async fetch() {
     const { app, ctx } = this;
@@ -1030,64 +984,11 @@ module.exports = {
 };
 ```
 
-### Config
 
-我们推荐应用开发遵循**配置和代码分离的原则**，将一些需要硬编码的业务配置都放到配置文件中，同时配置文件支持各个不同的运行环境使用不同的配置，使用起来也非常方便，所有框架、插件和应用级别的配置都可以通过 Config 对象获取到。
-
-### 获取方式
-
-我们可以通过 `app.config` 从 Application 实例上获取到 config 对象，也可以在 `Controller, Service, Helper` 的实例上通过 `this.config` 获取到 config 对象。
-
-### Logger
-
-框架内置了功能强大的日志功能，可以非常方便的打印各种级别的日志到对应的日志文件中，每一个 logger 对象都提供了 4 个级别的方法：
-
-- logger.debug()
-- logger.info()
-- logger.warn()
-- logger.error()
-
-各个 Logger 对象的获取方式和使用场景
-
-- App Logger
-  通过 app.logger 来获取，如果我们想做一些应用级别的日志记录，如记录启动阶段的一些数据信息，记录一些业务上与请求无关的信息，都可以通过 App Logger 来完成。
-
-- App CoreLogger  
-   通过 app.coreLogger 来获取，一般我们在开发应用时都不应该通过 CoreLogger 打印日志，而框架和插件则需要通过它来打印应用级别的日志，这样可以更清晰的区分应用和框架打印的日志，通过 CoreLogger 打印的日志会放到和 Logger 不同的文件中。
-
-- Context Logger  
-   通过 ctx.logger 获取，从访问方式上我们可以看出来，Context Logger 一定是与请求相关的，它打印的日志都会在前面带上一些当前请求相关的信息（如 `[$userId/$ip/$traceId/${cost}ms $method $url]`），通过这些信息，我们可以从日志快速定位请求，并串联一次请求中的所有的日志。
-
-- Context CoreLogger  
-   通过 ctx.coreLogger 获取到它，和 Context Logger 的区别是一般只有插件和框架会通过它来记录日志。
-
-- Controller Logger & Service Logger  
-   可以在 Controller 和 Service 实例上通过 this.logger 获取到它们，它们本质上就是一个 Context Logger，不过在打印日志的时候还会额外的加上文件路径，方便定位日志的打印位置。
-
-### Subscription
-
-订阅模型是一种比较常见的开发模式，譬如消息中间件的消费者或调度任务。因此我们提供了 Subscription 基类来规范化这个模式。
-
-可以通过以下方式来引用 Subscription 基类：
-
-```js
-const Subscription = require("egg").Subscription;
-
-class Schedule extends Subscription {
-  // 需要实现此方法
-  // subscribe 可以为 async function 或 generator function
-  async subscribe() {}
-}
-```
-
-插件开发者可以根据自己的需求基于它定制订阅规范，如定时任务就是使用这种规范实现的。
-
-### 踩坑记录
+## 踩坑记录
 
 ```js
 // config/config.default.js
-
-
 cors: {
     origin: function(ctx) {
         // ctx.origin 和 ctx.get('origin') 居然是不同的！！！
@@ -1096,5 +997,4 @@ cors: {
         return ctx.get('origin')
     }
 }
-
 ```

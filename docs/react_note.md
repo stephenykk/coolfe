@@ -1,5 +1,7 @@
 # react notes
 
+[印记中文react文档](https://react.docschina.org/docs/code-splitting.html)
+
 ## react 特点
 
 - 声明范式

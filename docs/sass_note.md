@@ -103,9 +103,9 @@ SASS 允许使用变量，所有变量以`$`开头。
 
 `#{合法的表达式,即可}` 如: `#{px2rem($x)}rem`
 ```scss
-    $h: 10px;
-    @function sum(n) {
-        @return n + 12;
+    $h: 10;
+    @function sum($n) {
+        @return $n + 12;
     }
     .test {
         height: #{sum($h)}px;
@@ -444,6 +444,7 @@ SASS 允许用户编写自己的函数。
 - str-slice($str, $start-at, \$end-at);
 - to-upper-case(\$str);
 - to-lower-case(\$str);
+- unit(20%)  # %
 
 ### number 函数
 

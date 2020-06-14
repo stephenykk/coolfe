@@ -9,6 +9,13 @@ CoffeeScript 尝试用简洁的方式展示 JavaScript 优秀的部分。
 ```bash
     cnpm i -g coffee-script
     coffee -v
+    # 现在coffeescript已经到2.x版本了
+    # coffee-script装的是1.x的旧版，新版这样安装
+    cnpm i -g coffeescript@next
+    coffee -v
+
+    #  查看官方文档
+    npm home coffeescript
 ```
 ## 示例
 
@@ -29,6 +36,9 @@ demo.coffee
 ```bash
     # 直接编译并执行
     coffee demo.coffee
+
+    # 打印编译后的js
+    coffee -p demo.coffee
     
     # 编译输出 demo.js
     coffee -c demo.coffee 
@@ -42,6 +52,7 @@ demo.coffee
     f = -> exports? and exports or {}
     f.toString()
     # exports? 表示 exports不为 null 或 undefined
+    # 类似三元运算符  cond ? trueExpr : falseExpr
 ```
 ## 语法
 
@@ -66,14 +77,16 @@ demo.coffee
     level = 'good' if score > 90
     # 存在赋值 不存在才赋值
     helper.repeat ?= (str, n) -> str.repeat(n)
+    # 三元运算符效果
+    val = if count > 10 then 'yes' else 'no'
 ```
 
 ### 函数
 ```coffee
     # 小箭头函数
-    # 有参数有用括号
+    # 有参数要用括号
     square = (x) -> x * x  
-    # 带函数调用 不用括号
+    # 带参数调用 不用括号
     square 10
     sum = (a , b) -> a + b
     sum 10, 20
@@ -91,6 +104,7 @@ demo.coffee
     greet = (me, others...) -> [me, others...].join(' ') + ' are friends'
 
     # 箭头函数 => 绑定上下文 同es6
+    # 对象字面量
     lufy = 
         name: 'lufy'
         hello: ->
@@ -99,7 +113,57 @@ demo.coffee
 
     lufy.hello()
 
+    # 字符串插值
+    name = 'alice'
+    console.log "hello, #{name} !"
+
 ```
+### 流程控制
+
+```coffee
+calamus=16;
+if calamus>5
+    console.log "Calamus is greater than 5"
+    if calamus>15
+         console.log "Calamus is greater than 5"
+     console.log "Over" 
+
+# if ... else ...
+if score > 80
+    console.log 'good'
+else
+    console.log 'bad'
+
+# 单行
+print 'great' if score > 95
+
+
+# 编译为js会添加break
+switch things
+    when "ice"
+        console.log "white"
+    when "grass"  then  console.log "green"  # 也可以实用then缩短语句到一行
+    else 
+        console.log "gray"
+
+```
+
+### 比较运算符
+
+CoffeeScript和JavaScript比较运算符转换
+
+CoffeeScript | JavaScript
+------------ | -----------
+is,==  |  ===
+isnt  |  !==
+not  |  !
+and  |  &&
+or  |  `||`
+true,yes,on  |  true
+false,no,off  |  false
+@,this  |  this
+of  |  in
+
 ### 区间
 ```coffee
     # var list = [1,2,3,4,5] 

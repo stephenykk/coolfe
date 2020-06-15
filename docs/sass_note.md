@@ -43,6 +43,14 @@ test.scss
 如果要将显示结果保存成文件，后面再跟一个.css 文件名。
 ```bash
     sass test.scss test.css
+
+    # 从标准输入中读取内容
+    sass -s --scss
+    # 然后输入 scss 代码
+    # windows  ctrl + z 然后回车结束输入
+
+    # 进入repl
+    sass -i
 ```
 SASS 提供四个编译风格的选项：
 

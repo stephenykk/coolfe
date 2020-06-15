@@ -1,6 +1,7 @@
 # coffeeScript 入门教程
 
-[入门教程](https://www.w3cschool.cn/coffeescript/)  
+[入门教程](https://www.w3cschool.cn/coffeescript/)   
+[coffee-script语法](http://coffee-script.org/#try)
 
 CoffeeScript 是一门编译到 JavaScript 的小巧语言。   
 CoffeeScript 尝试用简洁的方式展示 JavaScript 优秀的部分。
@@ -53,6 +54,48 @@ demo.coffee
     f.toString()
     # exports? 表示 exports不为 null 或 undefined
     # 类似三元运算符  cond ? trueExpr : falseExpr
+```
+
+命令行参数
+
+- `-c, --compile`  
+    编译一个 .coffee 脚本到一个同名的 .js 文件.  
+- `-m, --map`  
+    随 JavaScript 文件一起生成 source maps. 并且在 JavaScript 里加上sourceMappingURL 指令. 
+- `-i, --interactive`  
+    启动一个交互式的 CoffeeScript 会话用来尝试一些代码片段. 等同于执行  coffee 而不加参数.  
+- `-o, --output [DIR]`  
+    将所有编译后的 JavaScript 文件写到指定文件夹. 与 --compile 或 --watch 搭配使用.  
+- `-j, --join [FILE]`  
+    编译之前, 按参数传入顺序连接所有脚本到一起, 编译后写到指定的文件. 对于编译大型项目有用.   
+- `-w, --watch`  
+    监视文件改变, 任何文件更新时重新执行命令.  
+- `-p, --print`  
+    JavaScript 直接打印到 stdout 而不是写到一个文件.  
+- `-s, --stdio`  
+    将 CoffeeScript 传递到 STDIN 后从 STDOUT 获取 JavaScript. 对其他语言写的进程有好处. 比如: `cat src/cake.coffee | coffee -sc`
+- `-e, --eval`  
+    直接从命令行编译和打印一小段 CoffeeScript. 比如: `coffee -e "console.log num for num in [10..1]"`
+- `-b, --bare`  
+    编译到 JavaScript 时去掉顶层函数的包裹.
+- `-n, --nodes`  
+    不对 CoffeeScript 进行编译, 仅仅 lex 和解析, 打印 parse tree
+- `--nodejs`  
+    node 命令有一些实用的参数, 比如 --debug, --debug-brk, --max-stack-size, 和 --expose-gc. 用这个参数直接把参数转发到 Node.js. 重复使用 --nodejs 来传递多个参数.
+
+```bash
+# 编译一个 .coffee 文件的树形目录 src 到一个同级  .js 文件树形目录 lib:
+coffee --compile --output lib/ src/
+# 监视一个文件的改变, 每次文件被保证时重新编译:
+coffee --watch --compile experimental.coffee
+# 合并一组文件到单个脚本:
+coffee --join project.js --compile src/*.coffee
+# 从一个 one-liner 打印编译后的 JS:
+coffee -bpe "alert i for i in [0..10]"
+# 现在全部一起, 在你工作时监视和重复编译整个项目:
+coffee -o lib/ -cw src/
+# 运行 CoffeeScript REPL (Ctrl-D 来终止, Ctrl-V 激活多行):
+coffee
 ```
 ## 语法
 
@@ -163,6 +206,18 @@ true,yes,on  |  true
 false,no,off  |  false
 @,this  |  this
 of  |  in
+
+### try/catch
+```coffee
+try
+  allHellBreaksLoose()
+  catsAndDogsLivingTogether()
+catch error
+  print error
+finally
+  cleanUp()
+
+```
 
 ### 区间
 ```coffee

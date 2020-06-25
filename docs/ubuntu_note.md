@@ -322,3 +322,13 @@ deb 包是预编译包, 包名约定: softwareName_version_revVersion_arch eg: h
   sudo apt-get update
   sudo apt-get install git
   ```
+
+## 使用总结
+### 查看版本信息
+- cat /etc/issue
+- lsb_release -a
+- uname -a
+### 命令行下打开图片
+- `xdg-open <imgfile>`
+
+

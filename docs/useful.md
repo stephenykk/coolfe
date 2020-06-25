@@ -5,6 +5,7 @@
 - [印记中文](https://docschina.org/)
 - [webpack 中文文档](https://webpack.docschina.org/)
 - [webpack 中文文档 2](https://www.webpackjs.com/concepts/)
+- [typescript 教程](http://ts.xcatliu.com/)
 
 | 综合类                                        | 地址                                                                                               |
 | --------------------------------------------- | -------------------------------------------------------------------------------------------------- |

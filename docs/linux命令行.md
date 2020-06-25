@@ -5,12 +5,43 @@
 ## 快捷键
 
 ```bash
-ctrl + q # 关闭应用
+# 关闭应用
+ctrl + q 
+ctrl + w # 关闭tab 或 应用 看情况
+
+# 终端相关
 ctrl + alt + t # 打开终端
-win + a # 然后输入 terminal 同上
-ctrl + l # 清屏 同 clear
+win + a # 打开 dash 面板, 然后输入 terminal 打开终端
+ctrl + d # 关闭终端
+ctrl + l # 清屏
+clear # 清屏
 shift + pageUp # 向上滚动bash命令行的内容
 shift + pageDown # 向下滚动bash命令行的内容
+ctrl + shift + up # 逐行向上回滚
+```
+
+## home目录 文件夹名换回英文
+```bash
+export LANG=en_US
+xdg-user-dirs-gtk-update
+```
+
+## 命令行下打开图片
+```bash
+xdg-open <imgFile>
+```
+## 命令行下打开文件夹
+```bash
+nautilus . # 打开当前目录
+nautilus # 打开home目录
+nautilus /your/path # 打开指定目录
+```
+
+## 安装软件
+```bash
+sudo apt-get install vim
+sudo dpkg -i <vscode>
+sudo apt --fix-broken install # 修复依赖问题 并继续安装
 ```
 
 ## 查看帮助
@@ -23,10 +54,16 @@ man shutdown
 ## 开/关机
 
 ```bash
-sudo init 0 # 关机
+# 关机
+sudo init 0
 sudo shutdown -h now
-poweroff
-sudo init 6 # 重启
+sudo poweroff
+sudo shutdown -h 2 # 2分钟后关机
+# 重启
+sudo init 6
+sudo shutdown -r now
+sudo reboot
+
 ```
 
 ## 查看系统信息

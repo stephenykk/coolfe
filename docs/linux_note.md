@@ -51,7 +51,7 @@ Linux 系统有 7 个运行级别(runlevel)：
 
 ## linux 关机
 
-正确的关机流程: sync > shotdown > reboot > halt  
+正确的关机流程: sync > shutdown > reboot > halt  
 关机指令 `shutdown`, `man shutdown` 查看帮助
 
 ```

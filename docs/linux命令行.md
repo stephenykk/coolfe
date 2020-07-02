@@ -13,10 +13,44 @@ ctrl + w # ctrl + q 关闭不了，试试它
 # 终端
 win + a # 打开dash面板 然后输入 terminal 
 ctrl + alt + t # 打开终端
+win + a # 打开 dash 面板, 然后输入 terminal 打开终端
 ctrl + d # 关闭终端
-ctrl + l # 清屏 同 clear
+ctrl + l # 清屏
+clear # 清屏
 shift + pageUp # 向上滚动bash命令行的内容
 shift + pageDown # 向下滚动bash命令行的内容
+ctrl + shift + up # 逐行向上回滚
+
+# 控制台
+ctrl + alt + f1 - f6 # 进入控制台
+ctrl + alt + f7 # 返回图形界面
+
+# 切换用户
+ctrl + alt + l
+```
+
+## home目录 文件夹名换回英文
+```bash
+export LANG=en_US
+xdg-user-dirs-gtk-update
+```
+
+## 命令行下打开图片
+```bash
+xdg-open <imgFile>
+```
+## 命令行下打开文件夹
+```bash
+nautilus . # 打开当前目录
+nautilus # 打开home目录
+nautilus /your/path # 打开指定目录
+```
+
+## 安装软件
+```bash
+sudo apt-get install vim
+sudo dpkg -i <vscode>
+sudo apt --fix-broken install # 修复依赖问题 并继续安装
 ```
 
 ## 查看帮助
@@ -30,16 +64,15 @@ man shutdown # less 查看器
 
 ```bash
 # 关机
-sudo init 0 
+sudo init 0
 sudo shutdown -h now
-poweroff
-# 定时关机
-sudo shutdown -h 1 # 1分钟后关机
-sudo shutdown -h 13:57
-
+sudo poweroff
+sudo shutdown -h 2 # 2分钟后关机
 # 重启
-sudo init 6 
+sudo init 6
 sudo shutdown -r now
+sudo reboot
+
 ```
 
 ## 查看系统信息
@@ -88,6 +121,10 @@ sudo passwd <user> # 以root身份修改用户密码
 ```bash
 who am i #查看当前用户 详细
 who mom likes # 同上
+
+# ubuntu
+who -u
+who -a
 whoami #查看当前用户 简短
 ```
 
@@ -123,10 +160,59 @@ ls /home
 
 ```bash
 groups alice
-sudo usermod -G sudo alice # 添加到sudo组
-groups alice
-su alice
-sudo ls /
+usermod -G sudo alice # 添加到sudo组
+usermod -d /home/foo alice # 修改用户主目录
+usermod -g pan alice # 修改用户所属组
+usermod -l alice-pan alice # 修改用户的登录名
+usermod -s /bin/rbash alice # 修改用户登录时用的shell
+
+id pan # 查看用户id uid gid..
+finger pan # 查看用户信息 需 apt-get install finger
+```
+### useradd
+
+```bash
+# 没有主目录的用户，不能登录到图形界面
+useradd lufy # 添加用户，但不为用户建立主目录
+# 没有设置密码的用户不能使用
+passwd lufy 
+
+useradd -m zoro # 创建用户，并为用户建立主目录
+useradd -g pan nami # 创建用户，并加入到已有用户组
+useradd -s /bin/sh jobar # 创建用户 并指定登录所用的shell
+# 用户的缺省UID从500向后顺序增加，500以下作为系统保留账号，可以指定UID
+useradd -u 2090 robin # 创建用户 并指定用户的uid 
+```
+### userdel
+```bash
+userdel zoro  # 删除用户，但并不删除用户的主目录
+useradd -m test
+ls /home
+userdel -r test # 删除用户的同时，删除用户的主目录，以释放硬盘空间
+```
+
+### groupadd
+```bash
+groupadd opmm # 添加组
+cat /etc/group | tail -3
+```
+
+### groupmod
+```bash
+groupmod -n opms opmm # 重命名组
+groupmod -g 2010 opms # 修改组id
+```
+
+### groupdel
+```bash
+groupdel opms # 删除组
+```
+
+### gpasswd
+```bash
+cat /etc/group # 查看组信息 组的成员列表
+gpasswd -a user1 users # 把user1加入users组
+gpasswd -d user1 users # 把user1移出users组
 ```
 
 ## 目录和文件
@@ -177,6 +263,7 @@ gedit <file> # 编辑文件 当不存在时，新建文件
 ```bash
 mkdir <dir> # 创建文件夹
 mkdir -p hello/world/folderA # 沿路径创建多层目录
+rmdir -p hello/world/folderA # 删除
 ```
 
 ### mv
@@ -210,6 +297,9 @@ rm -rf !(dist.rar|node_modules)
 
 ```bash
 tail -n 10 web.log # 查看文件末尾 10 行内容
+tail web.log # 默认末尾10行
+tail -3 web.log
+tail -f web.log # 持续监听并显示末尾10行
 ```
 
 ### cat

@@ -394,10 +394,55 @@ grep可用于shell脚本，因为grep通过返回一个状态值来说明搜索�
 
 ```bash
 grep -r <keyword> dir # 递归地查找包含关键字的文件
-cd ~
-echo alice-fine > hello
-echo alice-fine > hi
-grep -r alice-fine .
+cd
+echo hello hero > hello
+echo hello college > college
+grep -r hello .
+
+# grep的规则表达式
+# [] 默认是特殊含义，其他括号默认是普通字符 需转义才是特殊含义
+
+^ # 锚定行的开始 如：'^grep'匹配所有以grep开头的行。
+$ # 锚定行的结束 如：'grep$'匹配所有以grep结尾的行。
+. # 匹配一个非换行符的字符 如：'gr.p'匹配gr后接一个任意字符，然后是p。
+* # 匹配零个或多个先前字符 如：'*grep'匹配所有一个或多个空格后紧跟grep的行。
+.* # 一起用代表任意字符。
+[] # 匹配一个指定范围内的字符，如'[Gg]rep'匹配Grep和grep。
+[^] # 匹配一个不在指定范围内的字符，如：'[^A-FH-Z]rep'匹配不包含A-R和T-Z的一个字母开头，紧跟rep的行。
+\(..\) # 标记匹配字符，如'\(love\)'，love被标记为1。
+\< # 锚定单词的开始，如:'\<grep'匹配包含以grep开头的单词的行。
+\> # 锚定单词的结束，如'grep\>'匹配包含以grep结尾的单词的行。
+x\{m\} # 重复字符x，m次，如：'o\{5\}'匹配包含5个o的行。
+x\{m,\} # 重复字符x,至少m次，如：'o\{5,\}'匹配至少有5个o的行。
+x\{m,n\} # 重复字符x，至少m次，不多于n次，如：'o\{5,10\}'匹配5–10个o的行。
+\w # 匹配文字和数字字符，也就是[A-Za-z0-9]，如：'G\w*p'匹配以G后跟零个或多个文字或数字字符，然后是p。
+\W # \w的反置形式，匹配一个或多个非单词字符，如点号句号等。
+\b # 单词锁定符，如: '\bgrep\b'只匹配grep。
+
+# POSIX字符 POSIX(The Portable Operating System Interface)
+
+# POSIX字符要放到[]号内才能成为正则表达式，如[[:alnum:]]  同 [A- Za-z0-9]
+
+[:alnum:] #文字数字字符
+[:alpha:] #文字字符
+[:digit:] #数字字符
+[:space:] #所有空白字符（新行，空格，制表符）
+[:lower:] #小写字符
+[:upper:] #大写字符
+[:xdigit:] #十六进制数字（0-9，a-f，A-F）
+[:graph:] #非空字符（非空格、控制字符）
+[:cntrl:] #控制字符
+[:print:] #非空字符（包括空格）
+[:punct:] #标点符号
+
+# 查找指定进程
+ps -ef | grep node
+# 统计有多少个node进程
+ps -ef | grep -c node
+# -n显示行号 -f 匹配模式从文件读取
+echo node > pattern
+ps -ef | grep -nf pattern
+# -v 选中
 ```
 
 ## nginx

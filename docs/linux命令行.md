@@ -1,6 +1,8 @@
 # linux 命令行
 
-[每天一个 linux 命令](https://yelog.org/2016/12/01/linux-command%EF%BC%881%EF%BC%89-ls/)
+[每天一个 linux 命令](https://yelog.org/2016/12/01/linux-command%EF%BC%881%EF%BC%89-ls/)  
+[linux常用命令](https://www.cnblogs.com/biu-we/p/13242681.html)  
+[linux常用命令,简明清晰版](https://www.cnblogs.com/si-137/p/13234703.html)
 
 ## 快捷键
 

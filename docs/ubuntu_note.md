@@ -331,4 +331,23 @@ deb 包是预编译包, 包名约定: softwareName_version_revVersion_arch eg: h
 ### 命令行下打开图片
 - `xdg-open <imgfile>`
 
+### 家目录常规文件夹换回英文名(方便输入)
+1.使用命令
 
+      export LANG=en_US
+
+      xdg-user-dirs-gtk-update
+
+2.在弹出的窗口中询问是否将目录转化为英文路径，同意并关闭
+
+3.使用命令
+
+      epxort LANG=zh_CN
+
+4.重启Ubuntu，下次进入系统后，会提示是否把目录转化为中文，选择不许并选择不再提示，并取消修改 
+
+
+### win7安装ubuntu后没有win7启动项
+重新生成GRUB的启动菜单配置文件
+sudo update-grub
+然后重启

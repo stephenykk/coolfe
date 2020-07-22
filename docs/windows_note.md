@@ -55,3 +55,4 @@ control printers | 打印机面板
 `dir /s | find "hello"`
 
 `dir /s | findStr ".*.json"`
+

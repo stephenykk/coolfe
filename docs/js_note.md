@@ -79,7 +79,7 @@ comic.replace(/\s/, "$$"); // one$piece
   反向引用：  
    小括号包含的表达式所匹配到的字符串不仅是在匹配结束后才可以使用， 在匹配过程中也可以使用.
 
-  引用方法: 第 1 个左括号`(`捕获的内容, 对应 `/1`; 第 2 个左括号`(`捕获的内容, 对应 `/2` ...
+  引用方法: 第 1 个左括号`(`捕获的内容, 对应 `\1`; 第 2 个左括号`(`捕获的内容, 对应 `\2` ...
 
   ```js
   '"hello"'.match(/('|")(.*?)(\1)/); // "hello"
@@ -130,7 +130,7 @@ arr.indexOf(el); // => index or -1 严格相等比较 [1].indexOf('1') => -1
 arr.lastIndexOf(el);
 arr.find(cb);
 arr.findIndex(cb);
-arr.includes(el); // 严格相等比较 [1].includes('-1') => false
+arr.includes(el); // 严格相等比较 [1].includes('1') => false
 ```
 
 ### 其他
@@ -141,6 +141,8 @@ arr.join(sep);
 
 new Array(10).fill(1); // 生成指定数量元素的数组
 Array.from(new Set([1, 2, 2, 1])); // => [1,2] 生成数组 去重
+
+arr.length = 0 // 清空数组
 ```
 
 ## Function

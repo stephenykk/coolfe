@@ -6,6 +6,7 @@
   "devDependencies": {
     "opn": "^5.4.0"
   },
+
   "dependencies": {
     "mpvue": "^2.0.5"
   }

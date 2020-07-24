@@ -84,18 +84,23 @@ xhr.send(formData);
 
 - onreadystatechange
   当 readyState 属性改变时的回调
-- readyState - 0 UNOPEN 未打开 - 1 OPENED 未发送 - 2 HEADERS_RECIEVED 收到响应头 - 3 LOADING 接收响应体 - 4 DONE 完成
+- readyState 
+  - 0 UNOPEN 未打开 
+  - 1 OPENED 未发送 
+  - 2 HEADERS_RECIEVED 收到响应头 
+  - 3 LOADING 接收响应体 
+  - 4 DONE 完成
 - response
   响应体的类型(由 responseType 指定)
-- responseType
+- responseType  
   期望的响应类型，arrayBuffer, blob, json, document, text
 - responseText
 - responseXML
 - status
 - statusText
-- upload
+- upload  
   可添加监听事件，跟踪上传过程
-- withCredentials
+- withCredentials  
   跨域时，带上 cookie
 
 ### 方法
@@ -105,7 +110,7 @@ xhr.send(formData);
 - xhr.getAllResponseHeaders()
 - xhr.getResponseHeader(header)
 - xhr.open(method, url, async, user, pwd)
-- xhr.overrideMimeType(mime)
+- xhr.overrideMimeType(mime)  
   重写服务器返回的 Mine-type, 需在 xhr.send() 之前，调用
 - xhr.send(data)
 - xhr.setRequestHeader(header, value)
@@ -120,5 +125,5 @@ HTML5 新版本特性
 - 对本地离线存储的更好的支持 (`Indexed DB` 本地存储功能 , `localStorage`, `sessionStorage`)
 - 新的特殊内容元素，比如 `article` `footer` `header` `nav` `section`
 - 新的表单控件，比如 `calendar` `date` `time` `email` `url` `search`
-- 一个 HTML5 文档到另一个文档间的拖放功能
+- drag & grop
 - 提供外部应用和浏览器内部数据之间的开放接口

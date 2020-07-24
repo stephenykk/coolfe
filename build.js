@@ -23,26 +23,34 @@ class HomeHtml {
     return new Promise((resolve, reject) => {
       fs.readFile(fpath, 'utf8', function(err, con) {
         if(err) return reject(err)
-        let firstLine = con.match(/^.*$/m)[0]
+        let firstLine = con.match(/^.*$/m)[0].replace('#', '').trim()
         resolve({text: firstLine, url: `./docs/${file}`})
       })
     }) 
   }
 
   async getLinks() {
-    return await Promise.all(this.files.map(this.getLink, this))
+    let links = await Promise.all(this.files.map(this.getLink, this))
+    return links.sort((a, b) => {
+      var al = a.text.split('')
+      var bl = b.text.split('')
+      var r = 0;
+      al.findIndex((c, j) => {r = c.charCodeAt(0) - (bl[j] || '').charCodeAt(0); return r})
+      return r
+    })
   }
 
   async updateIndexMd() {
     let links = await this.getLinks();
+    // console.log(links.map(l => l.text));
   
     let linksMarkdown = links.map(link => {
       return `+ [${link.text}](${link.url})`;
     });
   
     let con = fs.readFileSync(this.indexMd, "utf8");
-    const re = /(<!-- links -->)[\s\S]*/gim;
-    con = con.replace(re, "$1\r\n" + linksMarkdown.join("\r\n"));
+    const re = /(<!-- links-start -->)[\s\S]*(<!-- links-end -->)/gim;
+    con = con.replace(re, "$1\r\n" + linksMarkdown.join("\r\n")+'\r\n$2');
   
     fs.writeFileSync(this.indexMd, con, "utf8");
   
@@ -50,6 +58,7 @@ class HomeHtml {
   }
 
   async start() {
+    console.log('start.......')
     try {
       await this.updateIndexMd();
   

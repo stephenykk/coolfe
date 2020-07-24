@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 # VueRouter2.x notes
 
 ## 安装
@@ -7,16 +6,6 @@
     // <script src="https://unpkg.com/vue-router/dist/vue-router.js"></script>
 
     // 安装
-=======
-# vue-router2.x
-
-## 安装
-
-    // cdn
-    https://unpkg.com/vue-router/dist/vue-router.js
-
-    //安装
->>>>>>> 124efc54297a09178fd738a975595fd3c7b50426
     npm install vue-router
     bower install vue-router
 
@@ -26,17 +15,11 @@
     // 插件方式启用
     Vue.use(VueRouter);
 
-<<<<<<< HEAD
     // 在浏览器环境引入vue-router.js会自动调用 Vue.use(VueRouter);
 ```
 ## 基本使用
 ```html
     <!-- router-link router-view -->
-=======
-    //在浏览器环境引入vue-router.js会自动调用 Vue.use(VueRouter);
-
-## 基本使用
->>>>>>> 124efc54297a09178fd738a975595fd3c7b50426
 
     <script src="https://unpkg.com/vue/dist/vue.js"></script>
     <script src="https://unpkg.com/vue-router/dist/vue-router.js"></script>
@@ -86,7 +69,6 @@
     }).$mount('#app')
 
     // 现在，应用已经启动了！
-<<<<<<< HEAD
     </script>
 ```
 要注意，当 `<router-link>` 对应的路由匹配成功，将自动设置 class 属性值 .router-link-active
@@ -98,24 +80,6 @@
   const User = {
         template: '<div>User {{ $route.params.id }}</div>'
       }
-=======
-
-要注意，当 `<router-link>` 对应的路由匹配成功，将自动设置 class 属性值 .router-link-active
-
-## 动态路由匹配
-
-我们经常需要把某种模式匹配到的所有路由，全都映射到同个组件。例如，我们有一个 User 组件，对于所有 ID 各不相同的用户，都要使用这个组件来渲染。
-  
- const User = {
-template: '<div>User {{ $route.params.id }}</div>'
-}
-
-    const router = new VueRouter({
-      routes: [
-        // 动态路径参数 以冒号开头
-        // 匹配 /user/foo (this.$route.params.id === 'foo'), /user/bar
-        { path: '/user/:id', component: User },
->>>>>>> 124efc54297a09178fd738a975595fd3c7b50426
 
   const router = new VueRouter({
     routes: [
@@ -123,18 +87,12 @@ template: '<div>User {{ $route.params.id }}</div>'
       // 匹配 /user/foo (this.$route.params.id === 'foo'), /user/bar
       { path: '/user/:id', component: User },
 
-<<<<<<< HEAD
       //1条路径可包含多个动态片段
       {path: '/user/:username/post/:postid', component: User}
     ]
   })
 ```
 ## 响应路由参数的变化
-=======
-## 响应路由参数的变化
-
-从 /user/foo 导航到 user/bar，原来的 User 组件实例会被复用, 想对路由参数的变化作出响应的话，你可以简单地 watch（监测变化） \$route 对象
->>>>>>> 124efc54297a09178fd738a975595fd3c7b50426
 
 从 /user/foo 导航到 user/bar，原来的 User 组件实例会被复用, 想对路由参数的变化作出响应的话，你可以简单地 watch（监测变化） \$route 对象
 ```js
@@ -159,21 +117,9 @@ template: '<div>User {{ $route.params.id }}</div>'
 ```
 ## 高级匹配模式
 
-<<<<<<< HEAD
 vue-router 使用 path-to-regexp 作为路径匹配引擎，查看它的 [文档](https://github.com/pillarjs/path-to-regexp#parameters) 学习高阶的路径匹配.
 
 ## 匹配优先级
-=======
-## 高级匹配模式
-
-vue-router 使用 path-to-regexp 作为路径匹配引擎，查看它的 [文档](https://github.com/pillarjs/path-to-regexp#parameters) 学习高阶的路径匹配.
-
-## 匹配优先级
-
-有时候，同一个路径可以匹配多个路由，此时，匹配的优先级就按照路由的定义顺序：谁先定义的，谁的优先级就最高。
-
-## 嵌套路由
->>>>>>> 124efc54297a09178fd738a975595fd3c7b50426
 
 有时候，同一个路径可以匹配多个路由，此时，匹配的优先级就按照路由的定义顺序：谁先定义的，谁的优先级就最高。
 
@@ -224,17 +170,9 @@ vue-router 使用 path-to-regexp 作为路径匹配引擎，查看它的 [文档
 
 `router.push(location, onComplete?, onAbort?)`
 
-<<<<<<< HEAD
 ```js
   router.push(location, onComplete?, onAbort?)
   this.$router === router
-=======
-## 编程式的导航
-
-除了使用 `<router-link>` 创建 a 标签来定义导航链接，我们还可以借助 router 的实例方法，通过编写代码来实现。
-
-### `router.push(location, onComplete?, onAbort?); // this.$router === router`
->>>>>>> 124efc54297a09178fd738a975595fd3c7b50426
 
   // 字符串
   router.push('home')
@@ -242,13 +180,8 @@ vue-router 使用 path-to-regexp 作为路径匹配引擎，查看它的 [文档
   // 对象
   router.push({ path: 'home' })
 
-<<<<<<< HEAD
   // 命名的路由 /user/123
   router.push({ name: 'user', params: { userId: 123 }})
-=======
-    // 命名的路由 /user/123
-    router.push({ name: 'user', params: { userId: 123 }})
->>>>>>> 124efc54297a09178fd738a975595fd3c7b50426
 
   // 带查询参数，变成 /register?plan=private
   router.push({ path: 'register', query: { plan: 'private' }})
@@ -262,19 +195,10 @@ vue-router 使用 path-to-regexp 作为路径匹配引擎，查看它的 [文档
 
 `router.replace(location, onComplete?, onAbort?)`
 
-<<<<<<< HEAD
 跟 router.push 很像，唯一的不同就是，它不会向 history 添加新记录，而是跟它的方法名一样 —— 替换掉当前的 history 记录。
 
 `router.go(n)`
 
-=======
-### `router.replace(location, onComplete?, onAbort?)`
-
-跟 router.push 很像，唯一的不同就是，它不会向 history 添加新记录，而是跟它的方法名一样 —— 替换掉当前的 history 记录。
-
-### `router.go(n)`
-
->>>>>>> 124efc54297a09178fd738a975595fd3c7b50426
 这个方法的参数是一个整数，意思是在 history 记录中向前或者后退多少步，类似 window.history.go(n)。
 ```js
     // 历史记录中前进一步，同 history.forward()
@@ -289,21 +213,12 @@ vue-router 使用 path-to-regexp 作为路径匹配引擎，查看它的 [文档
     // 如果 history 记录不够用，那就默默地失败呗
     router.go(-100)
     router.go(100)
-<<<<<<< HEAD
 ```
-=======
-
->>>>>>> 124efc54297a09178fd738a975595fd3c7b50426
 你也许注意到 router.push、 router.replace 和 router.go 跟 window.history.pushState、 window.history.replaceState 和 window.history.go 好像， 实际上它们确实是效仿 window.history API 的。
 
 因此，如果你已经熟悉 Browser History APIs，那么在 vue-router 中操作 history 就是超级简单的。
 
 ## 命名路由
-<<<<<<< HEAD
-=======
-
-有时候，通过一个名称来标识一个路由显得更方便一些，特别是在链接一个路由，或者是执行一些跳转的时候。你可以在创建 Router 实例的时候，在 routes 配置中给某个路由设置名称。
->>>>>>> 124efc54297a09178fd738a975595fd3c7b50426
 
 有时候，通过一个名称来标识一个路由显得更方便一些，特别是在链接一个路由，或者是执行一些跳转的时候。你可以在创建 Router 实例的时候，在 routes 配置中给某个路由设置名称。
 ```js
@@ -317,13 +232,8 @@ vue-router 使用 path-to-regexp 作为路径匹配引擎，查看它的 [文档
       ]
     })
 
-<<<<<<< HEAD
     // <router-link :to="{ name: 'user', params: { userId: 123 }}">User</router-link>
 ```
-=======
-    <router-link :to="{ name: 'user', params: { userId: 123 }}">User</router-link>
-
->>>>>>> 124efc54297a09178fd738a975595fd3c7b50426
 ## 命名视图
 
 有时候想同时（同级）展示多个视图，而不是嵌套展示，例如创建一个布局，有 sidebar（侧导航） 和 main（主内容） 两个视图，这个时候命名视图就派上用场了
@@ -348,15 +258,9 @@ vue-router 使用 path-to-regexp 作为路径匹配引擎，查看它的 [文档
         }
       ]
     })
-<<<<<<< HEAD
 ```
 ## 重定向
 ```js
-=======
-
-## 重定向
-
->>>>>>> 124efc54297a09178fd738a975595fd3c7b50426
     // 下面例子是从 /a 重定向到 /b
     const router = new VueRouter({
       routes: [
@@ -383,11 +287,6 @@ vue-router 使用 path-to-regexp 作为路径匹配引擎，查看它的 [文档
 ```
 ## 别名
 
-<<<<<<< HEAD
-=======
-## 别名
-
->>>>>>> 124efc54297a09178fd738a975595fd3c7b50426
 『重定向』的意思是，当用户访问 /a 时，URL 将会被替换成 /b，然后匹配路由为 /b，那么『别名』又是什么呢？
 
 /a 的别名是 /b，意味着，当用户访问 /b 时，URL 会保持为 /b，但是路由匹配则为 /a，就像用户访问 /a 一样。
@@ -405,15 +304,9 @@ vue-router 使用 path-to-regexp 作为路径匹配引擎，查看它的 [文档
 ## 路由组件传参
 
 在组件中使用\$route 会使之与其对应路由形成高度耦合，从而使组件只能在某些特定的 url 上使用，限制了其灵活性。
-<<<<<<< HEAD
 
 使用 props 将组件和路由解耦：
 
-=======
-
-使用 props 将组件和路由解耦：
-
->>>>>>> 124efc54297a09178fd738a975595fd3c7b50426
 ### 与\$route 耦合
 
     const User = {

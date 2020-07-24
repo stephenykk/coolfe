@@ -1,4 +1,4 @@
-# [转]seajs 详解
+# seajs 详解
 
 `SeaJS` 是一个遵循 commonJS 规范的 javascript 模块加载框架，可以**实现 javascript 的模块化开发和模块化加载**(_kk:模块可按需加载或全部加载_)。
 
@@ -183,13 +183,13 @@ index.html 加载了 init 模块，并使用此模块的 initPage 方法初始�
 
 ## SeaJS 使用教程
 
-###下载及安装
+### 下载及安装
 
     npm i seajs --save
     # 页面中引入
     <script src="sea.js"></script>
 
-###SeaJS 基本开发原则
+### SeaJS 基本开发原则
 
 在讨论 SeaJS 的具体使用前，先介绍一下 SeaJS 的模块化理念和开发原则。
 
@@ -199,7 +199,7 @@ index.html 加载了 init 模块，并使用此模块的 initPage 方法初始�
 
 **另外，每个模块应该都定义在一个单独 js 文件中，即一个 js 文件对应一个模块。**
 
-###模块定义: define
+### 模块定义: define
 
 define 可以接收三个参数：
 
@@ -238,7 +238,7 @@ id 是一个模块的标识字符串，define 只有 factory 参数时，id 会�
 
 deps 一般也不需要传入，需要用到的模块用 require 加载即可。
 
-###工厂函数 factory 解析
+### 工厂函数 factory 解析
 
 工厂函数是模块的主体和重点。在只传递 factory 给 define 时（_推荐写法_），factory 的三个参数分别是：
 
@@ -254,7 +254,7 @@ deps 一般也不需要传入，需要用到的模块用 require 加载即可。
 - module.dependencies 一个数组，存储了此模块依赖的所有模块的 ID 列表。
 - module.exports 与 exports 指向同一个对象。
 
-###三种编写模块的模式
+### 三种编写模块的模式
 
 基于 exports 的模式：
 
@@ -306,7 +306,7 @@ deps 一般也不需要传入，需要用到的模块用 require 加载即可。
         }
     });
 
-###模块的载入和引用
+### 模块的载入和引用
 
 **模块的寻址算法**
 
@@ -392,7 +392,7 @@ var \$ = require('jquery');
         });
     });
 
-###SeaJS 的全局配置
+### SeaJS 的全局配置
 
 `seajs.config()`可以设置全局配置：
 
@@ -425,7 +425,7 @@ var \$ = require('jquery');
 - `debug`
   表示是否工作在调试模式下。
 
-###SeaJS 与现有 JS 库配合使用
+### SeaJS 与现有 JS 库配合使用
 
 要将现有 JS 库如 jQuery 与 SeaJS 一起使用，只需根据 SeaJS 的的模块定义规则对现有库进行一个封装。例如：
   
@@ -437,7 +437,7 @@ define(function () {
         return $.noConflict();
     });
 
-###SeaJS 项目的打包部署
+### SeaJS 项目的打包部署
 
 SeaJS 本来集成了一个打包部署工具`spm`，后来作者为了更 KISS 一点，将`spm`拆出了 SeaJS 而成为了一个单独的项目。 `spm`的核心思想是将所有模块的代码都合并压缩后并入入口模块，由于 SeaJS 本身的特性，html 不需要做任何改动就可以很方便的在开发环境和生产环境 间切换。
 

@@ -1,4 +1,4 @@
-# [转]SASS 用法指南
+# SASS 用法指南
 
 > 转自 [阮一峰 SASS 用法指南](http://www.ruanyifeng.com/blog/2012/06/sass.html)
 

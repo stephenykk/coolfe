@@ -1,4 +1,7 @@
 {
+  "scripts": {
+    "build": "node build"
+  },
   "devDependencies": {
     "opn": "^5.4.0"
   },

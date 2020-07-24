@@ -1,70 +1,68 @@
 const fs = require("fs");
-const child_process = require("child_process");
 const path = require("path");
+const child_process = require("child_process");
+const { rejects } = require("assert");
 
-let docsDir = path.resolve(__dirname, "./docs");
+const pathJoin = path.join
 
-async function getLinks() {
-  let files = fs.readdirSync(docsDir);
-  console.log("-----------> files:", files);
-  console.log();
-  console.log();
+class HomeHtml {
+  constructor() {
+    this.docsRoot = pathJoin(__dirname, 'docs')
+    this.indexMd = pathJoin(__dirname, 'index.md')
+    this.files = this.getFiles(this.docsRoot)
+  }
 
-  files = files.filter(file => {
-    let stat = fs.statSync(path.resolve(docsDir, file));
-    return !stat.isDirectory();
-  });
+  getFiles(dir) {
+    let files = fs.readdirSync(dir)
+    files = files.filter(file => !/^\./.test(file))
+    return files.filter(file => fs.statSync(pathJoin(dir, file)).isFile())
+  }
 
-  let links = [];
+  getLink(file) {
+    let fpath = pathJoin(this.docsRoot, file)
+    return new Promise((resolve, reject) => {
+      fs.readFile(fpath, 'utf8', function(err, con) {
+        if(err) return reject(err)
+        let firstLine = con.match(/^.*$/m)[0]
+        resolve({text: firstLine, url: `./docs/${file}`})
+      })
+    }) 
+  }
 
+  async getLinks() {
+    return await Promise.all(this.files.map(this.getLink, this))
+  }
 
-  for (let i = 0; i < files.length; i++) {
-    let link = await new Promise(resolve => {
-      let file = files[i];
-      let con = fs.readFileSync(path.join(docsDir, file));
-      let firstLine = /^.*$/m.exec(con)[0];
-      resolve({
-        url: `./docs/${file}`,
-        text: firstLine
-      });
+  async updateIndexMd() {
+    let links = await getLinks();
+  
+    let linksMarkdown = links.map(link => {
+      return `+ [${link.text}](${link.url})`;
     });
-
-    links.push(link);
-  }
   
-  console.log("------------>links:", links);       
+    let con = fs.readFileSync(this.indexMd, "utf8");
+    const re = /(<!-- links -->)[\s\S]*/gim;
+    con = con.replace(re, "$1\r\n" + linksMarkdown.join("\r\n"));
   
-  return links;
-}
-
-async function write(fpath) {
-  let links = await getLinks();
-
-  let linksMarkdown = links.map(link => {
-    return `+ [${link.text}](${link.url})`;
-  });
-
-  let con = fs.readFileSync(fpath, "utf8");
-  const re = /(<!-- links -->)[\s\S]*/gim;
-  con = con.replace(re, "$1\r\n" + linksMarkdown.join("\r\n"));
-
-  fs.writeFileSync(fpath, con, "utf8");
-  return true;
-}
-
-async function main() {
-  try {
-    await write("index.md");
-
-    // index.md -> index.html
-    let result = child_process.execSync("markdown-html index.md -o index.html");
-    console.log();
-    console.log();
-
-    console.log("index.md -> index.html done..");
-  } catch (e) {
-    console.log("err:", e);
+    fs.writeFileSync(this.indexMd, con, "utf8");
+  
+    return true;
   }
+
+  async start() {
+    try {
+      await this.updateIndexMd();
+  
+      // index.md -> index.html
+      let result = child_process.execSync("markdown-html index.md -o index.html");
+      console.log('\r\n\r\n');
+  
+      console.log("index.md -> index.html done..");
+    } catch (e) {
+      console.log("err:", e);
+    }
+  }
+
 }
 
-main();
+new HomeHtml().start()

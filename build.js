@@ -24,7 +24,7 @@ class HomeHtml {
       fs.readFile(fpath, 'utf8', function(err, con) {
         if(err) return reject(err)
         let firstLine = con.match(/^.*$/m)[0].replace('#', '').trim()
-        resolve({text: firstLine, url: `./docs/${file}`})
+        resolve({text: firstLine, url: `./docs/${file.replace(/\.md$/, '.html')}`})
       })
     }) 
   }

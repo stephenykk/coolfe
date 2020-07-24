@@ -34,7 +34,7 @@ class HomeHtml {
   }
 
   async updateIndexMd() {
-    let links = await getLinks();
+    let links = await this.getLinks();
   
     let linksMarkdown = links.map(link => {
       return `+ [${link.text}](${link.url})`;

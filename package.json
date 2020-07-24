@@ -1,6 +1,7 @@
 {
   "scripts": {
-    "build": "node build"
+    "build": "node build",
+    "commit": "git add . && git commit -m 'rebuild index.html'"
   },
   "devDependencies": {
     "opn": "^5.4.0"

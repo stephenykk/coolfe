@@ -2,7 +2,8 @@
 
 ## let const
 
-let，const 定义变量，即使在最外层也不会变成 window 的属性，只有 var 定义的变量才会成为 window 的属性。
+let，const 定义变量，即使在最外层也不会变成 window 的属性，只有 var 定义的变量才会成为 window 的属性。  
+let, const 不允许重复声明，另外要注意暂时性死区
 
 ## String
 
@@ -56,7 +57,8 @@ comic.replace(/\s/, "$$"); // one$piece
 - `[]` 匹配任意包含在[]内的一系列字符中的任意一个，不是多个。
 
   ```js
-  "fgo".match(/[f-k]/); // fg
+  "fgo".match(/[f-k]/); // [f]
+  "fgo".match(/[f-k]/g); // [f, g]
   ```
 
 - `[^]` 匹配任意不包含在[]内的一系列字符中的任意一个，不是多个。
@@ -94,7 +96,7 @@ arr.every(cb);
 arr.some(cb);
 arr.filter(cb);
 arr.forEach(cb);
-arr.map(cb);
+arr.map(cb, thisArg);
 arr.reduce(cb);
 arr.reduceRight(cb);
 ```
@@ -140,7 +142,14 @@ arr.fill(val);
 arr.join(sep);
 
 new Array(10).fill(1); // 生成指定数量元素的数组
+
+// Array.from(set)
+// Array.from(arryLike)
 Array.from(new Set([1, 2, 2, 1])); // => [1,2] 生成数组 去重
+function greet(name, words) {
+  // let args = Array.prototype.slice.call(arguments)
+  let args = Array.from(arguments)
+}
 
 arr.length = 0 // 清空数组
 ```
@@ -161,7 +170,7 @@ function Vue(options) {
 }
 ```
 
-### IIF 立即执行函数
+### IIF 立即执行函数(Immediate Invoke Function)
 
 立即执行函数常用于创建独立的作用域，声明的变量不污染外部命名空间，或 返回闭包
 
@@ -178,13 +187,10 @@ function Vue(options) {
   };
 })();
 
-+(function () {
-  console.log("call at once too");
-})();
-
-!(function () {
-  console.log("call at once too");
-})();
+// 前面加运算符 让函数表达式被正确识别
+// 不推荐 容易被IDE格式化转换掉
++function() { console.log('hello')}();
+!function() { console.log('hello')}();
 ```
 
 ### 形参数量 和 函数名
@@ -214,7 +220,7 @@ console.log(sum.name); // sum
 function foo() {
   // arguments   array-like object 不定参函数访问实参列表
   // arguments === foo.arguments
-  var args = [].slice.call(arguments); // to real array
+  var args = Array.prototype.slice.call(arguments); // to real array
   console.log(args);
 
   // 引用函数自身，更推荐用具名函数
@@ -232,8 +238,13 @@ console.log("foo.arguments:", foo.arguments);
 function main() {
   console.log("main start..");
   foo("hello", "world");
+
+  // 箭头函数的arguments,为其定义时所在函数作用域的arguments, 同this
+  let bar = () => {
+    console.log('bar arguments:', arguments) // ['hello', 'world']
+  }
 }
-main();
+main('hello', 'world');
 ```
 
 ### JSON.stringify(value[, replacer[, space]])
@@ -259,10 +270,16 @@ var data = {
   home: { name: "hk", country: "cn" },
 };
 
-JSON.stingify(data);
-JSON.stingify(data, null, 2);
-JSON.stingify(data, null, "\t");
+JSON.stringify(data);
+JSON.stringify(data, null, 2);
+JSON.stringify(data, null, "\t");
 
+/*
+{
+  "name": "sandy",
+  "job": "singer"
+}
+*/
 JSON.stringify(data, ["name", "job"], 2);
 
 JSON.stringify(
@@ -323,10 +340,11 @@ foo.apply(obj, [10, 3]); // => 70
 ### setTimeout(fn, ms, args..)
 
 ```js
-// setTimeout(要执行的代码, 等待的毫秒数)
-// setTimeout(JavaScript函数, 等待的毫秒数)
+// 调用方式1： setTimeout(要执行的代码, 等待的毫秒数)
+// 调用方式2： setTimeout(JavaScript函数, 等待的毫秒数)
 
-// 1秒之后 eval('hello()')
+// 1秒之后 eval('hello()') 全局作用域下必须有hello函数
+// 注意 nodejs 下， 不支持调用方式1
 setTimeout("hello()", 1000);
 function hello() {
   console.log("hello world");
@@ -356,6 +374,16 @@ var emptyFn = new Function();
 // 只传一个参数的情况 这个参数就是函数体
 var hello = new Function("console.log('hello')");
 
+// new Function()生成函数的上级作用域总是全局作用域
+window.a = 200
+function testScope() {
+  var a = 100;
+  var nadd = new Function('b', 'return a + b')
+  var add = function(b) {return a + b}
+  console.log(add(20)) // 120
+  console.log(nadd(20)) // 220
+}
+
 // 传多个参数的情况，最后一个参数为函数体，前面的参数都是该函数的形参名
 var sum = new Function("a", "b", "return a + b;");
 console.log(sum(10, 20)); // => 30
@@ -370,11 +398,11 @@ console.log(global === window);
 
 ## Object
 
-Object 是普通对象的构造函数，它上面有很多有用的方法(_内省方法_)
+Object 是普通对象的构造函数，它上面有很多有用的方法(_内省(自省/反射)方法_)
 
 ```js
 //--- Object.assign 合并对象
-// 将所有可枚举属性的值从一个或多个源对象复制到目标对象
+// 将所有自有的可枚举属性从一个或多个源对象复制到目标对象
 Object.assign({}, defData, newData);
 
 // 若 source包含getter, 要保证原样复制到目标，则应
@@ -407,7 +435,7 @@ const obj = Object.assign({}, v1, null, v2, undefined, v3, v4);
 // 注意，只有字符串的包装对象才可能有自身可枚举属性。
 console.log(obj); // { "0": "a", "1": "b", "2": "c" }
 
-//--- deep clone
+//--- deep clone 简单版 没处理函数和循环引用
 var cloneData = JSON.parse(JSON.stringify(data));
 
 //--- Object.create(proto[, propertiesObject])
@@ -513,7 +541,7 @@ var arr = [
 Object.fromEntries(arr); // 键值对数组(二维数组)转换为对象
 Object.fromEntries(map);
 
-// obj map values
+// obj.mapValues
 Object.fromEntries(Object.entries(lufy).map(([key, val]) => [key, val + "kk"]));
 
 Object.defineProperty(lufy, "skill", { value: "stretch" });
@@ -554,7 +582,7 @@ Object.getOwnPropertyDescriptor(sandy, "job");
 Object.getOwnPropertyDescriptors(sandy);
 
 //--- 判断相同值
-// Object.is(val1, val2) 有别于 == 和 === 比较, 不会做隐式类型转换
+// Object.is(val1, val2) 有别于 == 和 === 比较, 不会做隐式类型转换, 结果更符合预期
 Object.is(window, window); // true
 Object.is(null, undefined); // false
 Object.is(NaN, NaN); // true
@@ -564,19 +592,29 @@ Object.is(0, -0); // false
 Object.is(0, +0); // false
 Object.is([], []); // false
 
-//--- 对象扩展 冻结 密封
+```
+冻结 密封 不可扩展
 
+名称 | writable | configurable | extensible | 相关方法
+---|:---:|:---:|:---:|---
+冻结 | N | N | N | Object.freeze()  Object.isFrozen()
+密封 | Y | N | N | Object.seal()  Object.isSealed()
+不可扩展 | Y | Y | N | Object.preventExtensions()  Object.isExtensible()
+
+
+```js
+//--- 对象扩展 冻结 密封
 // 冻结
 // 指对象不可扩展，所有属性都是不可配置的(configurable)，且所有数据属性（即没有getter或setter组件的访问器的属性）都是不可写的(writable)。
 // 即 不可以: 加属性,删属性, 修改属性值
 var comic = { name: "fullmetal", year: 2010 };
 Object.freeze(comic); // return comic
-Object.isFrozen(comic); // true 对象不可扩展 所有属性只读且不可配置
+Object.isFrozen(comic); // true 不可增减属性(对象不可扩展), 所有属性只读, 不可配置
 // 以下都无效
 comic.hero = "yuki";
 delete comic.name;
 comic.year = 2011;
-// 一个不可扩展的空对象同时也是一个冻结对象.
+// 一个不可扩展的空对象同时也是一个冻结对象.(0个属性，且不能添加，所以根本没有属性去写和配置,等同frozen)
 var vacuouslyFrozen = Object.preventExtensions({});
 Object.isFrozen(vacuouslyFrozen); //=== true;
 // 一个冻结对象也是一个密封对象.
@@ -585,22 +623,20 @@ Object.isSealed(frozenObj); //=== true
 Object.isExtensible(frozenObj); //=== false
 
 // 密封
-// 指不可扩展，且所有自身属性都不可配置（但不一定是不可写）
-// 即 不可以：加属性，删属性
+// 指不可扩展(增减属性)，不可配置，已有属性可写
 var book = { name: "two city", price: 12 };
 Object.seal(book); // return book
-Object.isSealed(book); // true 对象不可扩展 所有属性不可配置
-// 以下无效
-book.name = "war and peace";
-book.author = "winter";
+Object.isSealed(book);
 
-// 不可扩展
-// 即 不可以： 加属性
+book.name = "war and peace"; // ok
+book.author = "winter"; // fail
+
+// 不可扩展(增减属性)
 var book2 = { name: "two city", price: 12 };
 Object.preventExtensions(book2);
 Object.isExtensible(book2);
-// 以下无效
-book2.from = "england";
+
+book2.from = "england"; // fail
 ```
 
 普通对象的方法

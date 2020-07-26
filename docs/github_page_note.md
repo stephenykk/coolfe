@@ -18,3 +18,11 @@
 
 ## static site generators
 [About GitHub Pages and Jekyll - GitHub Docs](https://docs.github.com/en/github/working-with-github-pages/about-github-pages-and-jekyll)
+
+## jekyll
+jekyll会自动转换markdown为html文件，直接访问即可。
+```js
+// http://stephenykk.github.io/coolfe/docs/test.md
+// -> 
+// http://stephenykk.github.io/coolfe/docs/test.html
+```

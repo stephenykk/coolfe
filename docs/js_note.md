@@ -644,10 +644,12 @@ book2.from = "england"; // fail
 ```js
 obj.hasOwnProperty(key);
 obj.propertyIsEnumerable(key);
+
 obj.isPrototypeOf(o);
+obj.__proto__; // 访问原型对象
+
 obj.toString();
 obj.valueOf();
-obj.__proto__; // 访问原型对象
 ```
 
 ## 异步

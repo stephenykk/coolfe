@@ -222,10 +222,15 @@ git d hashid
     # 显示所有提交过的用户，按提交次数排序
     git shortlog -sn
 
-    # 搜索提交历史，返回提交的文件内容包含关键词的提交记录
+    # 搜索历史提交的内容
+    # 返回提交的文件内容包含关键词的提交记录
     git log -S [keyword]
-    # 查询某段代码，是什么时候提交上来的 很实用呀
+    # 查询某段代码，是什么时候提交上来的 很实用呀~
     git log -S "console.log('kkmm')"
+
+    # 搜索历史提交的注释
+    git  log  --grep  [keyword]
+    git  log  --grep  [keyword] --author yangxyi@kuaiji.com
 
     # 显示指定文件的每行内容是什么人在什么时间修改过
     git blame [file]
@@ -315,6 +320,10 @@ git d hashid
     # 本地master分支追踪origin/next远程分支
     git branch --set-upstream-to=origin/next master
     git branch -u origin/next master # 同上 简短选项名
+
+    # 找出包含指定 tag/commit 的分支
+    git branch --contains tags/<tag>
+    git branch --contains< commit> 
 ```
 
 ## git pull

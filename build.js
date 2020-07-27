@@ -63,7 +63,7 @@ class HomeHtml {
       await this.updateIndexMd();
   
       // index.md -> index.html
-      let result = child_process.execSync("markdown-html index.md -o index.html");
+      let result = child_process.execSync("markdown-html index.md -o index.html -l template.html");
       console.log('\r\n\r\n');
   
       console.log("index.md -> index.html done..");

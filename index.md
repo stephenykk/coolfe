@@ -58,6 +58,7 @@
 + [nginx note](./docs/nginx.html)
 + [nodejs child_process](./docs/node_child_process.html)
 + [nodejs debug](./docs/node_debug.html)
++ [nodejs learn more](./docs/nodejs_lm.html)
 + [nodejs note](./docs/node_note.html)
 + [npm note](./docs/npm_note.html)
 + [phantomjs 教程](./docs/phantomjs_note.html)

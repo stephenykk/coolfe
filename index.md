@@ -1,4 +1,4 @@
-# 技术日志3
+# 技术日志
 
 <style>
     h1 {font-size: 30px; text-align: center;}

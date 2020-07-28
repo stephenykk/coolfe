@@ -32,7 +32,7 @@ import { createStore } from "redux";
 const store = createStore(reducer);
 ```
 
-createStore 函数接受另 reducer 函数作为参数，返回新生成的 Store 对象。
+createStore 函数接受一个 reducer 函数作为参数，返回新生成的 Store 对象。
 
 ### State
 
@@ -161,7 +161,7 @@ const total = actions.reduce(reducer, 0); // 3
 
 ### 纯函数
 
-Reducer 函数最重要的特征是，它是一个纯函数(相同的输入，返回相同的输出; 没有副作用的函数)。
+Reducer 函数最重要的特征是，它是一个纯函数(_相同的输入，返回相同的输出; 没有副作用的函数_)。
 
 由于 Reducer 是纯函数，就可以保证同样的 State，必定得到同样的 View。但也正因为这一点，Reducer 函数里面不能改变 State，必须返回一个全新的对象，请参考下面的写法。
 
@@ -519,7 +519,7 @@ const store = createStore(reducer, applyMiddleware(promiseMiddleware));
 
 看一下 redux-promise 的源码，就会明白它内部是怎么操作的。
 
-````js
+```js
     export default function promiseMiddleware({ dispatch }) {
       return next => action => {
         if (!isFSA(action)) { // isFluxStandardAction
@@ -539,8 +539,6 @@ const store = createStore(reducer, applyMiddleware(promiseMiddleware));
           : next(action);
       };
     }
-
-```js
-
+```
 从上面代码可以看出，如果 Action 本身是一个 Promise，它 resolve 以后的值应该是一个 Action 对象，会被dispatch方法送出（action.then(dispatch)），但 reject 以后不会有任何动作；如果 Action 对象的payload属性是一个 Promise 对象，那么无论 resolve 和 reject，dispatch方法都会发出 Action。
-````
+

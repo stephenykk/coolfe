@@ -36,7 +36,7 @@
 </html>
 ```
 
-> > 在浏览器中使用 Babel 来编译 JSX 效率是非常低的。
+> 注: 在浏览器中使用 Babel 来编译 JSX 效率是非常低的
 
 ## 安装
 
@@ -67,7 +67,7 @@
 
 ### ReactDOM.render()
 
-```js
+```jsx
 ReactDOM.render(
   <h1>Hello world!</h1>, // 根组件
   document.getElementById("exmpale") // 挂载点
@@ -78,7 +78,7 @@ ReactDOM.render(
 
 HTML 语言直接写在 JavaScript 语言之中，不加任何引号，这就是 JSX 的语法，它允许 HTML 与 JavaScript 的混写
 
-```js
+```jsx
 var names = ["Alice", "Emily", "Kate"];
 ReactDOM.render(
   <div>
@@ -94,7 +94,7 @@ ReactDOM.render(
 
 JSX 允许直接在模板插入 JavaScript 变量。如果这个变量是一个数组，则会展开这个数组的所有成员
 
-```js
+```jsx
 var arr = [<h1>Hello world!</h1>, <h2>React is awesome</h2>];
 ReactDOM.render(<div>{arr}</div>, document.getElementById("example"));
 ```

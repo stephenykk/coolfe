@@ -15,16 +15,26 @@ class HomeHtml {
   getFiles(dir) {
     let files = fs.readdirSync(dir)
     files = files.filter(file => !/^\./.test(file))
-    return files.filter(file => fs.statSync(pathJoin(dir, file)).isFile())
+    return files.map(file => {
+      let stat = fs.statSync(pathJoin(dir, file))
+      let isFile = stat.isFile();
+      if(!isFile) {
+        return false
+      } else {
+        let date = stat.mtime.toISOString().replace(/T.*$/, '')
+        return [file, date]
+      }
+    })
   }
 
-  getLink(file) {
+  getLink(fileInfo) {
+    let [file, date] = fileInfo
     let fpath = pathJoin(this.docsRoot, file)
     return new Promise((resolve, reject) => {
       fs.readFile(fpath, 'utf8', function(err, con) {
         if(err) return reject(err)
         let firstLine = con.match(/^.*$/m)[0].replace('#', '').trim()
-        resolve({text: firstLine, url: `./docs/${file.replace(/\.md$/, '.html')}`})
+        resolve({date, text: firstLine, url: `./docs/${file.replace(/\.md$/, '.html')}`})
       })
     }) 
   }
@@ -45,7 +55,7 @@ class HomeHtml {
     // console.log(links.map(l => l.text));
   
     let linksMarkdown = links.map(link => {
-      return `+ [${link.text}](${link.url})`;
+      return `+ [${link.text}](${link.url})<time>${link.date}</time>`;
     });
   
     let con = fs.readFileSync(this.indexMd, "utf8");

@@ -1,4 +1,5 @@
 # vi notes
+[Linux vi/vim入门教程](https://www.runoob.com/linux/linux-vim.html)  
 
 `vimtutor` 是很好的入门教程
 
@@ -45,4 +46,12 @@ d0 # 删除前一个字符开始到行首的所有字符。
 dH # 删除从当前行到屏幕首行的内容。
 dM # 删除从当前行到屏幕中间行的内容。
 dL # 删除从当前行到屏幕末行的内容
+```
+
+## 其他命令
+```bash
+:set ic   # 忽略大小写 (ic 是 ignore case 的缩写)
+:set noic  # 不忽略大小写
+:set nu # 显示行号
+:set nonu # 不显示行号
 ```

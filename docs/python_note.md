@@ -75,11 +75,11 @@ python 有多种解释器:
 
 ### 输入
 
-````python
+```python
     name = input('input your name:') # 然后输入 'sindy' python3
     # name = raw_input('input your name:') # python2
     print(name)
-
+```
 
 语法
 ---
@@ -98,7 +98,7 @@ python的语法比较简单:
     else:
         print(-a)
 
-````
+```
 
 ### 数据类型和变量
 
@@ -159,7 +159,7 @@ python 的两种除法：
 
 ```python
     print(10 / 3) #3.33.. 普通除法 结果为浮点数
-    print(10 // 3) #3 整除(有小数 则向下取整) 结果为整数
+    print(10 // 3) #3 地板除 结果为整数 整除(有小数 则向下取整) 结果为整数
     print(20 / 3)
     print(20 // 3) #6
     print(9 / 3) #3.0 /除法计算结果是浮点数，即使是两个整数恰好整除，结果也是浮点数：

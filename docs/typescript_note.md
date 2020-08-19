@@ -1,5 +1,9 @@
 # typescript notes
 
+[typescript入门教程](https://www.runoob.com/w3cnote/getting-started-with-typescript.html)
+   
+[typescript教程](https://www.runoob.com/typescript/ts-tutorial.html)
+
 ## 简介
 
 `TypeScript` 是 JavaScript 的一个超集，主要提供了 `类型系统` 和对 `ES6` 的支持，由 Microsoft 开发。
@@ -11,6 +15,8 @@
 1. 增强了编辑器和 IDE 的功能，包括代码补全、接口提示、跳转到定义、重构等；
 
 **TypeSctipt 增强代码的可读性和可维护性**
+
+> TypeScript 是 JavaScript 的超集，扩展了 JavaScript 的语法，因此现有的 JavaScript 代码可与 TypeScript 一起工作无需任何修改，TypeScript 通过类型注解提供编译时的静态类型检查。
 
 ## 安装
 
@@ -43,6 +49,16 @@ tsc hello.ts
 ```
 
 ## 基础类型
+基本类型的批注是number, bool和string。而弱或动态类型的结构则是any类型
+
+例子
+```ts
+function add(left:number, right: number): number {
+    return left + right
+}
+```
+> 类型批注可以被导出到一个单独的声明文件以让使用类型的已被编译为JavaScript的TypeScript脚本的类型信息可用。
+> 当类型没有给出时，TypeScript编译器利用类型推断以推断类型。
 
 ### boolean
 
@@ -326,5 +342,114 @@ function getLength(something: string | number): number {
 
 
 
+## 接口
+接口可以作为一个类型批注。
+
+```ts
+interface Shap {
+    name: string;
+    width: number;
+    height: number;
+    color?: string;
+}
+function area(shape: Shape) {
+    var area = shape.width * shape.height
+    return `I'm a ${shape.name} with area ${area} cm square`
+}
+
+console.log(area({name: 'rectangle', width: 20, height: 10}))
+console.log(area({width: 30, height: 20})) // error 缺少name
+```
+
+## 箭头函数表达式（lambda表达式）
+lambda表达式 ()=>{something}或()=>something 相当于js中的函数,它的好处是可以自动将函数中的this附加到上下文中。
+
+```ts
+var shape = {
+    name: 'rectangle',
+    popup: function() {
+        console.log('this inside popup', this.name)
+        setTimeout(() => {
+            console.log('this inside setTimeout', this.name)
+        }, 1000)
+    }
+}
+shape.popup()
+```
+
+## 类
+类型批注支持的ECMAScript 6的类
+
+```ts
+class Shape {
+    area: number;
+    color: string;
+
+    constructor(name: string, width: number, height: number) {
+        this.area = width * height
+        this.color = 'pink'
+    };
+
+    show() {
+        return `I'm ${this.color} ${this.name} with area of ${this.area} cm square`
+    }
+
+}
+var shape = new Shape('rectangle', 20, 30)
+shape.show() // 因为类型注解没有name属性，所以访问this.name会报错
 
 
+```
+
+public 和 private 访问修饰符。Public 成员可以在任何地方访问， private 成员只允许在类中访问
+
+```ts
+class Person {
+    // 构造函数的 public name 等同下面的声明
+    // name: string;
+
+    private age: number;
+    private sex: string;
+    
+    constructor(public name: string, age, sex) {
+        // 构造函数参数内 public name 会自动做这个赋值
+        // this.name = name
+        this.age = age
+        this.sex = sex
+    }
+
+    show() {
+        return `I am ${this.name}, a ${this.sex}, ${this.age} yeas old~`
+    }
+}
+
+var alice = new Person('alice', 10, 'girl')
+console.log(alice.show())
+console.log(alice.sex) // 编译会报错 sex是private属性
+```
+
+
+## 继承
+我们可以继承一个已存在的类并创建一个派生类，继承使用关键字 extends
+
+```ts
+class Shape3D extends Shape {
+    volume: number;
+
+    constructor(public name: string, width: number, height: number, length: number) {
+        super(name, width, height)
+        this.volume = length * this.area
+    };
+
+    show() {
+        return `I'm ${this.name} with volume of ${this.volume} cm cue`
+    };
+
+    superShow() {
+        return super.show()
+    }
+}
+var cube = new Shape3D('cube', 30, 20, 10)
+console.log(cube.show())
+console.log(cube.superShow())
+```

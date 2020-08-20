@@ -1,5 +1,6 @@
 # python 基础教程
-[python基础教程](http://www.runoob.com/python/python-tutorial.html)
+
+[python 基础教程](http://www.runoob.com/python/python-tutorial.html)
 [python 教程 廖雪峰](https://www.liaoxuefeng.com/wiki/1016959663602400)
 
 ## 简介
@@ -50,11 +51,11 @@ python 有多种解释器:
 可在命令行交互环境执行，或保存为 hello.py 文件
 
 ```shell
-    >python
+    > python
     >>>print('hello world')
     >>>exit()
 
-    >python hello.py
+    > python hello.py
 
     #mac 或 linux上还可直接运行 python文件，如：
     // hello.py
@@ -75,14 +76,14 @@ python 有多种解释器:
 
 ### 输入
 
-````python
+```python
     name = input('input your name:') # 然后输入 'sindy' python3
     # name = raw_input('input your name:') # python2
     print(name)
+```
 
+### 语法
 
-语法
----
 python的语法比较简单:
 
 - 用缩进表示代码块; 不用括号,花括号划分代码块
@@ -98,7 +99,7 @@ python的语法比较简单:
     else:
         print(-a)
 
-````
+```
 
 ### 数据类型和变量
 
@@ -1137,7 +1138,7 @@ if __name__=='__main__':
 ```
 
 **作用域**  
-在一个模块中，我们可能会定义很多函数和变量，但有的函数和变量我们希望给别人使用，有的函数和变量我们希望仅仅在模块内部使用(_约定用`_`前缀标识_)。
+在一个模块中，我们可能会定义很多函数和变量，但有的函数和变量我们希望给别人使用，有的函数和变量我们希望仅仅在模块内部使用(_约定用`_`前缀标识\_)。
 
 正常的函数和变量名是公开的（public），可以被直接引用，比如：abc，x123，PI 等；
 

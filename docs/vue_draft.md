@@ -208,8 +208,14 @@ track-by 特性:
 ```
 不能检测的数组变化:
 ```js
-    vm.items[0]	 = {}; //应该 vm.items.$set(0, {name: 'changed'});
-    vm.items.length = 0; //应该 vm.items = [];
+    vm.items[0]	 = {}; 
+    // 应该 
+    // vm.$set(vm.items, 0, {name: 'changed'});
+    // Vue.set(vm.items, 0, {name: 'changed'})
+
+    vm.items.length = 0; 
+    // 应该 
+    // vm.items = [];
 ```
 扩展的便捷方法: 
 ```js

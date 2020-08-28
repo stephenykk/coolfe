@@ -322,6 +322,7 @@ find / -name issue -type f
 
 find / -name <keyword> -print # 从根目录开始递归地查找匹配的文件或文件夹
 find / -name "node*" -print # 从根目录开始递归地查找 node 前缀的文件或文件夹
+find . -maxdepth 2 -name "comic*"
 ```
 
 ### xargs

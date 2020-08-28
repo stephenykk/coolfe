@@ -214,7 +214,7 @@ vue-router 使用 path-to-regexp 作为路径匹配引擎，查看它的 [文档
     router.go(-100)
     router.go(100)
 ```
-你也许注意到 router.push、 router.replace 和 router.go 跟 window.history.pushState、 window.history.replaceState 和 window.history.go 好像， 实际上它们确实是效仿 window.history API 的。
+你也许注意到 `router.push`、 `router.replace` 和 `router.go` 跟 `window.history.pushState`、 `window.history.replaceState` 和 `window.history.go` 好像， 实际上它们确实是效仿 window.history API 的。
 
 因此，如果你已经熟悉 Browser History APIs，那么在 vue-router 中操作 history 就是超级简单的。
 
@@ -303,7 +303,7 @@ vue-router 使用 path-to-regexp 作为路径匹配引擎，查看它的 [文档
 
 ## 路由组件传参
 
-在组件中使用\$route 会使之与其对应路由形成高度耦合，从而使组件只能在某些特定的 url 上使用，限制了其灵活性。
+在组件中使用 `$route` 会使之与其对应路由形成高度耦合，从而使组件只能在某些特定的 url 上使用，限制了其灵活性。
 
 使用 props 将组件和路由解耦：
 
@@ -340,12 +340,12 @@ vue-router 使用 path-to-regexp 作为路径匹配引擎，查看它的 [文档
 ## HTML5 History 模式
 
 history 模式，这种模式充分利用 history.pushState API 来完成 URL 跳转而无须重新加载页面。
-
+```js
     const router = new VueRouter({
       mode: 'history',
       routes: [...]
     })
-
+```
 history 需要后端配置
 
 ## 后端配置例子

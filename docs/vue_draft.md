@@ -53,14 +53,14 @@ vm.$destroy()
 ```
 Dom 模板
 
-插值: {{msg}} {{{html}}} {{* once }} XSS 攻击
+插值: `{{msg}} {{{html}}} {{* once }}` XSS 攻击  
 标签 属性插值: `<div id="item-{{id}}">..</div>`
 
-{{..}} 内部的为**绑定表达式**，有**表达式**和**过滤器**构成。 单个表达式 (_使用声明语句和流程控制语句都是不行的_)
+`{{..}}` 内部的为**绑定表达式**，由**表达式**和**过滤器**构成。 单个表达式 (_使用声明语句和流程控制语句都是不行的_)
 
-过滤器 {{msg | capitalize}} {{msg|filterA|filterB}} {{msg|filterA 'arg1' arg2}}
+过滤器 `{{msg | capitalize}} {{msg|filterA|filterB}} {{msg|filterA 'arg1' arg2}}`
 
-指令的值限定为**绑定表达式**: 参考插值 {{msg|filter}}
+指令的值限定为**绑定表达式**: 参考插值 `{{msg|filter}}`
 
 指令的职责是：表达式的值改变时，把特殊的行为应用到 dom 上.
 ```html

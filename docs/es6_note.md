@@ -3017,6 +3017,1208 @@ while(!res.done){
 // :( 但这只适用于同步操作
 ```
 
+Thunk 函数的自动流程管理
+
+```js
+// 下面就是一个基于 Thunk 函数的 Generator 执行器。
+function run(fn) {
+  var gen = fn();
+
+  function next(err, data) {
+    var result = gen.next(data);
+    if (result.done) return;
+    // result.value 是一个thunk函数，封装了异步操作，
+    // 等待传入回调函数，然后开始执行
+    result.value(next);
+  }
+
+  next();
+}
+
+var g = function* (){
+  var f1 = yield readFileThunk('fileA');
+  var f2 = yield readFileThunk('fileB');
+  // ...
+  var fn = yield readFileThunk('fileN');
+};
+
+run(g);
+
+
+```
+
+Thunk 函数并不是 Generator 函数自动执行的唯一方案。因为自动执行的关键是，必须有一种机制，自动控制 Generator 函数的流程，接收和交还程序的执行权。回调函数可以做到这一点，Promise 对象也可以做到这一点。
+
+### co模块
+> co 模块是著名程序员 TJ Holowaychuk 于 2013 年 6 月发布的一个小工具，用于 Generator 函数的自动执行。
+
+```js
+var gen = function* () {
+  var f1 = yield readFile('/etc/fstab');
+  var f2 = yield readFile('/etc/shells');
+  console.log(f1.toString());
+  console.log(f2.toString());
+};
+
+var co = require('co')
+// co函数返回一个Promise对象
+co(gen).then(function(){
+  console.log('Generator 函数执行完成');
+})
+```
+**co 模块的原理**
+
+前面说过，Generator 就是一个异步操作的容器。它的自动执行需要一种机制，当异步操作有了结果，能够自动交回执行权。
+
+两种方法可以做到这一点。
+
+- 回调函数。将异步操作包装成 Thunk 函数，在回调函数里面交回执行权。
+
+- Promise 对象。将异步操作包装成 Promise 对象，用then方法交回执行权。
+
+co 模块其实就是将两种自动执行器（Thunk 函数和 Promise 对象），包装成一个模块。使用 co 的前提条件是，Generator 函数的yield命令后面，只能是 Thunk 函数或 Promise 对象。如果数组或对象的成员，全部都是 Promise 对象，也可以使用 co
+
+### 基于 Promise 对象的自动执行
+```js
+var fs = require('fs');
+
+var readFile = function (fileName){
+  return new Promise(function (resolve, reject){
+    fs.readFile(fileName, function(error, data){
+      if (error) return reject(error);
+      resolve(data);
+    });
+  });
+};
+
+var gen = function* (){
+  var f1 = yield readFile('/etc/fstab');
+  var f2 = yield readFile('/etc/shells');
+  console.log(f1.toString());
+  console.log(f2.toString());
+};
+
+function run(gen){
+  var g = gen();
+
+  function next(data){
+    var result = g.next(data);
+    if (result.done) return result.value;
+    result.value.then(function(data){
+      next(data);
+    });
+  }
+
+  next();
+}
+
+run(gen);
+```
+
+## async 函数
+ES2017 标准引入了 async 函数，使得异步操作变得更加方便。
+
+async 函数是什么？一句话，它就是 Generator 函数的语法糖。
+
+```js
+const asyncReadFile = async function () {
+  const f1 = await readFile('/etc/fstab');
+  const f2 = await readFile('/etc/shells');
+  console.log(f1.toString());
+  console.log(f2.toString());
+};
+```
+
+async函数对 Generator 函数的改进，体现在以下四点: 
+- 内置执行器。(*不需要co*)
+- 更好的语义。(*async和await，比起星号和yield，语义更清楚了*)
+- 更广的适用性。(*await的东西可以是 Promise 对象和原始类型的值*)
+- 返回值是 Promise (*Generator 函数的返回值是 Iterator 对象*)
+
+async函数的使用形式
+```js
+// 函数声明
+async function foo() {}
+
+// 函数表达式
+const foo = async function () {};
+
+// 对象的方法
+let obj = { async foo() {} };
+obj.foo().then(...)
+
+// Class 的方法
+class Storage {
+  constructor() {
+    this.cachePromise = caches.open('avatars');
+  }
+
+  async getAvatar(name) {
+    const cache = await this.cachePromise;
+    return cache.match(`/avatars/${name}.jpg`);
+  }
+}
+
+const storage = new Storage();
+storage.getAvatar('jake').then(…);
+
+// 箭头函数
+const foo = async () => {};
+
+```
+
+async函数返回一个 Promise 对象。
+```js
+// async函数内部return语句返回的值，会成为then方法回调函数的参数。
+async function f() {
+  return 'hello world';
+}
+
+f().then(v => console.log(v))
+// "hello world"
+
+// async函数内部抛出错误，会导致返回的 Promise 对象变为reject状态。
+// 抛出的错误对象会被catch方法回调函数接收到。
+async function f() {
+  throw new Error('出错了');
+}
+
+f().then(
+  v => console.log(v),
+  e => console.log(e)
+)
+// Error: 出错了
+
+// 只有async函数内部的异步操作执行完，才会执行then方法指定的回调函数。
+async function getTitle(url) {
+  let response = await fetch(url);
+  let html = await response.text();
+  return html.match(/<title>([\s\S]+)<\/title>/i)[1];
+}
+getTitle('https://tc39.github.io/ecma262/').then(console.log)
+// "ECMAScript 2017 Language Specification"
+
+// await命令后面不是一个 Promise 对象，返回该值
+async function f() {
+  // 等同于
+  // return 123;
+  return await 123;
+}
+
+f().then(v => console.log(v))
+// 123
+
+// sleep
+function sleep(interval) {
+  return new Promise(resolve => {
+    setTimeout(resolve, interval);
+  })
+}
+
+// 用法
+async function one2FiveInAsync() {
+  for(let i = 1; i <= 5; i++) {
+    console.log(i);
+    await sleep(1000);
+  }
+}
+
+one2FiveInAsync();
+
+// await命令后面的 Promise 对象如果变为reject状态
+async function f() {
+  await Promise.reject('出错了');
+  await Promise.resolve('hello world'); // 不会执行
+}
+
+f()
+.then(v => console.log(v))
+.catch(e => console.log(e))
+// 出错了
+
+
+// 失败重试
+const superagent = require('superagent');
+const NUM_RETRIES = 3;
+
+async function test() {
+  let i;
+  for (i = 0; i < NUM_RETRIES; ++i) {
+    try {
+      await superagent.get('http://google.com/this-throws-an-error');
+      break;
+    } catch(err) {}
+  }
+  console.log(i); // 3
+}
+
+test();
+```
+
+async函数实现原理
+
+```js
+async function fn(args) {
+  // ...
+}
+
+// 等同于
+function fn(args) {
+  function spawn(genF) {
+    return new Promise(function(resolve, reject) {
+      const gen = genF();
+      function step(nextF) {
+        let next;
+        try {
+          next = nextF();
+        } catch(e) {
+          return reject(e);
+        }
+        if(next.done) {
+          return resolve(next.value);
+        }
+        Promise.resolve(next.value).then(function(v) {
+          step(function() { return gen.next(v); });
+        }, function(e) {
+          step(function() { return gen.throw(e); });
+        });
+      }
+      step(function() { return gen.next(undefined); });
+    });
+  }
+}
+
+```
+### 顶层 await
+目前，有一个语法提案，允许在模块的顶层独立使用await命令，使得上面那行代码不会报错了。这个提案的目的，是借用await解决模块异步加载的问题。
+
+## Class的基本语法
+基本上，ES6 的class可以看作只是一个语法糖，它的绝大部分功能，ES5 都可以做到，新的class写法只是让对象原型的写法更加清晰、更像面向对象编程的语法而已。
+
+```js
+// 事实上，类的所有方法都定义在类的prototype属性上面。
+class Point {
+  constructor(x, y) {
+    // 实例属性
+    this.x = x;
+    this.y = y;
+  }
+
+  toString() {
+    return '(' + this.x + ', ' + this.y + ')';
+  }
+}
+
+typeof Point // "function"
+Point === Point.prototype.constructor // true
+
+
+// 类必须使用new调用，否则会报错。这是它跟普通构造函数的一个主要区别
+
+class Foo extends Base {
+  constructor(props) {
+    super(props)
+  }
+}
+
+Foo()
+// TypeError: Class constructor Foo cannot be invoked without 'new'
+
+
+// 类中定义getter setter访问器属性
+class CustomHTMLElement {
+  constructor(element) {
+    this.element = element;
+  }
+
+  get html() {
+    return this.element.innerHTML;
+  }
+
+  set html(value) {
+    this.element.innerHTML = value;
+  }
+}
+
+var descriptor = Object.getOwnPropertyDescriptor(
+  CustomHTMLElement.prototype, "html"
+);
+
+"get" in descriptor  // true
+"set" in descriptor  // true
+```
+
+属性表达式
+```js
+let methodName = 'getArea';
+
+class Square {
+  constructor(length) {
+    // ...
+  }
+
+  [methodName]() {
+    // ...
+  }
+}
+```
+
+class表达式
+```js
+// 具名类表达式
+const MyClass = class Me {
+  getClassName() {
+    return Me.name;
+  }
+};
+let inst = new MyClass();
+inst.getClassName() // Me
+// Me只在 Class 内部有定义
+Me.name // ReferenceError: Me is not defined
+
+// 匿名类表达式
+const MyClass = class { /* ... */ };
+
+// 立即实例化的类表达式
+let person = new class {
+  constructor(name) {
+    this.name = name;
+  }
+
+  sayName() {
+    console.log(this.name);
+  }
+}('张三');
+
+person.sayName(); // "张三"
+```
+注意点:
+- 类和模块的内部，默认就是严格模式，所以不需要使用use strict指定运行模式
+- 类不存在变量提升（hoist）
+
+### 静态方法
+```js
+class Foo {
+  static classMethod() {
+    return 'hello';
+  }
+}
+
+Foo.classMethod() // 'hello'
+
+var foo = new Foo();
+foo.classMethod()
+// TypeError: foo.classMethod is not a function
+```
+
+父类的静态方法，可以被子类继承。*子类的原型对象是父类*
+```js
+class Foo {
+  static classMethod() {
+    return 'hello';
+  }
+}
+
+// Bar.__proto__ === Foo
+class Bar extends Foo {
+  // 静态方法也是可以从super对象上调用的。
+  static hello() {
+    return super.classMethod() + ', too';
+  }
+}
+
+Bar.classMethod() // 'hello'
+```
+
+### 实例属性的新写法
+实例属性除了定义在constructor()方法里面的this上面，也可以定义在类的最顶层。
+
+```js
+// 实例属性写在构造函数内
+class IncreasingCounter {
+  constructor() {
+    this._count = 0;
+  }
+  get value() {
+    console.log('Getting the current value!');
+    return this._count;
+  }
+  increment() {
+    this._count++;
+  }
+}
+
+// 实例属性定义在类的顶层
+class IncreasingCounter {
+  _count = 0;
+
+  // 现在有一个提案 提供了类的静态属性，
+  static myStaticProp = 42;
+
+
+  get value() {
+    console.log('Getting the current value!');
+    return this._count;
+  }
+  increment() {
+    this._count++;
+  }
+}
+```
+
+### new.target属性
+new是从构造函数生成实例对象的命令。ES6 为new命令引入了一个new.target属性，该属性一般用在构造函数之中，返回new命令作用于的那个构造函数。如果构造函数不是通过new命令或Reflect.construct()调用的，new.target会返回undefined，因此这个属性可以用来确定构造函数是怎么调用的。
+
+```js
+function Person(name) {
+  if (new.target !== undefined) {
+    this.name = name;
+  } else {
+    throw new Error('必须使用 new 命令生成实例');
+  }
+}
+
+// 另一种写法
+function Person(name) {
+  if (new.target === Person) {
+    this.name = name;
+  } else {
+    throw new Error('必须使用 new 命令生成实例');
+  }
+}
+
+var person = new Person('张三'); // 正确
+var notAPerson = Person.call(person, '张三');  // 报错
+
+// Class 内部调用new.target
+class Rectangle {
+  constructor(length, width) {
+    console.log(new.target === Rectangle);
+    this.length = length;
+    this.width = width;
+  }
+}
+
+var obj = new Rectangle(3, 4); // 输出 true
+
+
+
+// 抽象类：只能被继承 不能实例化
+class Shape {
+  constructor() {
+    if (new.target === Shape) {
+      throw new Error('本类不能实例化');
+    }
+  }
+}
+
+class Rectangle extends Shape {
+  constructor(length, width) {
+    super();
+    // ...
+  }
+}
+
+var x = new Shape();  // 报错
+var y = new Rectangle(3, 4);  // 正确
+```
+
+## Class的继承
+```js
+class ColorPoint extends Point {
+  constructor(x, y, color) {
+    // ColorPoint.__proto__ === Point
+    // ColorPoint.__proto__.call(this, ...args)
+    super(x, y); // 调用父类的constructor(x, y)
+    this.color = color;
+  }
+
+  toString() {
+    // this.__proto__.toString.call(this, ...args)
+    return this.color + ' ' + super.toString(); // 调用父类的toString()
+  }
+}
+
+// 如果通过super对某个属性赋值，这时super就是this，赋值的属性会变成子类实例的属性。
+class A {
+  constructor() {
+    this.x = 1;
+  }
+}
+
+class B extends A {
+  constructor() {
+    // A.call(this)
+    super();
+    this.x = 2;
+    // this.__proto__.x = 3 // 但不允许改原型对象的属性
+    // 所以等同 this.x = 3
+    super.x = 3; 
+
+    // this.__proto__.x
+    console.log(super.x); // undefined
+    console.log(this.x); // 3
+  }
+
+  // 在静态方法之中，这时super将指向父类
+  static myMethod(msg) {
+    // super == 方法所在对象的原型对象 == B.__proto__ == A
+    super.myMethod(msg);
+  }
+
+  // 在非静态方法之中，这时super将指向父类的原型对象
+  myMethod(msg) {
+    // this 指向子类实例
+    // super == 方法所在对象的原型对象 == this.__proto__.__proto__
+    super.myMethod(msg);
+  }
+}
+
+let b = new B();
+```
+## Module 的语法
+ES6 在语言标准的层面上，实现了模块功能，而且实现得相当简单，完全可以取代 CommonJS 和 AMD 规范，成为浏览器和服务器通用的模块解决方案。
+
+> ES6 模块的设计思想是尽量的静态化，使得编译时就能确定模块的依赖关系，以及输入和输出的变量。CommonJS 和 AMD 模块，都只能在运行时确定这些东西
+
+
+ES6 的模块自动采用严格模式，不管你有没有在模块头部加上"use strict";。
+
+严格模式主要有以下限制。
+
+- 变量必须声明后再使用
+- 函数的参数不能有同名属性，否则报错
+- 不能使用with语句
+- 不能对只读属性赋值，否则报错
+- 不能使用前缀 0 表示八进制数，否则报错
+- 不能删除不可删除的属性，否则报错
+- 不能删除变量delete prop，会报错，只能删除属性delete global[prop]
+- eval不会在它的外层作用域引入变量
+- eval和arguments不能被重新赋值
+- arguments不会自动反映函数参数的变化
+- 不能使用arguments.callee
+- 不能使用arguments.caller
+- 禁止this指向全局对象
+- 不能使用fn.caller和fn.arguments获取函数调用的堆栈
+- 增加了保留字（比如protected、static和interface）
+
+
+### export命令
+模块功能主要由两个命令构成：export和import。export命令用于规定模块的对外接口，import命令用于输入其他模块提供的功能。
+
+```js
+// export 后面跟声明语句或对象的简写形式
+// 因为要确定输出接口名和内部变量的对应关系
+
+// profile.js
+export var firstName = 'Michael';
+export var lastName = 'Jackson';
+export var year = 1958;
+
+
+// profile.js 另外一种写法
+var firstName = 'Michael';
+var lastName = 'Jackson';
+var year = 1958;
+
+export { firstName, lastName, year };
+
+// 输出函数或类
+export function multiply(x, y) {
+  return x * y;
+};
+
+export class Animal{}
+
+// 输出接口名和内部变量名不需要一样，可用as关键字重命名
+function hello() {}
+export {hello as sayHello, hello as greeting}
+
+
+// 错误写法
+
+// 报错
+var m = 1;
+export m;
+
+// 报错
+function f() {}
+export f;
+
+// export语句输出的接口，与其对应的值是动态绑定关系，即通过该接口，可以取到模块内部实时的值。
+// 外部的接口名总是指向内部foo变量  或者说外部接口是内部变量的别名
+// 这一点与 CommonJS 规范完全不同。CommonJS 模块输出的是值的缓存，不存在动态更新
+export var foo = 'bar';
+setTimeout(() => foo = 'baz', 500);
+
+// export命令只能放在模块顶层
+
+```
+
+
+### import命令
+```js
+// 大括号里面输入的变量名，必须与被导入模块对外接口的名称相同
+
+// main.js
+import { firstName, lastName, year } from './profile.js';
+
+function setName(element) {
+  element.textContent = firstName + ' ' + lastName;
+}
+
+// 重命名输入变量
+import { lastName as myLastName } from './profile.js';
+
+
+// import命令输入的变量都是只读的，因为它的本质是输入接口。也就是说，不允许在加载模块的脚本里面，改写接口。
+import {a} from './module-a.js'
+// 类似 const a = moduleA.a
+a = {}; // Syntax Error : 'a' is read-only;
+
+
+// 由于import是静态执行，所以不能使用表达式和变量，这些只有在运行时才能得到结果的语法结构。
+// 报错
+import { 'f' + 'oo' } from 'my_module';
+
+// 报错
+let module = 'my_module';
+import { foo } from module;
+
+// 报错
+if (x === 1) {
+  import { foo } from 'module1';
+} else {
+  import { foo } from 'module2';
+}
+
+// import语句会执行所加载的模块，因此可以有下面的写法。
+import 'lodash';
+
+// 多次重复执行同一句import语句，那么只会执行一次
+import './say-hello.js'
+import './say-hello.js'
+
+// 同样 say-hello 只会被执行一次
+import {helloYou} from './say-hello.js'
+import {helloMe} from './say-hello.js'
+
+// 因为import在静态解析阶段执行，所以它是一个模块之中最早执行的。下面的代码可能不会得到预期结果。
+require('core-js/modules/es6.symbol');
+require('core-js/modules/es6.promise');
+import React from 'React';
+```
+
+### 模块的整体加载
+```js
+import * as circle from './circle';
+
+console.log('圆面积：' + circle.area(4));
+console.log('圆周长：' + circle.circumference(14));
+
+// 注意，模块整体加载所在的那个对象（上例是circle），应该是可以静态分析的，所以不允许运行时改变。
+// 下面的写法都是不允许的。
+import * as circle from './circle';
+
+// 下面两行都是不允许的
+circle.foo = 'hello';
+circle.area = function () {};
+
+```
+
+### export default命令 
+export default命令用于指定模块的默认输出。
+
+```js
+// export default 对外接口名称就是default, 所以可直接跟变量名 建立对应关系
+
+// export-default.js
+export default function foo() {
+  console.log('foo');
+}
+
+// 或者写成
+
+function foo() {
+  console.log('foo');
+}
+
+export default foo;
+
+// import命令后面才不用加大括号，因为只可能唯一对应export default命令。
+import fooFn from './export-default.js'
+// 同
+import {default as fooFn} from './export-default.js'
+
+
+// 本质上，export default就是输出一个叫做default的变量或方法，然后系统允许你为它取任意名字。
+// modules.js
+function add(x, y) {
+  return x * y;
+}
+export {add as default};
+// 等同于
+// export default add;
+
+// app.js
+import { default as foo } from 'modules';
+// 等同于
+// import foo from 'modules';
+
+
+// 正是因为export default命令其实只是输出一个叫做default的变量，所以它后面不能跟变量声明语句。
+
+// 正确
+var a = 1;
+export default a;
+
+// 错误
+export default var a = 1;
+
+// export default也可以用来输出类。
+// MyClass.js
+export default class { ... }
+
+// main.js
+import MyClass from 'MyClass';
+let o = new MyClass();
+
+
+import _, { each, forEach } from 'lodash';
+```
+
+### export 与 import 的复合写法
+如果在一个模块之中，先输入后输出同一个模块，import语句可以与export语句写在一起。
+```js
+export { foo, bar } from 'my_module';
+
+// 可以简单理解为
+import { foo, bar } from 'my_module';
+export { foo, bar };
+
+// 注意 export 与 import 的复合写法
+// 写成一行以后，foo和bar实际上并没有被导入当前模块
+// 只是相当于对外转发了这两个接口，导致当前模块不能直接使用foo和bar。
+
+// 接口改名转发
+export { foo as myFoo } from 'my_module';
+
+// 接口整体转发
+export * from 'my_module';
+
+// 接口整体重命名导出，ES2020补上了这个写法。
+export * as ns from "mod";
+// 等同于
+import * as ns from "mod";
+export {ns};
+
+
+// 具名接口改为默认接口
+export { es6 as default } from './someModule';
+// 默认接口也可以改名为具名接口
+export { default as es6 } from './someModule';
+```
+
+
+### import()
+import和export命令只能在模块的顶层，不能在代码块之中（比如，在if代码块之中，或在函数之中）。
+
+> ES2020提案 引入import()函数，支持动态加载模块。
+
+import命令能够接受什么参数，import()函数就能接受什么参数，两者区别主要是后者为动态加载。
+
+```js
+// import()返回一个 Promise 对象
+const main = document.querySelector('main');
+
+import(`./section-modules/${someVariable}.js`)
+  .then(module => {
+    module.loadPageInto(main);
+  })
+  .catch(err => {
+    main.textContent = err.message;
+  });
+
+// import()函数与所加载的模块没有静态连接关系，这点也是与import语句不相同
+```
+
+适用场景
+```js
+// 按需加载
+button.addEventListener('click', event => {
+  import('./dialogBox.js')
+  .then(dialogBox => {
+    dialogBox.open();
+  })
+  .catch(error => {
+    /* Error handling */
+  })
+});
+
+// 条件加载
+if (condition) {
+  import('moduleA').then(...);
+} else {
+  import('moduleB').then(...);
+}
+
+// 动态模块路径
+import(f()).then(...);
+```
+注意点
+
+```js
+// 可用解构赋值获取导出接口
+import('./myModule.js')
+.then(({export1, export2}) => {
+  // ...·
+});
+
+// 用参数直接获得default接口
+import('./myModule.js')
+.then(myModule => {
+  console.log(myModule.default);
+});
+
+// 重命名导出接口
+import('./myModule.js')
+.then(({default: theDefault}) => {
+  console.log(theDefault);
+});
+
+// 同时加载多个模块
+Promise.all([
+  import('./module1.js'),
+  import('./module2.js'),
+  import('./module3.js'),
+])
+.then(([module1, module2, module3]) => {
+   ···
+});
+```
+
+## 异步遍历器
+ES2018 引入了“异步遍历器”（Async Iterator），为异步操作提供原生的遍历器接口，即value和done这两个属性都是异步产生。
+
+一个对象的同步遍历器的接口，部署在Symbol.iterator属性上面。同样地，对象的异步遍历器接口，部署在Symbol.asyncIterator属性上面。
+
+```js
+// 异步遍历器的最大的语法特点，就是调用遍历器的next方法，返回的是一个 Promise 对象; 而不是 {value, done} 对象
+asyncIterator
+  .next()
+  .then(
+    ({ value, done }) => /* ... */
+  );
+
+async function f() {
+  const asyncIterable = createAsyncIterable(['a', 'b']);
+  const asyncIterator = asyncIterable[Symbol.asyncIterator]();
+  console.log(await asyncIterator.next());
+  // { value: 'a', done: false }
+  console.log(await asyncIterator.next());
+  // { value: 'b', done: false }
+  console.log(await asyncIterator.next());
+  // { value: undefined, done: true }
+}  
+
+// 注意，异步遍历器的next方法是可以连续调用的 不必等到上一步产生的 Promise 对象resolve以后再调用
+const asyncIterable = createAsyncIterable(['a', 'b']);
+const asyncIterator = asyncIterable[Symbol.asyncIterator]();
+const [{value: v1}, {value: v2}] = await Promise.all([
+  asyncIterator.next(), asyncIterator.next()
+]);
+
+console.log(v1, v2); // a b
+
+
+```
+
+### for await...of
+前面介绍过，for...of循环用于遍历同步的 Iterator 接口。新引入的for await...of循环，则是用于遍历异步的 Iterator 接口。
+
+```js
+async function f() {
+  for await (const x of createAsyncIterable(['a', 'b'])) {
+    console.log(x);
+  }
+}
+// a
+// b
+
+// for await...of遍历部署了 asyncIterable 异步接口的对象
+let body = '';
+
+async function f() {
+  for await(const data of req) body += data;
+  const parsed = JSON.parse(body);
+  console.log('got', parsed);
+}
+
+
+async function () {
+  try {
+    for await (const x of createRejectingIterable()) {
+      console.log(x);
+    }
+  } catch (e) {
+    console.error(e);
+  }
+}
+```
+
+
+### 异步 Generator 函数
+就像 Generator 函数返回一个同步遍历器对象一样，异步 Generator 函数的作用，是返回一个异步遍历器对象。
+
+在语法上，异步 Generator 函数就是async函数与 Generator 函数的结合。
+```js
+async function* gen() {
+  yield 'hello';
+}
+const genObj = gen();
+genObj.next().then(x => console.log(x));
+// { value: 'hello', done: false }
+```
+
+异步遍历器的设计目的之一，就是 Generator 函数处理同步操作和异步操作时，能够使用同一套接口。
+
+```js
+// 同步 Generator 函数
+function* map(iterable, func) {
+  const iter = iterable[Symbol.iterator]();
+  while (true) {
+    const {value, done} = iter.next();
+    if (done) break;
+    yield func(value);
+  }
+}
+
+// 异步 Generator 函数
+async function* map(iterable, func) {
+  const iter = iterable[Symbol.asyncIterator]();
+  while (true) {
+    const {value, done} = await iter.next();
+    if (done) break;
+    yield func(value);
+  }
+}
+
+```
+
+### `yield*` 语句
+`yield*`语句也可以跟一个异步遍历器。
+```js
+async function* gen1() {
+  yield 'a';
+  yield 'b';
+  return 2;
+}
+
+async function* gen2() {
+  // result 最终会等于 2
+  const result = yield* gen1();
+}
+
+// 与同步 Generator 函数一样，for await...of循环会展开yield*
+(async function () {
+  for await (const x of gen2()) {
+    console.log(x);
+  }
+})();
+// a
+// b
+```
+
+## ArrayBuffer
+ArrayBuffer对象、TypedArray视图和DataView视图是 JavaScript 操作二进制数据的一个接口。
+>  这些对象早就存在，属于独立的规格（2011 年 2 月发布），ES6 将它们纳入了 ECMAScript 规格，并且增加了新的方法。它们都是以数组的语法处理二进制数据，所以统称为二进制数组。
+
+二进制数组由三类对象组成。
+
+- ArrayBuffer对象：代表内存之中的一段二进制数据，可以通过“视图”进行操作。“视图”部署了数组接口，这意味着，可以用数组的方法操作内存。
+
+- TypedArray视图：共包括 9 种类型的视图，比如Uint8Array（无符号 8 位整数）数组视图, Int16Array（16 位整数）数组视图, Float32Array（32 位浮点数）数组视图等等。
+
+- DataView视图：可以自定义复合格式的视图，比如第一个字节是 Uint8（无符号 8 位整数）、第二、三个字节是 Int16（16 位整数）、第四个字节开始是 Float32（32 位浮点数）等等，此外还可以自定义字节序。
+
+简单说，ArrayBuffer对象代表原始的二进制数据，TypedArray视图用来读写简单类型的二进制数据，DataView视图用来读写复杂类型的二进制数据。
+
+很多浏览器操作的 API，用到了二进制数组操作二进制数据，下面是其中的几个。
+
+- Canvas
+- File API
+- Fetch API
+- WebSockets
+- XMLHttpRequest
+
+### ArrrayBuffer对象
+ArrayBuffer对象代表储存二进制数据的一段内存，它不能直接读写，只能通过视图（TypedArray视图和DataView视图)来读写，视图的作用是以指定格式解读二进制数据。
+
+```js
+const buf = new ArrayBuffer(32);
+// 为了读写这段内容，需要为它指定视图。
+const dataView = new DataView(buf);
+dataView.getUint8(0) // 0
+
+const buffer = new ArrayBuffer(12);
+// 对同一段内存，分别建立两种视图
+const x1 = new Int32Array(buffer);
+x1[0] = 1;
+const x2 = new Uint8Array(buffer);
+x2[0]  = 2;
+
+x1[0] // 2  
+
+
+// TypedArray视图的构造函数，除了接受ArrayBuffer实例作为参数，还可以接受普通数组作为参数
+const typedArray = new Uint8Array([0,1,2]);
+typedArray.length // 3
+
+typedArray[0] = 5;
+typedArray // [5, 1, 2]
+```
+
+### ArrayBuffer.prototype.byteLength
+```js
+const typedArray = new Uint8Array([0,1,2]);
+typedArray.length // 3
+
+const u32arr = new Uint32Array([20, 30])
+u32arr.buffer.byteLength // 8
+
+const buffer = new ArrayBuffer(32);
+buffer.byteLength
+// 32
+```
+
+### ArrayBuffer.prototype.slice()
+```js
+const buffer = new ArrayBuffer(8);
+const newBuffer = buffer.slice(0, 3); // 复制一段buffer  到新的内存位置
+
+```
+
+### ArrayBuffer.isView(buf)
+```js
+const buffer = new ArrayBuffer(8);
+ArrayBuffer.isView(buffer) // false
+
+const v = new Int32Array(buffer);
+ArrayBuffer.isView(v) // true
+
+```
+TypedArray 数组提供 9 种构造函数，用来生成相应类型的数组实例。
+
+构造函数有多种用法。
+
+`TypedArray(buffer, byteOffset=0, length?)`
+
+```js
+// 创建一个8字节的ArrayBuffer
+const b = new ArrayBuffer(8);
+
+// 创建一个指向b的Int32视图，开始于字节0，直到缓冲区的末尾
+const v1 = new Int32Array(b);
+
+// 创建一个指向b的Uint8视图，开始于字节2，直到缓冲区的末尾
+const v2 = new Uint8Array(b, 2);
+
+// 创建一个指向b的Int16视图，开始于字节2，长度为2
+const v3 = new Int16Array(b, 2, 2);
+```
+
+`TypedArray(length)`
+
+视图还可以不通过ArrayBuffer对象，直接分配内存而生成
+
+```js
+const f64a = new Float64Array(8);
+f64a[0] = 10;
+f64a[1] = 20;
+f64a[2] = f64a[0] + f64a[1];
+```
+
+`TypedArray(typedArray)`
+
+TypedArray 数组的构造函数，可以接受另一个TypedArray实例作为参数。
+
+```js
+// 只是复制了参数数组的值，对应的底层内存是不一样的
+const x = new Int8Array([1, 1]);
+const y = new Int8Array(x);
+x[0] // 1
+y[0] // 1
+
+x[0] = 2;
+y[0] // 1
+
+
+// 基于同一段内存，构造不同的视图
+const x = new Int8Array([1, 1]);
+const y = new Int8Array(x.buffer);
+x[0] // 1
+y[0] // 1
+
+x[0] = 2;
+y[0] // 2
+```
+
+`TypedArray(arrayLikeObject)`
+
+构造函数的参数也可以是一个普通数组，然后直接生成TypedArray实例。
+
+```js
+const typedArray = new Uint8Array([1, 2, 3, 4]);
+
+// typedArray 数组也可以转换回普通数组。
+
+const normalArray = [...typedArray];
+// or
+const normalArray = Array.from(typedArray);
+// or
+const normalArray = Array.prototype.slice.call(typedArray);
+```
+
+**数组方法 普通数组的操作方法和属性，对 TypedArray 数组完全适用 (除了concat)**
+
+TypedArray 数组与普通数组一样，部署了 Iterator 接口，所以可以被遍历
+
+```js
+let ui8 = Uint8Array.of(0, 1, 2);
+for (let byte of ui8) {
+  console.log(byte);
+}
+// 0
+// 1
+// 2
+```
+
+### 字节序
+```js
+const buffer = new ArrayBuffer(16);
+const int32View = new Int32Array(buffer);
+
+for (let i = 0; i < int32View.length; i++) {
+  int32View[i] = i * 2;
+}
+
+const int16View = new Int16Array(buffer);
+
+// x86的计算机都采用小端字节序(little endian)
+for (let i = 0; i < int16View.length; i++) {
+  console.log("Entry " + i + ": " + int16View[i]);
+}
+// Entry 0: 0
+// Entry 1: 0
+// Entry 2: 2
+// Entry 3: 0
+// Entry 4: 4
+// Entry 5: 0
+// Entry 6: 6
+// Entry 7: 0
+```
+
+> 比如，一个占据四个字节的 16 进制数0x12345678，小端字节序储存顺序就是78563412；大端字节序则完全相反，将最重要的字节排在前面，储存顺序就是12345678。目前，所有个人电脑几乎都是小端字节序，所以 TypedArray 数组内部也采用小端字节序读写数据，或者更准确的说，按照本机操作系统设定的字节序读写数据。
 
 
 ## Decorator

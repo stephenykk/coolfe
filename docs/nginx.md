@@ -1,9 +1,10 @@
 # nginx note
-[Nginx介绍 - 简书](https://www.jianshu.com/p/d9f1aa7b6a0b)  
+[nginx入门教程](https://xuexb.github.io/learn-nginx/guide/)
 [nginx 配置详解](https://www.jianshu.com/p/1593954d5faf)  
 [nginx 重写规则配置](https://www.cnblogs.com/pengyunjing/p/8542200.html)  
 [Nginx正向代理和反向代理详解 - 简书](https://www.jianshu.com/p/d7258c062751)  
-[总结nginx中的location配置](http://www.fly63.com/article/detial/8552)
+[总结nginx中的location配置](http://www.fly63.com/article/detial/8552)  
+[Nginx的location匹配规则](https://www.cnblogs.com/duhuo/p/8323812.html)
 
 ## Nginx简介
 
@@ -23,7 +24,8 @@
 Nginx是一个高性能且开源的HTTP和反向代理Web服务器，同时也是一个IMAP、POP3、SMTP代理服务器；Nginx可以作为一个HTTP服务器进行网站的发布处理，另外Nginx可以作为反向代理进行负载均衡的实现。
 
 使用场景：
-- Web服务器
+- 反向代理
+- http服务器
 - 负载均衡服务器
 - 邮件代理服务器
 
@@ -38,22 +40,61 @@ Nginx是一个高性能且开源的HTTP和反向代理Web服务器，同时也�
 - upstream（负载均衡服务器设置）：指令主要用于负载均衡，设置一系列的后端服务器
 - location（URL匹配特定位置的设置）：用于匹配网页位置。
 
-[server 块配置](https://upload-images.jianshu.io/upload_images/658641-02caaa1bc69a795f.png)
+![server 块配置](https://upload-images.jianshu.io/upload_images/658641-02caaa1bc69a795f.png)
 
 
 ### location块
 
 URL地址匹配是进行Nginx配置中最灵活的部分。 location支持正则表达式匹配，也支持条件判断匹配，用户可以通过location指令实现Nginx对动、静态网页进行过滤处理。使用location URL匹配配置还可以实现反向代理，用于实现PHP动态解析或者负载负载均衡。
 
-[location块配置](https://upload-images.jianshu.io/upload_images/658641-262f6910d5c3f9ff.png)
+![location块配置](https://upload-images.jianshu.io/upload_images/658641-262f6910d5c3f9ff.png)
 
-```js
+alias与root的区别
+
+- root    实际访问文件路径会拼接URL中的路径  $request_filename = $document_root + $document_uri
+- alias   实际访问文件路径不会拼接URL中的路径
+
+
+```nginx
+    # 严格匹配：一，普通location，无任何前缀符号的；二，带=号前缀符号的严格匹配。
     location  /blogs  {
-        root /home/jie;
+        root /home/jie; # 会在root下查找blogs目录，所以要先新建blogs文件夹
         autoindex on;
     }
-    // curl localhost/blogs/a.html -> /home/jie/blogs/a.html
-    // curl localhost/blogs 显示文件列表
+    # curl localhost/blogs/a.html -> /home/jie/blogs/a.html
+    # curl localhost/blogs 显示文件列表
+    # localhost/blogshaha 也会匹配到 只要root下有对应目录即可
+
+    location /comics {
+      alias /home/pan/manhua; # alias值替代/comics, 
+      autoindex on;
+    }
+    # curl localhost/comics/hi.html -> /home/pan/manhua/hi.html
+
+    location ~ ^.+\.txt$ {
+      root /home/pan;  # 注意 指令都需要分号结尾
+    }
+    # curl localhost/docs/hello.txt 会查找 /home/pan/docs/hello.txt
+
+    location /documents/ {
+      # matches any query beginning with /documents/ and continues searching,
+      # so regular expressions will be checked. This will be matched only if
+      # regular expressions don't find a match.
+      [ configuration C ] 
+    }
+
+
+    location ^~ /images/ {
+      # matches any query beginning with /images/ and halts searching,
+      # so regular expressions will not be checked.
+      [ configuration D ] 
+    }
+    location ~* \.(gif|jpg|jpeg)$ {
+      # matches any request ending in gif, jpg, or jpeg. However, all
+      # requests to the /images/ directory will be handled by
+      # Configuration D.   
+      [ configuration E ] 
+    }
 ```
 
 语法规则： 
@@ -114,9 +155,24 @@ location / {
 ### ReWrite语法
 
 - last – 基本上都用这个Flag。
-- break – 中止Rewirte，不在继续匹配
-- redirect – 返回临时重定向的HTTP状态302
+- break – 中止Rewirte，不再继续匹配
 - permanent – 返回永久重定向的HTTP状态301
+- redirect – 返回临时重定向的HTTP状态302
+
+**last 和 break关键字的区别**
+
+- last 和 break 当出现在location 之外时，两者的作用是一致的没有任何差异
+
+- last 和 break 当出现在location 内部时：  
+  + last     使用了last 指令，rewrite 后会跳出location 作用域，重新开始再走一次刚才的行为
+  + break    使用了break 指令，rewrite后不会跳出location 作用域，它的生命也在这个location中终结
+
+
+**permanent 和 redirect关键字的区别**
+
+- permanent   永久性重定向，请求日志中的状态码为301
+- redirect    临时重定向，请求日志中的状态码为302
+
 
 ### 下面是可以用来判断的表达式：
 

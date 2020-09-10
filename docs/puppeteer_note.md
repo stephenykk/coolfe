@@ -5,10 +5,11 @@ Puppeteer 是 Chrome开发团队2017年发布的一个 Node.js包，提供了一
 
 
 [w3cschool puppeteer教程](https://www.w3cschool.cn/puppeteer/)
+[api](https://github.com/puppeteer/puppeteer/blob/main/docs/api.md#pageclickselector-options)
 
 ```js
 const puppeteer = require('puppeteer')
-
+https://github.com/puppeteer/puppeteer/blob/main/docs/api.md#pageclickselector-options
 async function main() {
     const browser = await puppeteer.launch({headless: true})
     const page = await browser.newPage()
@@ -23,7 +24,7 @@ async function main() {
 
     await page.goto('https://www.baidu.com', {waitUntil: 'networkidle2'})
     await page.waitFor(2 * 1000)
-    let title = await (await page).evaluate(() => {
+    let title = await page.evaluate(() => {
         return document.title
     })
 
@@ -59,6 +60,13 @@ const browser = await puppeteer.launch({
 console.log(browser.wsEndpoint()) 
 // ws://127.0.0.1:57546/devtools/browser/5d6ee624-6b5e-4b8c-b284-5e4800eac853
 // 这就是devTool用于连接调试页面的连接
+
+
+const puppeteer = require('puppeteer');
+puppeteer.launch().then(async browser = >{ // 存储节点以便能重新连接到 Chromium  
+const browserWSEndpoint = browser.wsEndpoint();  // 从 Chromium 断开和 puppeteer 的连接  browser.disconnect();  // 使用节点来重新建立连接  
+const browser2 = await puppeteer.connect({browserWSEndpoint});  // 关闭 Chromium  
+await browser2.close();});
 ```
 
 ## page

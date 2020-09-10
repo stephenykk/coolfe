@@ -18,7 +18,7 @@ Gulp 的设计核心是基于流的方式，将文件转化为抽象的流，然
 var gulp = require('gulp')
 gulp.task('default', function(done) {
   console.log('hello gulp')
-  callback() // 通知gulp，任务完成
+  done() // 通知gulp，任务完成
 })
 ```
 ## 执行

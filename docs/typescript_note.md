@@ -126,7 +126,7 @@ let count; // 推断为任意类型 同 let count: any
 
 可理解为相同类型的一组数据，数组类型有多种定义方式
 
-1. 类型 + 方括号 ( `type[ ]` )  
+1. 类型 + 方括号 ( `type[]` )  
    定义类型数组 _这种方式定义的数组项中不允许出现其他的类型_
    ```ts
    let list: number[] = [1, 2, 3];
@@ -134,6 +134,10 @@ let count; // 推断为任意类型 同 let count: any
 2. 数组泛型 ( `Array<type>` )
    ```ts
    let list: Array<number> = [1, 2, 3];
+
+   // 若数组元素的类型允许多种
+   let arr: (string | number)[] = ['hello', 10]
+   let items: Array<number | string> = ['good', 1]
    ```
 
 ## 元组 tuple
@@ -143,7 +147,7 @@ let count; // 推断为任意类型 同 let count: any
 let tup:[string, number] = ['name', 20]
 console.log(tup[0])
 
-// 越界访问元组元素，会重复已知类型去做推断
+// 越界访问元组元素，会重复已知类型去做推断 ::不会推导后面元素类型，不确定是否可配置
 // tup: [string, number, string, number, ...]
 tup[2] = 'zoro'
 tup[3] = true // 报错，该位置推断为 number
@@ -281,77 +285,32 @@ let r: RegExp = /[a-z]/;
 ```
 ### DOM 和 BOM 的内置对象
 Document、HTMLElement、Event、NodeList 等。
-```ts
-let body: HTMLElement = document.body;
-let allDiv: NodeList = document.querySelectorAll('div');
-document.addEventListener('click', function(e: MouseEvent) {
-  // Do something
-});
-```
-
-## 类型推论
-变量申明如果没有明确的指定类型，那么 TypeScript 会依照类型推论的规则推断出一个类型.  
-变量声明但是未赋值，会推论为 any
 
 ```ts
-let day = 'seven';
-// 等价于 let day: string = 'seven';
-day = 4;
-// 编译报错: error TS2322: Type 'number' is not assignable to type 'string'
-
-let x; // 等价 let x: any
-x = 100
-x = 'good'
-```
-## 联合类型
-表示取值可以为多种类型中的一种，使用 | 分隔每个类型  
-当 TypeScript 不确定一个联合类型的变量到底是哪个类型的时候, 我们只能访问此联合类型的所有类型里共有的属性或方法
-
-```ts
-let stringOrNumber:string | number;
-stringOrNumber = 'seven';
-
-function getLength(something: string | number): number {
-  return something.length;
-  // => 编译报错: length 不是 string类型 和 number类型 的共有属性, 所以报错
-}
-```
-
-## 类型断言
-
-类型断言（Type Assertion）可以用来手动指定一个值的类型。
-
-当使用 tsx 时，只有 as语法断言是被允许的
-
-类型断言有2种形式：
-
-1. <类型>值 ( 尖括号语法 )  
-    ```ts
-    let some: any = 'this is a string'
-    let len: number = (<string>some).length
-
-    function getLength(sth: string | number): number {
-        return (<string>sth).length
-    }
-    ```
+ tsenum Days = {Sun = 7, Mon=2, Tues, }
+ function getLength(sth: string | number): number {
+     return (<string>sth).length
+ }
+ ```
 2. 值 as 类型 ( as 语法 )  
-    ```ts
+ ```ts
     let other: any = 'this is also string'
     let size: number = (other as string).length
-    ```
+ ```
 
 
 
 ## 接口
-接口可以作为一个类型批注。
+接口使用 interface 关键字声明。一般首字母大写，根据ts命名规范，接口名加前缀 I
 
 ```ts
-interface Shap {
+interface Shape {
     name: string;
     width: number;
     height: number;
-    color?: string;
+    color?: string; // 可选属性
 }
+
 function area(shape: Shape) {
     var area = shape.width * shape.height
     return `I'm a ${shape.name} with area ${area} cm square`
@@ -359,6 +318,126 @@ function area(shape: Shape) {
 
 console.log(area({name: 'rectangle', width: 20, height: 10}))
 console.log(area({width: 30, height: 20})) // error 缺少name
+
+// 对函数参数对象做类型检查
+function getFood({name, color} : {name: string, color: string}): string {
+    return `this ${name} color is ${color}`
+}
+
+interface IFood {
+    name: string,
+    readonly color: string // 只读属性
+}
+
+function getFood2({name, color}: IFood): string {
+    return `this ${name} color is ${color}`
+}
+
+getFood2({name: 'alice', color: 'red', age: 12}) // error 包含额外字段 age
+getFood2({name: 'alice', color: 'red', age: 12} as IFood) // ok
+// 或者 修改接口 支持其他字段
+interface IFood {
+    name: string,
+    readonly color: string,
+    [propName: string]: any
+}
+// 或者 用兼容类型转换
+let obj = {name: 'alice', color: 'red', age: 12}
+getFood2(obj)
+
+// ReadonlyArray<T> 创建不可变数组
+let rolist: ReadonlyArray<number> = [1,2]
+rolist[1] = 10 // error readonly
+
+
+// readonly vs const 的区别
+// const 定义的变量不可重新赋值，但是其属性值是可改变的，而 readonly 定义的属性不可改变。
+```
+
+使用接口表示函数类型时，需要给接口定义一个调用签名，用来描述函数的参数和返回值的类型。如下：
+```ts
+interface FuncInterface {
+  (num1: number, num2: number): number
+}
+
+let add: FuncInterface = (n1, n2) => {
+  return n1 + n2
+}
+add(2, 5)
+```
+
+用接口表示可索引的类型 数组和对象
+```ts
+interface StrArray {
+    [index: number]: string
+}
+const arr: StrArry = ['hello', 'alice']
+
+interface StrObject {
+    [key: string]: string
+}
+const obj: StrObject = {name: 'aclie', like: 'sing'}
+```
+
+继承接口
+```ts
+interface BaseInfo {
+  name: string,
+  age: number
+}
+
+interface AddressInfo extends BaseInfo {
+  address: string
+}
+
+const userInfo: AddressInfo = {
+  name: 'jack',
+  age: 12,
+  address: 'shanghai'
+}
+
+// 多重继承
+
+interface AllInfo extends BaseInfo, AddressInfo {
+  hobby: string
+}
+
+const allInfo: AllInfo = {
+  name: 'mike',
+  age: 12,
+  address: 'beijing',
+  hobby: 'song'
+}
+
+```
+
+混合类型接口
+```ts
+interface Counter {
+  // 函数参数和返回值类型
+  (): void;
+  // 函数属性及类型
+  count: number;
+  // 函数方法及返回值
+  rest(): void;
+}
+
+// 定义一个函数，该函数返回Counter类型的函数
+function getCounter(): Counter {
+  const getCount = () => {
+    getCount.count++
+  }
+  getCount.count = 0
+  getCount.rest = function () {
+    this.count = 0
+  }
+  return getCount
+}
+
+const getCount = getCounter()
+getCount()        // 1
+getCount()        // 2
+getCount.rest()   // 0
 ```
 
 ## 箭头函数表达式（lambda表达式）
@@ -378,7 +457,7 @@ shape.popup()
 ```
 
 ## 类
-类型批注支持的ECMAScript 6的类
+TypeScript中的类不仅具有ES6中类的全部功能，还提供了修饰符、抽象类等其他新功能。
 
 ```ts
 class Shape {
@@ -400,6 +479,7 @@ shape.show() // 因为类型注解没有name属性，所以访问this.name会报
 
 
 ```
+TypeScript 可以使用三种修饰符，分别是 public、private 和 protected。
 
 public 和 private 访问修饰符。Public 成员可以在任何地方访问， private 成员只允许在类中访问
 
@@ -427,7 +507,26 @@ var alice = new Person('alice', 10, 'girl')
 console.log(alice.show())
 console.log(alice.sex) // 编译会报错 sex是private属性
 ```
+抽象类  
+当构造函数修饰为 protected 时，该类只允许被继承，不能在包含它的类外被实例化：
 
+```ts
+class Animal {
+  public name: string;
+  protected constructor (name: string) {
+    this.name = name
+  }
+}
+
+class Cat extends Animal {
+  constructor (name: string) {
+    super(name)
+  }
+}
+
+let cat = new Animal('mike')
+// 报错：Constructor of class 'Animal' is protected and only accessible within the class declaration.
+```
 
 ## 继承
 我们可以继承一个已存在的类并创建一个派生类，继承使用关键字 extends

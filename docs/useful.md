@@ -35,3 +35,5 @@
 [这篇博客](https://www.cnblogs.com/nxmin/p/9124850.html)有很多其他资源汇总
 
 [一个比较基础的网站](https://www.wangmingchang.com/)
+
+[前端基础进阶](https://segmentfault.com/a/1190000012646488) *很好很系统的文章* 

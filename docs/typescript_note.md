@@ -49,7 +49,7 @@ tsc hello.ts
 ```
 
 ## 基础类型
-基本类型的批注是number, bool和string。而弱或动态类型的结构则是any类型
+基本类型的批注是number, string和boolean。而弱或动态类型的结构则是any类型
 
 例子
 ```ts

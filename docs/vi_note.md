@@ -56,6 +56,7 @@ dL # 删除从当前行到屏幕末行的内容
 :set nonu # 不显示行号
 ```
 
+<<<<<<< HEAD
 ## 多文件编辑
 ```bash
 :helper buffer # 查看帮助
@@ -64,3 +65,32 @@ dL # 删除从当前行到屏幕末行的内容
 :bp # 切换到上一个文件
 :sb # 分割窗口编辑当前文件  ctrl + w , j 焦点定位到下个窗口 ctrl + w, k 焦点定位上个窗口
 ```
+=======
+## 多个文件编辑和切换
+```bash
+# 打开多个文件
+vim file1 file2 ... filen
+:open file2
+
+# 分栏 同时显示多个文件
+:split
+:vsplit
+
+# 切换当前编辑文件
+:bp  # buffer previous
+:bn  # buffer next
+:n  # 一个窗格编辑多个文件时，切换到下一个文件
+:N  # 一个窗格编辑多个文件时，切换到上一个文件
+:ls # 查看所有打开的文档
+
+
+# 切换窗口
+ctrl + w , w
+ctrl + w , j / k / h / l
+
+# 保存所有
+:wqa  # 保存所有窗口 并退出
+:qa!  # 强制退出所有窗口
+
+```
+>>>>>>> 7041f17aa1908edcdbad7f72e7d7616e99bafa53

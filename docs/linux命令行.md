@@ -500,3 +500,7 @@ df -k #同上 文件大小k为单位
 # super + A 输入 disks ,打开 disks 工具
 # sudo hdparm -I /dev/sdb 查看硬盘参数
 ```
+
+
+## top
+[Linux top命令的用法详细详解](https://www.cnblogs.com/fuqu/p/10230385.html)

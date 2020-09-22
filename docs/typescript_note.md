@@ -291,12 +291,13 @@ Document、HTMLElement、Event、NodeList 等。
  function getLength(sth: string | number): number {
      return (<string>sth).length
  }
- ```
-2. 值 as 类型 ( as 语法 )  
- ```ts
-    let other: any = 'this is also string'
-    let size: number = (other as string).length
- ```
+```
+
+类型断言 值 as 类型 ( as 语法 )  
+```ts
+  let other: any = 'this is also string'
+  let size: number = (other as string).length
+```
 
 
 

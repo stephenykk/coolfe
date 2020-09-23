@@ -1,7 +1,6 @@
 const fs = require("fs");
 const path = require("path");
 const child_process = require("child_process");
-const { rejects } = require("assert");
 
 const pathJoin = path.join
 
@@ -10,6 +9,13 @@ class HomeHtml {
     this.docsRoot = pathJoin(__dirname, 'docs')
     this.indexMd = pathJoin(__dirname, 'index.md')
     this.files = this.getFiles(this.docsRoot)
+  }
+
+  dateFormat(date, isTime = true) {
+    let dparts  = [date.getFullYear(), date.getMonth() + 1, date.getDate()]
+    let tparts = [date.getHours(), date.getMinutes(), date.getSeconds()]
+    
+    return dparts.join('-') + (isTime ? ' ' + tparts.join(':') : '')
   }
 
   getFiles(dir) {
@@ -21,7 +27,7 @@ class HomeHtml {
       if(!isFile) {
         return false
       } else {
-        let date = stat.mtime.toISOString().replace(/T.*$/, '')
+        let date = this.dateFormat(stat.mtime)
         return [file, date]
       }
     })
@@ -41,13 +47,14 @@ class HomeHtml {
 
   async getLinks() {
     let links = await Promise.all(this.files.map(this.getLink, this))
-    return links.sort((a, b) => {
+    links.sort((a, b) => {
       var al = a.text.split('')
       var bl = b.text.split('')
       var r = 0;
       al.findIndex((c, j) => {r = c.charCodeAt(0) - (bl[j] || '').charCodeAt(0); return r})
       return r
     })
+    return links
   }
 
   async updateIndexMd() {
@@ -67,8 +74,8 @@ class HomeHtml {
     return true;
   }
 
-  async start() {
-    console.log('start.......')
+  async create() {
+    console.log('creating.......')
     try {
       await this.updateIndexMd();
   
@@ -84,4 +91,4 @@ class HomeHtml {
 
 }
 
-new HomeHtml().start()
+new HomeHtml().create()

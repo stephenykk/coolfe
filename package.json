@@ -1,13 +1,9 @@
 {
   "scripts": {
-    "build": "node build",
-    "commit": "git add . && git commit -m 'rebuild index.html'"
+    "build": "node build && npm run commit",
+    "commit": "git add . && git commit -m 'rebuild index.html' && git push"
   },
   "devDependencies": {
     "opn": "^5.4.0"
-  },
-
-  "dependencies": {
-    "mpvue": "^2.0.5"
   }
 }

@@ -75,7 +75,7 @@ class HomeHtml {
   }
 
   async create() {
-    console.log('creating.......')
+    console.log('creating..')
     try {
       await this.updateIndexMd();
   

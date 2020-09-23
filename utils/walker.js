@@ -7,7 +7,8 @@ const path = require('path')
 class Walker {
     constructor(options = {}) {
         this.root = path.resolve(options.root || __dirname)
-        this.blackList = options.blackList || ['node_modules']
+        this.skipDirList = options.skipDirList || [/node_modules/]
+        this.skipFileList = options.skipFileList || []
         this.check = options.check || function() {return true}
         this.callback = options.callback || console.log
     }
@@ -22,6 +23,17 @@ class Walker {
         return [ypart, npart]
     }
 
+    outBlockList(name, blockList) {
+        return blockList.every(blockRe => {
+            if(typeof blockRe === 'string') {
+                let blockName = blockRe
+                return name !== blockName
+            } else { // reg
+                return !blockRe.test(name)
+            }
+        })
+    }
+
     walk(root) {
         root = root
 
@@ -32,12 +44,13 @@ class Walker {
 
         let [dirnames, fnames] = this.divide(files, fname => fs.statSync(path.resolve(root, fname)).isDirectory())
 
+        fnames = fnames.filter(fname => this.outBlockList(fname, this.skipFileList))
         fnames.forEach(fname => {
             let fpath = path.resolve(root, fname)
             this.check(fname, fpath) && this.callback(fpath)
         })
 
-        dirnames = dirnames.filter(dirname => !this.blackList.includes(dirname))
+        dirnames = dirnames.filter(dirname => this.outBlockList(dirname, this.skipDirList))
 
         dirnames.forEach(dir => {
             let dpath = path.resolve(root, dir)

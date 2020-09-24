@@ -10,30 +10,6 @@ function $(s) {
     return document.querySelector(s)
 }
 
-/**
- * 添加页面快捷键
- * @param {string} keys 快捷键
- * @param {function} callback 回调函数
- */
-function addShortCute(keys, callback) {
-    keys = keys.split('+').map(v => v.trim())
-    let key = keys.pop()
-    let keyCond = {
-        key
-    }
-    if (keys.length) {
-        keys = keys.map(ctrlKey => `${ctrlKey}Key`)
-        keys.forEach(key => keyCond[key] = true)
-    }
-
-    document.addEventListener('keyup', function (event) {
-        let data = pick(event, Object.keys(keyCond))
-        data.key = data.key.toLowerCase()
-        if(looseEqual(data, keyCond)) {
-            callback()
-        }
-    })
-}
 
 function pick(data, keys) {
     let obj = {}
@@ -45,8 +21,10 @@ function isPlainObject(obj) {
     return Object.prototype.toString.call(obj).slice(8, -1) === 'Object'
 }
 
+
 function looseEqual(a, b) {
     
+
     function isArray(arr) {
         return Array.isArray(arr)
     }
@@ -88,3 +66,74 @@ function looseEqual(a, b) {
 
     })
 }
+
+// ---------------------------------------------
+
+/**
+ * 添加页面快捷键
+ * @param {string} keys 快捷键
+ * @param {function} callback 回调函数
+ */
+function addShortCute(keys, callback) {
+    keys = keys.split('+').map(v => v.trim())
+    let key = keys.pop()
+    let keyCond = {
+        key
+    }
+    if (keys.length) {
+        keys = keys.map(ctrlKey => `${ctrlKey}Key`)
+        keys.forEach(key => keyCond[key] = true)
+    }
+
+    document.addEventListener('keyup', function (event) {
+        let data = pick(event, Object.keys(keyCond))
+        data.key = data.key.toLowerCase()
+        if(looseEqual(data, keyCond)) {
+            callback()
+        }
+    })
+}
+
+
+// like nodejs url module
+const Url = (function() {
+    const urlKeys = ['protocol', 'hostname', 'port', 'host', 'pathname', 'search', 'hash']
+
+    function parse(url, isParseQuery = true) {
+        var a = document.createElement('a')
+        a.href = url
+        let oUrl = pick(a, urlKeys)
+        if(isParseQuery) {
+            oUrl.query = oUrl.search.replace(/^\?/, '')
+            let entries = oUrl.query.split('&').map(kv => {
+                let [key, val] = kv.split('=')
+                val = decodeURIComponent(val)
+                return [key, val]
+            });
+            oUrl.query = Object.fromEntries(entries)
+        }
+        if(!oUrl.port) {
+            delete oUrl.port
+        }
+        return oUrl
+    }
+
+    function format(oUrl) {
+        if(isPlainObject(oUrl.query)) {
+            let entries = Object.entries(oUrl.query)
+            let querystr = entries.map(pair => {
+                let [key, val] = pair
+                val = encodeURIComponent(val)
+                return [key, val].join('=')
+            }).join('&')
+            oUrl.search = '?' + querystr
+        }
+        var a = document.createElement('a')
+        a.href = 'http://test.com'
+        Object.assign(a, oUrl)
+        return a.href
+    }
+
+    return {parse, format}
+
+})();

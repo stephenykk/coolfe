@@ -97,6 +97,28 @@ function addShortCute(keys, callback) {
 
 // like nodejs url module
 const Url = (function() {
+    // shim Object.fromEntries  Object.entries
+    if(!Object.fromEntries) {
+        Object.fromEntries = function(entries) {
+            let result = {}
+            for(let [key, val] of entries) {
+                result[key] = val
+            }
+            return result
+        }
+    }
+
+    if(!Object.entries) {
+        Object.entries = function(obj) {
+            let entries = []
+            Object.keys(obj).forEach(key => {
+                let val = obj[key]
+                entries.push([key, val])
+            })
+            return entries
+        }
+    }
+
     const urlKeys = ['protocol', 'hostname', 'port', 'host', 'pathname', 'search', 'hash']
 
     function parse(url, isParseQuery = true) {

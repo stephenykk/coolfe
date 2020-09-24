@@ -239,7 +239,7 @@ const createStore = (reducer) => {
     listeners.forEach((listener) => listener());
   };
 
-  const subscrive = (listener) => {
+  const subscribe = (listener) => {
     listeners.push(listener);
     return () => {
       listeners = listeners.filter((l) => l !== listener);
@@ -440,6 +440,18 @@ export default function applyMiddleware(...middlewares) {
     chain = middlewares.map((middleware) => middleware(middlewareAPI));
     dispatch = compose(...chain)(store.dispatch);
 
+    /* 
+    
+    function compose(...fns) {
+        return function(...args)  {
+            let initRet = fns.pop()(...args) // action => {...}
+            return fns.reduceRight((ret, fn) => {
+                return fn(ret)
+            }, initRet)
+        }
+    }
+    */
+
     return { ...store, dispatch };
   };
 }
@@ -460,6 +472,18 @@ import { createStore, applyMiddleware } from "redux";
 import thunk from "redux-thunk";
 import reducer from "./reducers";
 
+/* 
+function thunk ({getState, dispatch}) {
+    return next => action => {
+        if(typeof action === 'function') {
+            action(getState, dispatch)
+        } else {
+            next(action)
+        }
+    }
+}
+ */
+
 // Note: this API requires redux@>=3.1.0
 const store = createStore(reducer, applyMiddleware(thunk));
 ```
@@ -479,6 +503,28 @@ import { createStore, applyMiddleware } from "redux";
 import promiseMiddleware from "redux-promise";
 import reducer from "./reducers";
 
+/* 
+
+function promiseMiddleware ({getState, dispatch}) {
+    return next => action => {
+        if(action.then) {
+            action.then(data => {
+                dispatch(data)
+            })
+        } else {
+            if(action.payload && action.payload.then) {
+                action.payload.then(data => {
+                    action.payload = data
+                    dispatch(action)
+                })
+            } else {
+                next(action)
+            }
+        }
+    }
+}
+*/
+
 const store = createStore(reducer, applyMiddleware(promiseMiddleware));
 ```
 
@@ -487,12 +533,14 @@ const store = createStore(reducer, applyMiddleware(promiseMiddleware));
 ```js
     const fetchPosts =
       (dispatch, postTitle) => new Promise(function (resolve, reject) {
+        // show loading
          dispatch(requestPosts(postTitle));
+        //  send ajax
          return fetch(`/some/API/${postTitle}.json`)
-           .then(response => {
-             type: 'FETCH_POSTS',
-             payload: response.json()
-           });
+                .then(response => {
+                  type: 'FETCH_POSTS',
+                  payload: response.json()
+                });
     });
 ```
 

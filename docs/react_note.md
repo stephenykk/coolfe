@@ -397,7 +397,7 @@ ReactDOM.render(
 ## redux
 
 参考[阮一峰的 redux 教程](http://www.ruanyifeng.com/blog/2016/09/redux_tutorial_part_one_basic_usages.html)，讲解的比较清楚。  
-[redux 知识点笔记](./redux.note.md)
+[redux 知识点笔记](./redux_note.md)
 
 
 ## more about react
@@ -477,7 +477,8 @@ function Welcome(props) {
   return <h1>Hello, {props.name}</h1>;
 }
 
-const element = <Welcome name="Sara" />;ReactDOM.render(
+const element = <Welcome name="Sara" />;
+ReactDOM.render(
   element,
   document.getElementById('root')
 );
@@ -516,7 +517,10 @@ class Clock extends React.Component {
     clearInterval(this.timerID);
   }
 
-  tick() {    this.setState({      date: new Date()    });  }
+  tick() {    
+    this.setState({date: new Date()});  
+  }
+
   render() {
     return (
       <div>
@@ -550,7 +554,9 @@ ReactDOM.render(
      constructor(props) {
         super(props);
         this.state = {
-          posts: [],      comments: []    };
+          posts: [],      
+          comments: []    
+        };
       }
 
      // 这里的合并是浅合并，
@@ -651,7 +657,10 @@ ReactDOM.render(
     }
 
     render() {
-      // 此语法确保 `handleClick` 内的 `this` 已被绑定。    return (      <button onClick={() => this.handleClick()}>        Click me
+      // 此语法确保 `handleClick` 内的 `this` 已被绑定。    
+      return (
+        <button onClick={() => this.handleClick()}>
+          Click me
         </button>
       );
     }
@@ -739,7 +748,8 @@ function Mailbox(props) {
   return (
     <div>
       <h1>Hello!</h1>
-      {unreadMessages.length > 0 &&        <h2>          You have {unreadMessages.length} unread messages.        </h2>      }    </div>
+      {unreadMessages.length > 0 &&        <h2>          You have {unreadMessages.length} unread messages.        </h2>      }    
+    </div>
   );
 }
 

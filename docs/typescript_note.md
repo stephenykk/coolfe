@@ -1,8 +1,13 @@
 # typescript notes
 
-[typescript入门教程](https://www.runoob.com/w3cnote/getting-started-with-typescript.html)
+[typescript入门教程](https://www.runoob.com/w3cnote/getting-started-with-typescript.html)  
    
-[typescript教程](https://www.runoob.com/typescript/ts-tutorial.html)
+[typescript教程](https://www.runoob.com/typescript/ts-tutorial.html)  
+
+[结合实例学习 Typescript（2.6w字）](https://juejin.im/post/6876981358346895368)
+
+[Typescript gitbook](https://www.runoob.com/manual/gitbook/TypeScript/_book/)  
+
 
 ## 简介
 
@@ -14,6 +19,13 @@
 1. 可以在编译阶段就发现大部分错误，这总比在运行时候出错好；
 1. 增强了编辑器和 IDE 的功能，包括代码补全、接口提示、跳转到定义、重构等；
 
+语法特性:
+- 类 Class
+- 接口 Interface
+- 类型注解 Type annotations
+- 编译时类型检查
+- 箭头函数
+
 **TypeSctipt 增强代码的可读性和可维护性**
 
 > TypeScript 是 JavaScript 的超集，扩展了 JavaScript 的语法，因此现有的 JavaScript 代码可与 TypeScript 一起工作无需任何修改，TypeScript 通过类型注解提供编译时的静态类型检查。
@@ -23,6 +35,10 @@
 ```bash
 npm i -g typescript
 tsc -v # 查看版本 验证安装成功
+
+tsc hello.ts  # 自动生成 hello.js
+tsc -w hello.ts # 监听改动
+nodemon hello.js # hello.js修改后 重新执行
 ```
 
 [在线编译预览](https://www.tslang.cn/play/index.html)
@@ -34,10 +50,19 @@ tsc -v # 查看版本 验证安装成功
 使用 `:` 指定变量的类型，`:` 的前后有没有空格都可以;
 
 ```ts
-function sayHello(person: string) {
-  return "Hello," + person;
+function sayHello(name: string, age: number): string {
+  return "Hello, I am " + name + ',' + age + 'years old';
 }
 sayHello("Alice");
+
+// 用接口重新定义
+interface Person {
+  name: string;
+  age: number;
+}
+function hello(person: Person): string {
+  return `Hello, I am ${person.name}, ${person.age} years old`
+}
 ```
 
 ## 编译

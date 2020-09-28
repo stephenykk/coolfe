@@ -425,3 +425,51 @@ export default {
   }
 }
 ```
+
+
+详解setup参数
+
+```js
+// MyBook.vue
+
+
+// 1. props
+import { toRefs } from 'vue'
+
+export default {
+  props: {
+    title: String
+  },
+  setup(props) {
+    // props的属性已是响应式的
+    console.log(props.title)
+
+    // :: 注意不能用解构赋值使用属性
+    // !!wrong
+    let {title} = props
+
+    // 可以用toRefs进行包装后，解构赋值
+    let {title} = toRefs(props)
+    console.log(title.value)
+  }
+}
+
+// 2.ctx = {attrs, slots, emit}
+
+// ctx只是普通的js对象，可以放心地用解构赋值
+// let { attrs, slots, emit } = ctx
+// attrs.x slots.x 这样使用，最好不要赋值给变量使用，应为attrs slots会随父组件更新
+export default {
+  setup(props, context) {
+    // Attributes (Non-reactive object)
+    console.log(context.attrs)
+
+    // Slots (Non-reactive object)
+    console.log(context.slots)
+
+    // Emit Events (Method)
+    console.log(context.emit)
+  }
+}
+
+```

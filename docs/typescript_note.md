@@ -312,7 +312,6 @@ let r: RegExp = /[a-z]/;
 Document、HTMLElement、Event、NodeList 等。
 
 ```ts
- tsenum Days = {Sun = 7, Mon=2, Tues, }
  function getLength(sth: string | number): number {
      return (<string>sth).length
  }

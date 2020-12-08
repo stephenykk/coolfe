@@ -201,6 +201,7 @@ reset 的其他用法
 - git branch -d merged_branch
 - git branch -D unmerged_branch
 - git branch -m oldBranch newBranch #分支重命名
+- git branch --contains commitId  #查看哪些分支包含指定commit
 
 ## git diff
 

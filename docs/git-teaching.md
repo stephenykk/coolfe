@@ -184,6 +184,9 @@ git d hashid
     # 重做上一次commit，并包括指定文件的新变化
     git commit --amend [file1] [file2] ...
 
+    # 修改author
+    git commit --amend --author pan <stephenykk@163.com>
+
 ```
 
 ## git mv

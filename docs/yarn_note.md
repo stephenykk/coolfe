@@ -1,6 +1,5 @@
 # yarn notes
 
-
 ## 安装
 有以下几种方式:
 1. 下载 `.msi` 安装包
@@ -11,7 +10,6 @@
 
 ## 用法
 
-```shell
     # 初始化项目, 问答的方式生成 package.json, 同 npm init
     yarn init
 

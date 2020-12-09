@@ -420,17 +420,33 @@ reset 的其他用法
 
 - remote origin 用 git 协议的 url, push 操作时，提示 _Connection reset by 13.229.188.59 fatal: Could not read from remote repository._  
   `git config --global credential.helper store` 记录上次的密码 不用每次都输入啦！
+
 - 遇到 warning: LF will be replaced by CRLF 警告  
+
+    > 首先问题出在不同操作系统所使用的换行符是不一样的，下面罗列一下三大主流操作系统的换行符：
+
+    > Uinx/Linux采用换行符LF表示下一行（LF：LineFeed，中文意思是换行）；
+    > Dos和Windows采用回车+换行CRLF表示下一行（CRLF：CarriageReturn LineFeed，中文意思是回车换行）；
+    > Mac OS采用回车CR表示下一行（CR：CarriageReturn，中文意思是回车）。 
+    > 在Git中，可以通过以下命令来显示当前你的Git中采取哪种对待换行符的方式
+
+    > $ git config core.autocrlf
+    > 此命令会有三个输出，“true”，“false”或者“input”
+
+    > 为true时，Git会将你add的所有文件视为文本问价你，将结尾的CRLF转换为LF，而checkout时会再将文件的LF格式转为CRLF格式。
+    > 为false时，line endings不做任何改变，文本文件保持其原来的样子。
+    > 为input时，add时Git会把CRLF转换为LF，而check时仍旧为LF，所以Windows操作系统不建议设置此值。
+
    `git config --global core.autocrlf false` 修改 git 全局配置，禁止 git 自动将 LF 转化成 CRLF。
 
-  // 提交时转换为 LF，检出时转换为 CRLF
-  git config --global core.autocrlf true
+    // 提交时转换为 LF，检出时转换为 CRLF
+    git config --global core.autocrlf true
 
-  // 提交时转换为 LF，检出时不转换
-  git config --global core.autocrlf input
+    // 提交时转换为 LF，检出时不转换
+    git config --global core.autocrlf input
 
-  // 提交检出均不转换
-  git config --global core.autocrlf false
+    // 提交检出均不转换
+    git config --global core.autocrlf false
 
 
     #拒绝提交包含混合换行符的文件

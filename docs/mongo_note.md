@@ -58,7 +58,7 @@
   备份数据的存放目录(_需提前建好_) 如: `mongodump -h 172.1.2.3:27017 -d mydb -o dataBack`
 
 ```bash
-mongo #连接本地mongodb
+mongo # 连接本地mongodb
 show dbs
 use book
 db.books.insert({name: 'two cities', price: 12}) # 创建collection, 添加1条数据
@@ -82,7 +82,7 @@ db.blogs.find({"tags":{"$all":["story","rule"]}}) # tags同时包含story 和 ru
 db.blogs.find({"tags.0":"MongoDB"}) # tags[0] == MongoDB 的
 db.blogs.find({"tags":{"$size":3}}) # tags有3个元素的
 
-db.blogs.find({"comment.name":"Jack"}) #查询内嵌文档
+db.blogs.find({"comment.name":"Jack"}) # 查询内嵌文档
 # 注：skip()、limit()、sort()，分别表示略过文档的数量，匹配的数量和排序（1表示正序，-1表示倒序）
 db.blogs.find({}).skip(2).limit(2).sort({"readCount":-1})
 
@@ -108,7 +108,7 @@ db.users.update({},{"$inc":{"age":1}},false,true) # 别忘了将第四个参数�
 db.users.update({"_id":0},{"$push":{"hobby":"swim"}}) # hobby必须是一个数组，所以你在其他文档上使用是不会成功的
 
 # 给 userA 去掉 read爱好
-db.users.update({"_id":0},{"$pull":{"hobby":"read"}}) #它会移除数组中所有匹配到的“read”元素
+db.users.update({"_id":0},{"$pull":{"hobby":"read"}}) # 它会移除数组中所有匹配到的“read”元素
 # 移除 首/尾 元素
 db.users.update({"_id":0},{"$pop":{"hobby":1}}) # 表示移除hobby中的最后一个元素，为-1表示移除第一个元素
 

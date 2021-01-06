@@ -19,20 +19,20 @@ linux 下保存截图发现会乱码，则可以安装一下字体解决
 
     // 下载字体文件， 通过xshell的sftp,上传到 /usr/share/fonts
     sftp:> cd /usr/share/fonts
-    sftp:> put  #上传文件
+    sftp:> put  # 上传文件
     回到xshell
     cd /usr/share/fonts
     > mkfontscale
     > mkfontdir
-    > fc-cache -fv #刷新字体缓存
-    > fc-list :lang=zh #查看中文字体
-    > fc-match Arial -s #字体匹配方式..
+    > fc-cache -fv # 刷新字体缓存
+    > fc-list :lang=zh # 查看中文字体
+    > fc-match Arial -s # 字体匹配方式..
 
 ## 安装
 
     npm install -g phantomjs-prebuilt
-    phantomjs -v #查看版本
-    phantomjs -h #查看帮助
+    phantomjs -v # 查看版本
+    phantomjs -h # 查看帮助
 
 ## 使用
 

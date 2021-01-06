@@ -67,25 +67,25 @@
 
 chmod 改变文件或目录的权限
 
-    chmod 755 abc #赋予abc权限rwxr-xr-x
+    chmod 755 abc # 赋予abc权限rwxr-xr-x
 
-    chmod u=rwx，g=rx，o=rx abc #同上u=用户权限，g=组权限，o=不同组其他用户权限
+    chmod u=rwx，g=rx，o=rx abc # 同上u=用户权限，g=组权限，o=不同组其他用户权限
 
-    chmod u-x，g+w abc #给abc去除用户执行的权限，增加组写的权限
+    chmod u-x，g+w abc # 给abc去除用户执行的权限，增加组写的权限
 
-    chmod a+r abc #给所有用户添加读的权限
+    chmod a+r abc # 给所有用户添加读的权限
 
 ## 改变所有者（chown）和用户组（chgrp）命令
 
-    chown xiaoming abc #改变abc的所有者为xiaoming
+    chown xiaoming abc # 改变abc的所有者为xiaoming
 
-    chown xiaoming:student abc #同时改变所有者和所属组
+    chown xiaoming:student abc # 同时改变所有者和所属组
 
-    chgrp root abc #改变abc所属的组为root
+    chgrp root abc # 改变abc所属的组为root
 
-    chown root ./abc #改变abc这个目录的所有者是root
+    chown root ./abc # 改变abc这个目录的所有者是root
 
-    chown ‐R root ./abc #改变abc这个目录及其下面所有的文件和目录的所有者是root
+    chown ‐R root ./abc # 改变abc这个目录及其下面所有的文件和目录的所有者是root
 
 ## 改变用户所在组
 

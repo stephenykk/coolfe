@@ -203,13 +203,13 @@ echo "hello world"
 
 ```bash
 # 方法1
-chmod +x ./test.sh  #使脚本有执行权限
-test.sh  #注意这样是错的，会到PATH指定的目录中查找test.sh
-./test.sh  #会用 #!指定的bash解释脚本
+chmod +x ./test.sh  # 使脚本有执行权限
+test.sh  # 注意这样是错的，会到PATH指定的目录中查找test.sh
+./test.sh  # 会用 #!指定的bash解释脚本
 
 # 方法2
 bash test.sh
-/bin/bash test.sh  #同上
+/bin/bash test.sh  # 同上
 
 ```
 
@@ -218,7 +218,7 @@ hello.sh 读取用户输入内容，并展示
 ```bash
 #!/bin/bash
 echo "What is your name?"
-read PERSON  #读取输入内容并赋值给变量
+read PERSON  # 读取输入内容并赋值给变量
 echo "Hello, $PERSON"
 # 单双引号的区别 类似php, 单引号内为字符串字面量，不会进行变量解析
 echo 'hello $PERSON'
@@ -287,15 +287,15 @@ echo $comic
 echo ${comic} # 同上 明确指定变量名边界
 skill=java
 echo "i am learning ${skill}script"
-skill=phyton  #修改变量
+skill=phyton  # 修改变量
 
 ````
 
 **将命令的结果赋值给变量**
 
 ```bash
-dt=`date +%Y-%m-%d` #把命令的结果赋值给变量
-dt=$(date +%Y-%m-%d) #同上
+dt=`date +%Y-%m-%d` # 把命令的结果赋值给变量
+dt=$(date +%Y-%m-%d) # 同上
 ```
 
 **只读变量**
@@ -517,30 +517,30 @@ fi
 
 ## shell 注释
 
-以“#”开头的行就是注释，会被解释器忽略, sh 里没有多行注释，只能每一行加一个#号。
+以“#”开头的行就是注释，会被解释器忽略, sh 里没有多行注释，只能每一行加一个# 号。
 
 ## shell 字符串
 
 字符串可以用单引号，也可以用双引号，也可以不用引号。单双引号的区别跟 PHP 类似。
 
 ```bash
-#单引号
+# 单引号
 str='this is a string'
-#双引号
+# 双引号
 your_name='qinjx'
 str="Hello, I know your are \"$your_name\"! \n"
-#拼接字符串
+# 拼接字符串
 your_name="qinjx"
 greeting="hello, "$your_name" !"
 greeting_1="hello, ${your_name} !"
 echo $greeting $greeting_1
-#获取字符串长度
+# 获取字符串长度
 string="abcd"
-echo ${#string} #输出 4
-#提取子串
+echo ${#string} # 输出 4
+# 提取子串
 string="alibaba is a great company"
-echo ${string:1:4} #输出liba  ${string:index:length}
-#查找子串
+echo ${string:1:4} # 输出liba  ${string:index:length}
+# 查找子串
 string="alibaba is a great company"
 echo `expr index "$string" is`
 ```
@@ -565,12 +565,12 @@ value2
 value3
 )
 
-#单独指定数组的各个元素
+# 单独指定数组的各个元素
 arr[0]=value0
 arr[1]=value1
 arr[2]=value2
 
-#访问数组元素
+# 访问数组元素
 echo ${arr[1]}
 
 ```
@@ -585,7 +585,7 @@ NAME[2]="Mahnaz"
 echo "First Index: ${NAME[0]}"
 echo "Second Index: ${NAME[1]}"
 
-#使用@ 或 * 可以获取数组中的所有元素
+# 使用@ 或 * 可以获取数组中的所有元素
 echo "First Method: ${NAME[*]}"
 echo "Second Method: ${NAME[@]}"
 ```
@@ -607,20 +607,20 @@ lengthn=${#array_name[n]}
 echo 是 Shell 的一个内部指令，用于在屏幕上打印出指定的字符串
 
 ```bash
-#显示转义字符
+# 显示转义字符
 echo -e "\"It is a test\""
-#显示变量
+# 显示变量
 name="OK"
 echo "$name It is a test"
-#显示换行
+# 显示换行
 echo -e "OK!\n"
 echo "It is a test"
-#显示不换行
+# 显示不换行
 echo -n "OK!"
 echo "It is a test"
-#显示结果重定向至文件
+# 显示结果重定向至文件
 echo "It is a test" > myfile
-#显示命令执行结果
+# 显示命令执行结果
 echo `date`
 ```
 
@@ -709,7 +709,7 @@ if test $[2*3] -eq $[1+5]; then echo 'The two numbers are equal!'; fi;
 # if ... else 语句也经常与 test 命令结合使用
 # test 命令用于检查某个条件是否成立，与方括号([ ])类似。
 num1=$[2*3]
-num2=$[1+5]  #同 num2=`epxr 1 + 5`
+num2=$[1+5]  # 同 num2=`epxr 1 + 5`
 if test $[num1] -eq $[num2]
 then
     echo 'The two numbers are equal!'
@@ -1000,7 +1000,7 @@ echo "The sum of two numbers is $ret !"
 函数返回值在调用该函数后通过 \$? 来获得
 
 ```bash
-#函数调函数
+# 函数调函数
 #!/bin/bash
 # Calling one function from another
 number_one () {

@@ -325,7 +325,7 @@ deps 一般也不需要传入，需要用到的模块用 require 加载即可。
 
 - 载入`css`时，如: `require("./module1-style.css")`;
 - 路径中含有`?`时，如: `require("http://example/js/a.json?cb=func")`;
-- 路径以`#结尾`时，如: `require("http://example/js/a.json#")`;
+- 路径以`# 结尾`时，如: `require("http://example/js/a.json#")`;
 
 根据应用场景的不同，SeaJS 提供了三个载入模块的 API，分别是`seajs.use()`，`require()`和`require.async()`，下面分别介绍:
 

@@ -75,10 +75,10 @@ windows 用盘符标识分区
 
 linux 分区这样表示：
 
-- /dev/hda #第一块 ide 硬盘
-- /dev/hda1 #第一块 ide 硬盘的第一个主分区 1-4 预留给主分区
-- /dev/hda5 #第一块 ide 硬盘的第一个逻辑分区
-- /dev/sdb1 #第二块 sata 硬盘的第一个主分区
+- /dev/hda # 第一块 ide 硬盘
+- /dev/hda1 # 第一块 ide 硬盘的第一个主分区 1-4 预留给主分区
+- /dev/hda5 # 第一块 ide 硬盘的第一个逻辑分区
+- /dev/sdb1 # 第二块 sata 硬盘的第一个主分区
 
 每个设备都用 -**/dev 文件夹** 下的一个文件表示
 
@@ -210,7 +210,7 @@ r(read) w(write) x(execute)
 
 ## 用户
 
-- su - root #切换用户
+- su - root # 切换用户
 
 ## 系统目录
 

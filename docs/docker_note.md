@@ -311,14 +311,14 @@ docker ps -l
 docker port mynginx  # docker port mynginx 80
 curl localhost:8080 # 查看nginx欢迎页
 
-mkdir -p ~/nginx/www ~/nginx/conf ~/nginx/logs #创建nginx相关目录
-docker cp mynginx:/ect/nginx/nginx.conf ~/nginx/conf #复制容器内的文件到宿主机
+mkdir -p ~/nginx/www ~/nginx/conf ~/nginx/logs # 创建nginx相关目录
+docker cp mynginx:/ect/nginx/nginx.conf ~/nginx/conf # 复制容器内的文件到宿主机
 docker run -d -p 8082:80 --name usenginx -v ~/nginx/www:/usr/share/nginx/html -v ~/nginx/conf/nginx.conf:/etc/nginx/nginx.conf -v ~/nginx/logs:/var/log/nginx nginx # -v 把宿主机目录挂载到容器内
 cd ~/nginx/www
-vi index.html #创建个html文件 然后浏览器访问 localhost:8082 就能看到这个文件了
+vi index.html # 创建个html文件 然后浏览器访问 localhost:8082 就能看到这个文件了
 
-docker kill -s HUP container_name #发送HUP信号给容器
-docker restart container_name #重启容器
+docker kill -s HUP container_name # 发送HUP信号给容器
+docker restart container_name # 重启容器
 ```
 
 ### 安装 php

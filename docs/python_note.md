@@ -70,8 +70,8 @@ python 有多种解释器:
 
 ```python
     print('hello python')
-    print('nice', 'to', 'meet', 'you') #可打印多个字符串 同 console.log
-    print('100+200=', 100+200) #逗号分隔的每个表达式间加空格
+    print('nice', 'to', 'meet', 'you') # 可打印多个字符串 同 console.log
+    print('100+200=', 100+200) # 逗号分隔的每个表达式间加空格
 ```
 
 ### 输入
@@ -106,10 +106,10 @@ python的语法比较简单:
 python 的数据类型包括: 整数、浮点数、字符串、字节型、布尔值、空值、列表、字典和自定义类型
 
 ```python
-    1, 100, -80, 0xfa #整数
-    1.23 1.23e9, 1.2e-5 #浮点数
+    1, 100, -80, 0xfa # 整数
+    1.23 1.23e9, 1.2e-5 # 浮点数
 
-    #字符串 单双引号互相包含
+    # 字符串 单双引号互相包含
     "what's your name"
     'I\'m "OK"'
 
@@ -124,18 +124,18 @@ python 的数据类型包括: 整数、浮点数、字符串、字节型、布�
     will not escape
     '''
 
-    #字节型
+    # 字节型
     b'ABC'
     len('abc') # 3
     b'hello'.decode('ascii')
     len(b'good') #4
 
-    #布尔值
+    # 布尔值
     True False
     # 逻辑运算符
     # and or not
 
-    #空值
+    # 空值
     None
 
     # 条件判断
@@ -148,9 +148,9 @@ python 的数据类型包括: 整数、浮点数、字符串、字节型、布�
 python 是弱类型(动态类型)语言
 
 ```python
-    a = 100 #整数
+    a = 100 # 整数
     print(a)
-    a = 'hello' #字符串
+    a = 'hello' # 字符串
     print(a)
 ```
 
@@ -203,8 +203,8 @@ python 的整数和浮点数没有大小限制
 
 ```python
     print('包含中文的str')
-    print(ord('A')) #字符对应的编码
-    print(chr(66)) #编码对应的字符
+    print(ord('A')) # 字符对应的编码
+    print(chr(66)) # 编码对应的字符
     # 知道字符的编码，可用十六进制 输出字符
     print('\u4e2d\u6587')
 ```
@@ -416,8 +416,8 @@ print(role)
 if('age' in role):
     print('yes')
 
-role.get('age')  #若没有age字段 返回None
-role.get('age', 10) #没有age字段 返回默认值
+role.get('age')  # 若没有age字段 返回None
+role.get('age', 10) # 没有age字段 返回默认值
 
 ```
 
@@ -448,14 +448,14 @@ print(s | s2) # 并集
 Python 内置了很多有用的函数，我们可以直接调用
 
 ```python
->>>help(abs) #查看函数帮助
+>>>help(abs) # 查看函数帮助
 abs(-120)
 abs(-1, 2) # 入参数量不对 会报错
 abs('ABC') # 入参类型不对 会报错
 min(1,2)
 max(2,3) # min max不限定参数个数
 
-#数据类型转换
+# 数据类型转换
 int('12')
 float('12.33')
 str(100)
@@ -682,13 +682,13 @@ move(4, 'A', 'B', 'C')
 ```python
 L = ['Michael', 'Sarah', 'Tracy', 'Bob', 'Jack']
 # list[start:end:step]
-L[0:3] #前3个元素同  L[:3]
-L[-3:] #后3个元素
-L[-2:-1] #倒数切片
-L[-1] #末尾元素
-L[:10:2] #前10个数，每两个取一个
-L[::5] #所有数，每5个取一个
-L[:] #取所有，即复制一个list
+L[0:3] # 前3个元素同  L[:3]
+L[-3:] # 后3个元素
+L[-2:-1] # 倒数切片
+L[-1] # 末尾元素
+L[:10:2] # 前10个数，每两个取一个
+L[::5] # 所有数，每5个取一个
+L[:] # 取所有，即复制一个list
 
 #tuple和字符串也是一种list，同样可用切片操作
 (0, 1, 2, 3, 4, 5)[:3]
@@ -775,7 +775,7 @@ print(next(g))
 for n in g:
     print(n)
 
-#著名的斐波拉契数列（Fibonacci），除第一个和第二个数外，任意一个数都可由前两个数相加得到
+# 著名的斐波拉契数列（Fibonacci），除第一个和第二个数外，任意一个数都可由前两个数相加得到
 def fib(max):
     n, a, b = 0, 0, 1
     while n < max:
@@ -858,7 +858,7 @@ isinstance(iter('abc'), Iterator) // True
 for x in [1, 2, 3, 4, 5]:
     pass
 
-#等价于
+# 等价于
 
 # 首先获得Iterator对象:
 it = iter([1, 2, 3, 4, 5])
@@ -950,8 +950,8 @@ def is_odd(n):
 list(filter(is_odd, [1, 2, 4, 5, 6, 9, 10, 15]))
 
 # sorted sorted(list, keyFn)
-sorted(['bob', 'about', 'Zoo', 'Credit'], key=str.lower) #升序
-sorted(['bob', 'about', 'Zoo', 'Credit'], key=str.lower, reverse=True) #降序
+sorted(['bob', 'about', 'Zoo', 'Credit'], key=str.lower) # 升序
+sorted(['bob', 'about', 'Zoo', 'Credit'], key=str.lower, reverse=True) # 降序
 
 ```
 
@@ -1022,7 +1022,7 @@ def log(func):
     def wrapper(*args, **kw):
         print('call %s():' % func.__name__)
         return func(*args, **kw)
-    return wrapper #返回装饰了目标函数的函数
+    return wrapper # 返回装饰了目标函数的函数
 
 # 借助Python的@语法，把decorator置于函数的定义处
 @log
@@ -1045,7 +1045,7 @@ def log(text):
     return decorator
 
 # now = log('execute')(now)
-@log('execute') #返回的结果作为装饰器
+@log('execute') # 返回的结果作为装饰器
 def now():
     print('2019-11-12')
 
@@ -1077,7 +1077,7 @@ def int2(x, base=2):
 # functools.partial就是帮助我们创建一个偏函数的，不需要我们自己定义int2()
 
 import functools
-int2 = functools.partial(int, base=2) #预绑定末尾参数的函数
+int2 = functools.partial(int, base=2) # 预绑定末尾参数的函数
 # 固定了int()函数的关键字参数base
 # 相当于
 kw = {'base': 2}

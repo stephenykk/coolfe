@@ -21,8 +21,8 @@
 - gpedit.msc
 - regedit
 - control system
-- control userpasswords2 #高级帐户管理
-- control userpasswords #用户帐户管理 **同 nusrmgr.cpl**
+- control userpasswords2 # 高级帐户管理
+- control userpasswords # 用户帐户管理 **同 nusrmgr.cpl**
 
 > 注：\*.cpl 文件还可接受参数 eg: sysdm.cpl ,3 打开系统属性面板第 3 个 tab
 

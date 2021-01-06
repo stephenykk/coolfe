@@ -4,7 +4,7 @@
 
 [web worker 简介](https://www.cnblogs.com/stephenykk/p/8608450.html)
 
-有别于 Java/C#等编程语言，Javascript 运行在一个单线程环境中，对 setTimeout/setInterval、ajax 和 dom 事件的异步处理是依赖事件循环实现的。
+有别于 Java/C# 等编程语言，Javascript 运行在一个单线程环境中，对 setTimeout/setInterval、ajax 和 dom 事件的异步处理是依赖事件循环实现的。
 
 ## Web Worker 是什么
 

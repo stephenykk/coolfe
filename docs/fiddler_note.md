@@ -69,7 +69,7 @@
   - `i` _ignore case_ 忽略大小写
   - `n` _requires explicit capture groups_ 要求明确的捕获组
   - `s` _enables single-line syntax_ 单行
-  - `x` _enables comments after the #character_ 支持#后加注释
+  - `x` _enables comments after the #character_ 支持# 后加注释
 
 自动响应的内容
 

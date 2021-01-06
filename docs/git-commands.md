@@ -7,7 +7,7 @@
 ```bash
     #clone 远端仓库的某个分支2
     git clone -b <branch> <remote_repo>
-    #例: clone远端仓库的dev分支到本地
+    # 例: clone远端仓库的dev分支到本地
     git clone -b dev git@github.com:stephenykk/test.git
 
     #clone仓库到指定文件夹
@@ -20,17 +20,17 @@
 切换分支，创建分支，检出暂存版本覆盖本地修改
 
 ```bash
-    #基于远程分支在本地新建分支，并切换到新分支
-    #当不成功时，说明本地repo还不能感知到该远程分支,
+    # 基于远程分支在本地新建分支，并切换到新分支
+    # 当不成功时，说明本地repo还不能感知到该远程分支,
     #git remote update 更新一下跟踪信息
     git checkout -b local_name origin/remote_name
-    #例：基于远程dev分支，创建本地dev分支，并切换到本地dev分支
+    # 例：基于远程dev分支，创建本地dev分支，并切换到本地dev分支
     git checkout -b dev origin/dev
 
-    #切换到mater分支
+    # 切换到mater分支
     git checkout master
 
-    #但是，需要注意的是，如果该文件已经 add 到暂存队列中，上面的命令就不灵光喽 需要先让这个文件取消暂存
+    # 但是，需要注意的是，如果该文件已经 add 到暂存队列中，上面的命令就不灵光喽 需要先让这个文件取消暂存
     #index -> working directory
     git checkout -- + 需要恢复的文件名
 
@@ -43,31 +43,33 @@
 查看提交日志
 
 ```bash
-    git log --since="1 day ago" #查看1天前到现在的提交日志
-    git log --since "1 day ago" #同上 = 是可选的
+    git log --since="1 day ago" # 查看1天前到现在的提交日志
+    git log --since "1 day ago" # 同上 = 是可选的
     git log --since "2019-01-03" --until "2019-01-04"  # 查看某时间段的提交日志
 
-    git log -- somefile.html #查看某文件的更新历史
+    git log -- somefile.html # 查看某文件的更新历史
     git log <file> # 同上
-    git log  somefile.html #同上 -- 是可选的
-    git log -- f1.html f2.html #查看多个文件的修改日志
-    git log -- folder #查看指定文件夹的修改日志
+    git log  somefile.html # 同上 -- 是可选的
+    git log -- f1.html f2.html # 查看多个文件的修改日志
+    git log -- folder # 查看指定文件夹的修改日志
 
 
     git log -3 # 查看最近3次的提交日志
 
     git log -p <file> # 查看每次详细修改内容的diff
-    git log -p -- somefile.html #某文件明细更新历史
-    git log -1 -p -- somefile.html #查看某文件上次的修改内容
-    git log -2 --name-only #显示日志和修改了哪些文件
+    git log -p -- somefile.html # 某文件明细更新历史
+    git log -1 -p -- somefile.html # 查看某文件上次的修改内容
+    git log -2 --name-only # 显示日志和修改了哪些文件
 
-    git log -3 dev #查看dev分支最近3次的提交日志
+    git log -3 dev # 查看dev分支最近3次的提交日志
 
-    git log v1.0.. #查看v1.0后的提交日志
-    git log --author=stephenykk #查看某人提交的记录
-    git log --author kk #同上 user.name 包含kk 即可
+    git log v1.0.. # 查看v1.0后的提交日志
+    git log --author=stephenykk # 查看某人提交的记录
+    git log --author kk # 同上 user.name 包含kk 即可
     git log -p -2 # 查看最近两次详细修改内容的diff
-    git log --stat #查看提交统计信息
+    git log --stat # 查看提交统计信息
+
+    git reflog -10  # 查看最近的操作历史，可恢复到 reset --hard 之前
 
 ```
 
@@ -76,11 +78,19 @@
 提交修改
 
 ```bash
-    #一些文件在本地修改后，不希望commit到远端仓库，可以这样
+    # 一些文件在本地修改后，不希望commit到远端仓库，可以这样
     git add .
     git commit -m "commit part of changes" -- <folder/file>
 
-    git commit --amend -m "new commit logs" #修改最后一次提交记录 (通常用来修改提交日志)
+    git commit --amend -m "new commit logs" # 修改最后一次提交记录 (通常用来修改提交日志)
+
+    # 删除文件
+    rm test.txt
+    git add .
+    git commit -m "rm 'test.txt'"
+
+    git rm test.txt
+    git commit -m "git rm 'test.txt'"
 ```
 
 ## git show
@@ -89,8 +99,8 @@
 
 ```bash
     git show <commit_id> # 显示某次提交的内容 git show $id
-    git show head #查看最新的提交 同 git log -1 -p
-    git show head^ #查看上次的提交
+    git show head # 查看最新的提交 同 git log -1 -p
+    git show head^ # 查看上次的提交
 ```
 
 git add
@@ -177,15 +187,15 @@ repo->index->working directory
 reset 的其他用法
 
 ```bash
-    #撤销working tree的修改
+    # 撤销working tree的修改
     #HEAD, index和working tree都重置为最后一次commit的状态
     git reset --hard HEAD
-#撤销staged状态
+# 撤销staged状态
     #index tree回退到最后一次commit的状态  不影响工作目录的修改
     git reset HEAD
 
-    #撤销指定文件的staged状态
-    git reset <file>  #相当于 git reset HEAD -- <file>
+    # 撤销指定文件的staged状态
+    git reset <file>  # 相当于 git reset HEAD -- <file>
     git reset -- .
 ```
 
@@ -193,29 +203,29 @@ reset 的其他用法
 
 分支管理：查看 创建 删除 重命名
 
-- git branch #列出本地分支
-- git branch -r #查看所有远程分支
-- git branch -a #查看所有分支 包括远端仓库的分支
-- git branch -a -v #查看本地和远端仓库的所有分支，并显示最后一次提交
-- git branch new_branch #基于当前分支创建分支
+- git branch # 列出本地分支
+- git branch -r # 查看所有远程分支
+- git branch -a # 查看所有分支 包括远端仓库的分支
+- git branch -a -v # 查看本地和远端仓库的所有分支，并显示最后一次提交
+- git branch new_branch # 基于当前分支创建分支
 - git branch -d merged_branch
 - git branch -D unmerged_branch
-- git branch -m oldBranch newBranch #分支重命名
-- git branch --contains commitId  #查看哪些分支包含指定commit
+- git branch -m oldBranch newBranch # 分支重命名
+- git branch --contains commitId  # 查看哪些分支包含指定commit
 
 ## git diff
 
 比较版本之间的差异： 两个 commit 之间，工作目录和暂存区之间，暂存区和本地仓库之间
 
 ```bash
-    #分支比较
+    # 分支比较
     git diff <branch1>..<branch2>
 
-    #比较两次提交的差异 仅列出文件名
+    # 比较两次提交的差异 仅列出文件名
     git diff HEAD HEAD^ --name-only  # HEAD 同 head 不区分大小写
-    git diff HEAD..HEAD^ #同上 .. 不是必须的
+    git diff HEAD..HEAD^ # 同上 .. 不是必须的
 
-    #比较两个分支，指定文件夹下的差异
+    # 比较两个分支，指定文件夹下的差异
     git diff <branch1>..<branch2> --name-only -- folderA
 
     git diff <file> # 比较当前文件和暂存区文件差异 git diff
@@ -236,14 +246,14 @@ reset 的其他用法
 远端仓库管理： 查看 添加 删除 重命名 修改 url
 
 ```bash
-    #显示远端仓库的详细信息(fetchUrl pushUrl, branches, "local branches configured for 'git pull'" , "local refs configured for 'git push' ")
+    # 显示远端仓库的详细信息(fetchUrl pushUrl, branches, "local branches configured for 'git pull'" , "local refs configured for 'git push' ")
     git remote show origin
 
-    git remote -v #查看远端仓库的配置信息
-    git remote update #更新远端仓库信息
+    git remote -v # 查看远端仓库的配置信息
+    git remote update # 更新远端仓库信息
     git remote add <name> <url>
     git remote remove <name>
-    git remote rename <old> <new> #重命名远端仓库名称
+    git remote rename <old> <new> # 重命名远端仓库名称
     git remote set-url --add <name> <newurl>
     git remote set-url --delete <name> <url>
 ```
@@ -253,7 +263,7 @@ reset 的其他用法
 拉取远程分支
 
 ```bash
-    #把远程分支取回本地分支中
+    # 把远程分支取回本地分支中
     git fetch origin remote_branch_name:local_branch_name
 
     #git clone默认拉取master分支，若需要再次拉取remote_dev分支
@@ -267,9 +277,9 @@ reset 的其他用法
 推送本地分支
 
 ```bash
-    git push #推送所有分支到远端 看 push.default 的设置
+    git push # 推送所有分支到远端 看 push.default 的设置
 
-    #只推送 当前分支 到 远端对应分支
+    # 只推送 当前分支 到 远端对应分支
     git push origin localBranchName:remoteBranchName
 
     Git中push.default可以指定在没有明确指定远程分支的情况下，默认push的远程分支，其取值可以是：
@@ -280,7 +290,7 @@ reset 的其他用法
         + simple - simple和upstream是相似的（通常用于central workflow），只有一点不同，simple必须保证本地分支和它的远程 upstream分支同名，否则会拒绝push操作
         + matching - push所有本地和远程两端都存在的同名分支
 
-    #通常 push.default = simeple (upstream, matching)
+    # 通常 push.default = simeple (upstream, matching)
     git push  # 推送到远程同名分支
     git push -f  # 强制推送，即使远程分支比本地新，谨慎使用
 
@@ -290,7 +300,7 @@ reset 的其他用法
 
 ```bash
     git help <command> # 显示command的help
-    cat -n .git/config #查看git的本地设置
+    cat -n .git/config # 查看git的本地设置
     git config --local -l # 同上
 ```
 
@@ -383,7 +393,7 @@ reset 的其他用法
 
     git push origin <local_branch>:<remote_branch> # 创建远程分支
 
-    git push origin :<remote_branch> #先删除本地分支(git branch -d <branch>)，然后再push删除远程分支
+    git push origin :<remote_branch> # 先删除本地分支(git branch -d <branch>)，然后再push删除远程分支
 
 ## Git 远程仓库管理
 
@@ -450,13 +460,13 @@ reset 的其他用法
     git config --global core.autocrlf false
 
 
-    #拒绝提交包含混合换行符的文件
+    # 拒绝提交包含混合换行符的文件
     git config --global core.safecrlf true
 
-    #允许提交包含混合换行符的文件
+    # 允许提交包含混合换行符的文件
     git config --global core.safecrlf false
 
-    #提交包含混合换行符的文件时给出警告
+    # 提交包含混合换行符的文件时给出警告
     git config --global core.safecrlf warn
 
 

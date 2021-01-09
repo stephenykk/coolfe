@@ -402,3 +402,7 @@ whereis mongo
 
 
 ```
+
+[linux后台运行和关闭、查看后台任务](https://www.cnblogs.com/kaituorensheng/p/3980334.html)  
+
+

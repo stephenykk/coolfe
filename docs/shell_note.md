@@ -1070,20 +1070,33 @@ wc -l < log.txt
 如果希望 stderr 重定向到 file，可以这样写：
 
 ```bash
-command 2 > file
-command 2 >> file
+# 注意 文件描述符和重定向符号和文件之间不能有空格
+command 2>file
+command 2>>file
 ```
 
 如果希望将 stdout 和 stderr 合并后重定向到 file，可以这样写：
 
 ```bash
 command > file 2>&1
+
+# test:
+touch cmd
+chmod a+x cmd
+# cmd:
+#!/bin/bash
+echo hello
+ls noThisDir
+echo end
+
+./cmd > outAndErr 2>&1
+cat outAndErr
 ```
 
 如果希望对 stdin 和 stdout 都重定向，可以这样写：
 
 ```bash
-command < file1 >file2
+command < file1 > file2
 ```
 
 **Here Document**

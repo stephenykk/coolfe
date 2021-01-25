@@ -1121,3 +1121,23 @@ source filename
 ```
 
 注意：被包含脚本不需要有执行权限。
+
+
+## shell 常见问题总结
+```bash
+# 批量创建文件夹
+mkdir {foo,bar}
+mkdir {0,1,2,3}{a,b,c}
+
+即可批量创建名字为0a,0b,0c,1a,1b,1c,2a,2b,2c,3a,3b,3c的文件夹。
+
+linux下创建文件的命令为: touch xxx (xxx为你要创建的文件夹名字)
+
+linux下批量创建文件方法:(ubuntu为例)
+
+touch {a,b,c}{a,b,c}
+
+即可批量创建名字为aa,ab,ac,ba,bb,bc,ca,cb,cc等文件。
+
+touch demo{1..10}
+```

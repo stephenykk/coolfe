@@ -120,13 +120,13 @@ sudo passwd <user> # 以root身份修改用户密码
 ### who
 
 ```bash
-who am i #查看当前用户 详细
+who am i # 查看当前用户 详细
 who mom likes # 同上
 
 # ubuntu
 who -u
 who -a
-whoami #查看当前用户 简短
+whoami # 查看当前用户 简短
 ```
 
 ### /etc/passwd
@@ -140,7 +140,7 @@ cat /etc/shadow # 用户密码文件 密文保存
 
 ```bash
 cat /etc/group # 查看系统所有用户组 group:pwd:gid:user_list
-cat /etc/gshaow #用户组的密码文件
+cat /etc/gshaow # 用户组的密码文件
 ```
 
 ### groups
@@ -354,8 +354,8 @@ xargs 是一个强有力的命令，它能够捕获一个命令的输出，然�
 - `-P` 修改最大的进程数，默认是1，为0时候为as many as it can ，这个例子我没有想到，应该平时都用不到的吧。
 
 ```shell
-find /sbin -perm +700 |ls -l       #这个命令是错误的
-find /sbin -perm +700 |xargs ls -l   #这样才是正确的
+find /sbin -perm +700 |ls -l       # 这个命令是错误的
+find /sbin -perm +700 |xargs ls -l   # 这样才是正确的
 
 # 多行输入单行输出：
 echo -e "one\ntwo\nthree\nfour" > data
@@ -425,17 +425,17 @@ x\{m,n\} # 重复字符x，至少m次，不多于n次，如：'o\{5,10\}'匹配5
 
 # POSIX字符要放到[]号内才能成为正则表达式，如[[:alnum:]]  同 [A- Za-z0-9]
 
-[:alnum:] #文字数字字符
-[:alpha:] #文字字符
-[:digit:] #数字字符
-[:space:] #所有空白字符（新行，空格，制表符）
-[:lower:] #小写字符
-[:upper:] #大写字符
-[:xdigit:] #十六进制数字（0-9，a-f，A-F）
-[:graph:] #非空字符（非空格、控制字符）
-[:cntrl:] #控制字符
-[:print:] #非空字符（包括空格）
-[:punct:] #标点符号
+[:alnum:] # 文字数字字符
+[:alpha:] # 文字字符
+[:digit:] # 数字字符
+[:space:] # 所有空白字符（新行，空格，制表符）
+[:lower:] # 小写字符
+[:upper:] # 大写字符
+[:xdigit:] # 十六进制数字（0-9，a-f，A-F）
+[:graph:] # 非空字符（非空格、控制字符）
+[:cntrl:] # 控制字符
+[:print:] # 非空字符（包括空格）
+[:punct:] # 标点符号
 
 # 查找指定进程
 ps -ef | grep node
@@ -476,26 +476,26 @@ which nginx # 同上
 ```bash
 echo $PATH # 查看环境变量 PATH (注意:区分大小写)
 
-#仅当前终端生效
+# 仅当前终端生效
 export PATH=/usr/local/mongodb/bin:$PATH # 临时配置
 
-#全局配置 /etc/profile
+# 全局配置 /etc/profile
 # vi /etc/profile , 添加 export PATH=/usr/local/mongodb/bin:$PATH 全局配置
 #source /etc/profile # 让修改立即生效
 
-#全局配置 /etc/environment
+# 全局配置 /etc/environment
 vim /etc/environment # 全局配置 直接修改环境变量配置文件
 
-#当前用户生效
+# 当前用户生效
 vim ~/.bashrc , 添加 export PATH=/usr/local/mongodb/bin:$PATH
 ```
 
 ## 磁盘
 
 ```bash
-df -h #查看磁盘剩余空间
-df -m #同上 文件大小m为单位
-df -k #同上 文件大小k为单位
+df -h # 查看磁盘剩余空间
+df -m # 同上 文件大小m为单位
+df -k # 同上 文件大小k为单位
 
 # super + A 输入 disks ,打开 disks 工具
 # sudo hdparm -I /dev/sdb 查看硬盘参数

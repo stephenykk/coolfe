@@ -119,34 +119,34 @@ alias与root的区别
 ```js
 // http://localhost/ 将匹配规则A
 location = / {
-   #规则A
+   # 规则A
 }
 // http://localhost/login 将匹配规则B
 location = /login {
-   #规则B
+   # 规则B
 }
 //  http://localhost/static/a.html 将匹配规则C
 location ^~ /static/ {
-   #规则C
+   # 规则C
 }
 
 location ~ \.(gif|jpg|png|js|css)$ {
-   #规则D
+   # 规则D
 }
 // http://localhost/a.PNG 则匹配规则E
 location ~* \.png$ {
-   #规则E
+   # 规则E
 }
 // http://localhost/a.XHTML
 location !~ \.xhtml$ {
-   #规则F
+   # 规则F
 }
 location !~* \.xhtml$ {
-   #规则G
+   # 规则G
 }
 // http://localhost/category/id/1111 
 location / {
-   #规则H
+   # 规则H
    proxy_pass http://tomcat:8080/
 }
 ```

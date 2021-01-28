@@ -5,7 +5,7 @@
 ## 用法
 
         $ npm install pm2 -g     # 命令行安装 pm2
-        $ pm2 start app.js -i 4 #后台运行pm2，启动4个app.js
+        $ pm2 start app.js -i 4 # 后台运行pm2，启动4个app.js
                                         # 也可以把'max' 参数传递给 start
                                         # 正确的进程数目依赖于Cpu的核心数目
         $ pm2 start app.js --name my-api # 命名进程
@@ -25,12 +25,12 @@
         运行进程的不同方式：
         $ pm2 start app.js -i max  # 根据有效CPU数目启动最大进程数目
         $ pm2 start app.js -i 3      # 启动3个进程
-        $ pm2 start app.js -x        #用fork模式启动 app.js 而不是使用 cluster
+        $ pm2 start app.js -x        # 用fork模式启动 app.js 而不是使用 cluster
         $ pm2 start app.js -x -- -a 23   # 用fork模式启动 app.js 并且传递参数 (-a 23)
         $ pm2 start app.js --name serverone  # 启动一个进程并把它命名为 serverone
         $ pm2 stop serverone       # 停止 serverone 进程
         $ pm2 start app.json        # 启动进程, 在 app.json里设置选项
-        $ pm2 start app.js -i max -- -a 23                   #在--之后给 app.js 传递参数
+        $ pm2 start app.js -i max -- -a 23                   # 在--之后给 app.js 传递参数
         $ pm2 start app.js -i max -e err.log -o out.log  # 启动 并 生成一个配置文件
         你也可以执行用其他语言编写的app  ( fork 模式):
         $ pm2 start my-bash-script.sh    -x --interpreter bash

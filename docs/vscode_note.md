@@ -180,7 +180,7 @@ ctrl + k, ctrl + t 选择主题
 1. ctrl + shift + p 输入 open settings
 2. 粘贴以下 vetur 的配置
 
-````json
+```json
   // Options for all default formatters
 "vetur.format.defaultFormatterOptions": {
 "js-beautify-html": {
@@ -193,5 +193,39 @@ ctrl + k, ctrl + t 选择主题
 	"sortAttributes": false
 }
 },
-  ```
-````
+```
+
+## 调试代码 
+[vscode debug 教程](https://www.php.cn/tool/vscode/434674.html)
+
+## lanch.json
+
+VS Code supports variable substitution inside strings in launch.json and has the following predefined variables:
+```js
+    ${workspaceFolder} - the path of the folder opened in VS Code
+    ${workspaceRootFolderName} - the name of the folder opened in VS Code without any slashes (/)
+    ${file} - the current opened file
+    ${relativeFile} - the current opened file relative to workspaceRoot
+    ${fileBasename} - the current opened file's basename
+    ${fileBasenameNoExtension} - the current opened file's basename with no file extension
+    ${fileDirname} - the current opened file's dirname
+    ${fileExtname} - the current opened file's extension
+    ${cwd} - the task runner's current working directory on startup
+    ${lineNumber} - the current selected line number in the active file
+```
+You can also reference environment variables through ${env:Name} syntax (for example, ${env:PATH}). Be sure to match the environment variable name's casing, for example ${env:Path} on Windows.
+```js
+    {
+        "type": "node",
+        "request": "launch",
+        "name": "Launch Program",
+        "program": "${workspaceFolder}/app.js",
+        "cwd": "${workspaceFolder}",
+        "args": [ "${env:USERNAME}" ]
+    }
+```
+You can reference VS Code settings and commands using the following syntax:
+```js
+    ${config:Name} - example: ${config:editor.fontSize}
+    ${command:CommandID} - example: ${command:explorer.newFolder}
+```

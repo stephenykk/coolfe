@@ -2,10 +2,10 @@
 
 ## 安装和使用
 
-    #安装
+    # 安装
     npm install vue-resource --save
 
-    #使用
+    # 使用
     var Vue = require('vue');
     var VueResource = require('vue-resource');
     Vue.use(VueResource);

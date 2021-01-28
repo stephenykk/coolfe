@@ -164,8 +164,8 @@ window 下远程登录客户端有 `secureCRT`, `Putty`, `SSH Secure Shell`, `Xs
 > 文件所有者以外的用户又可以分为文件所有者的同组用户和其他用户。 对于 root 用户来说，一般情况下，文件的权限对其不起作用。
 
 ```bash
-cat /etc/group | sort  #查看用户组 (sort表示按字母排序) group_name:passwd:GID:user_list (passwd 为 x 表示加密)
-cat /etc/passwd | sort #查看用户信息 user_name:passwd:uid:gid:group_name:home_dir:default_shell
+cat /etc/group | sort  # 查看用户组 (sort表示按字母排序) group_name:passwd:GID:user_list (passwd 为 x 表示加密)
+cat /etc/passwd | sort # 查看用户信息 user_name:passwd:uid:gid:group_name:home_dir:default_shell
 cat /etc/gshadow  # 用户组的密码文件 group_name:passwd 密码是加密的
 cat /etc/shadow  # 用户的密码文件 user_name:passwd
 
@@ -180,7 +180,7 @@ cd /opt
 mkdir myfolder
 ll # 查看
 chown pan myfolder # 修改所有者为pan
-chmod g-x,o-x myfolder #同组和其他组的用户 取消执行权限
+chmod g-x,o-x myfolder # 同组和其他组的用户 取消执行权限
 su test # 切换到test用户
 cd myfolder # test用户没有myfolder的执行权限 所以打不开文件夹
 
@@ -229,7 +229,7 @@ Linux 文件属性有两种设置方法，一种是数字，一种是符号。
   chomd -R g+w hello # 属组+w权限
   chmod -R a+w hello # 所有用户+w权限
   chmod -R u=rxw hello # 设置所有者的权限
-  chmod -R u=rxw,g=r,o=w hello #设置三种用户的权限 (注意逗号分隔)
+  chmod -R u=rxw,g=r,o=w hello # 设置三种用户的权限 (注意逗号分隔)
 
 ```
 
@@ -276,11 +276,11 @@ Linux 的目录结构为树状结构，最顶级的目录为根目录 /
 
 ```bash
   pwd
-  pwd -P #显示真实路径，而非链接文件的路径
+  pwd -P # 显示真实路径，而非链接文件的路径
 
   # 例子
   cd ~
-  ln -s Music mp3 #创建软链接 mp3
+  ln -s Music mp3 # 创建软链接 mp3
   cd mp3
   pwd -P
 
@@ -290,8 +290,8 @@ Linux 的目录结构为树状结构，最顶级的目录为根目录 /
 
 ```bash
 mkdir dirname
-mkdir -m 711 dirname #配置文件的权限喔！直接配置，不需要看默认权限 (umask) 的脸色～
-mkdir -p path/to/you/want #创建多层目录
+mkdir -m 711 dirname # 配置文件的权限喔！直接配置，不需要看默认权限 (umask) 的脸色～
+mkdir -p path/to/you/want # 创建多层目录
 
 cd path/to/you/want
 touch hello
@@ -349,7 +349,7 @@ crontab 命令(cron table)，它是 cron 的配置文件，也可以叫它作业
 > 我们还可以把脚本放在/etc/cron.hourly、/etc/cron.daily、/etc/cron.weekly、/etc/cron.monthly 目录中，让它每小时/天/星期、月执行一次。
 
 ```bash
-crontab [-u username]　　　　#省略用户 表示操作当前用户的crontab
+crontab [-u username]　　　　# 省略用户 表示操作当前用户的crontab
     -e      (编辑工作表)
     -l      (列出工作表里的命令)
     -r      (删除工作作)

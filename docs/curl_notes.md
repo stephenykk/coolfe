@@ -63,7 +63,7 @@ curl -i www.sina.com # 返回响应头和响应体
 # curl -I url 只显示响应头
 curl -I www.sina.com
 
-# curl -v url #显示完整的 http 通信过程
+# curl -v url # 显示完整的 http 通信过程
 curl -v www.sina.com
 
 # curl --trace output.txt url 显示更加详细的数据

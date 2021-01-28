@@ -65,7 +65,7 @@
 
 ```
     npm run release
-    npm run release -- --debug #临时使用debug签名
+    npm run release -- --debug # 临时使用debug签名
 ```
 
 ## 项目结构

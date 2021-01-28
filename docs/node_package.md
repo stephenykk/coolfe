@@ -27,7 +27,7 @@ fse.copy('/tmp/foo', '/tmp/foobk', err => {
 });
 
 // await-style
-async copyFile() {
+async function copyFile() {
     try {
         await fse.copy('/tmp/foo', '/tmp/foobk')
         console.log('success')

@@ -9,7 +9,6 @@ Puppeteer 是 Chrome开发团队2017年发布的一个 Node.js包，提供了一
 
 ```js
 const puppeteer = require('puppeteer')
-https://github.com/puppeteer/puppeteer/blob/main/docs/api.md#pageclickselector-options
 async function main() {
     const browser = await puppeteer.launch({headless: true})
     const page = await browser.newPage()
@@ -63,10 +62,12 @@ console.log(browser.wsEndpoint())
 
 
 const puppeteer = require('puppeteer');
-puppeteer.launch().then(async browser = >{ // 存储节点以便能重新连接到 Chromium  
-const browserWSEndpoint = browser.wsEndpoint();  // 从 Chromium 断开和 puppeteer 的连接  browser.disconnect();  // 使用节点来重新建立连接  
-const browser2 = await puppeteer.connect({browserWSEndpoint});  // 关闭 Chromium  
-await browser2.close();});
+puppeteer.launch().then(async browser => { 
+    const browserWSEndpoint = browser.wsEndpoint(); // 存储节点以便能重新连接到 Chromium   
+    browser.disconnect();  // 从 Chromium 断开和 puppeteer 的连接
+    const browser2 = await puppeteer.connect({browserWSEndpoint});  // 使用节点来重新建立连接  
+    await browser2.close(); // 关闭 Chromium  
+});
 ```
 
 ## page
@@ -103,8 +104,8 @@ waitUntil参数是来确定满足什么条件才认为页面跳转完成。包�
 const cookies = [
     {
       name: 'token',
-      value: 'system tokens', //你系统自己的token
-      domain: 'domain' //需要种在哪个domain下
+      value: 'system tokens', // 你系统自己的token
+      domain: 'domain' // 需要种在哪个domain下
     }
 ]
 await page.setCookie(...cookies)

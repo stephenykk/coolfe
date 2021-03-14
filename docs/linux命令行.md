@@ -57,7 +57,7 @@ sudo apt --fix-broken install # 修复依赖问题 并继续安装
 ## 查看帮助
 
 ```bash
-info shutdown # info 查看器 h 查看帮助 , q 退出 info 界面
+info shutdown # info 查看器 h 查看info帮助(H 查看快捷键) , q 退出 info 界面
 man shutdown # less 查看器
 ```
 
@@ -68,7 +68,8 @@ man shutdown # less 查看器
 sudo init 0
 sudo shutdown -h now
 sudo poweroff
-sudo shutdown -h 2 # 2分钟后关机
+sudo shutdown -h 2 # 定时2分钟后关机
+shutdown -c # 取消定时关机
 # 重启
 sudo init 6
 sudo shutdown -r now
@@ -120,7 +121,7 @@ sudo passwd <user> # 以root身份修改用户密码
 ### who
 
 ```bash
-who am i # 查看当前用户 详细
+whoami # 查看当前用户 详细
 who mom likes # 同上
 
 # ubuntu
@@ -323,6 +324,11 @@ find / -name issue -type f
 find / -name <keyword> -print # 从根目录开始递归地查找匹配的文件或文件夹
 find / -name "node*" -print # 从根目录开始递归地查找 node 前缀的文件或文件夹
 find . -maxdepth 2 -name "comic*"
+
+# 下面的用法会报 find: 缺少“-exec”参数 
+find images -type f -name "*.jpg" -exec echo jpg pic {}
+# 应该加斜线和分号; 如下：
+find images -type f -name "*.jpg" -exec echo jpg pic {} \; 
 ```
 
 ### xargs
@@ -337,7 +343,7 @@ xargs 默认的命令是 echo，这意味着通过管道传递给 xargs 的输�
 
 xargs 是一个强有力的命令，它能够捕获一个命令的输出，然后传递给另外一个命令。
 
-之所以能用到这个命令，关键是由于很多命令不支持|管道来传递参数，而日常工作中有有这个必要，所以就有了 xargs 命令，例如：
+之所以能用到这个命令，关键是由于很多命令不支持|管道来传递参数，而日常工作中有这个必要，所以就有了 xargs 命令，例如：
 
 - `-a file` 从文件中读入作为sdtin
 - `-e flag` ，注意有的时候可能会是-E，flag必须是一个以空格分隔的标志，当xargs分析到含有flag这个标志的时候就停止。
@@ -364,7 +370,7 @@ cat data | xargs
 cat data | xargs -n 2
 # -d 选项可以自定义一个定界符：
 echo can-you-see  | xargs -d-
-# -I 参数插值
+# -I 参数插值l
 echo -e "one\ntwo\nthree" | xargs -I {} echo the number is {} !
 # 复制所有图片文件到 /data/images 目录下
 ls *.jpg | xargs -n1 -I {} cp {} /data/images
@@ -400,6 +406,7 @@ cd
 echo hello hero > hello
 echo hello college > college
 grep -r hello .
+```
 
 # grep的规则表达式
 # [] 默认是特殊含义，其他括号默认是普通字符 需转义才是特殊含义
@@ -407,7 +414,7 @@ grep -r hello .
 ^ # 锚定行的开始 如：'^grep'匹配所有以grep开头的行。
 $ # 锚定行的结束 如：'grep$'匹配所有以grep结尾的行。
 . # 匹配一个非换行符的字符 如：'gr.p'匹配gr后接一个任意字符，然后是p。
-* # 匹配零个或多个先前字符 如：'*grep'匹配所有一个或多个空格后紧跟grep的行。
+* # 匹配零个或多个先前字符 如：' *grep'匹配所有一个或多个空格后紧跟grep的行。
 .* # 一起用代表任意字符。
 [] # 匹配一个指定范围内的字符，如'[Gg]rep'匹配Grep和grep。
 [^] # 匹配一个不在指定范围内的字符，如：'[^A-FH-Z]rep'匹配不包含A-R和T-Z的一个字母开头，紧跟rep的行。
@@ -436,6 +443,8 @@ x\{m,n\} # 重复字符x，至少m次，不多于n次，如：'o\{5,10\}'匹配5
 [:cntrl:] # 控制字符
 [:print:] # 非空字符（包括空格）
 [:punct:] # 标点符号
+
+grep -r "[[:digit:]]\{3,\}" . # 当前文件夹中查找包含3个或以上数字的文本行
 
 # 查找指定进程
 ps -ef | grep node
@@ -481,7 +490,7 @@ export PATH=/usr/local/mongodb/bin:$PATH # 临时配置
 
 # 全局配置 /etc/profile
 # vi /etc/profile , 添加 export PATH=/usr/local/mongodb/bin:$PATH 全局配置
-#source /etc/profile # 让修改立即生效
+# source /etc/profile # 让修改立即生效
 
 # 全局配置 /etc/environment
 vim /etc/environment # 全局配置 直接修改环境变量配置文件

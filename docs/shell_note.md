@@ -282,7 +282,7 @@ user=value   # 无空白符(*空格/tab*)时，可不用引号
 user='value' # 同php 字符串字面量(*单引号里面是什么就输出什么*)
 user="value" # 同php 先解析引号中的变量，命令，函数等
 
-comic=“one piece"
+comic="one piece"
 echo $comic
 echo ${comic} # 同上 明确指定变量名边界
 skill=java
@@ -360,7 +360,7 @@ echo $*
 **$\* 和 $@ 的区别**
 $* 和 $@ 都表示传递给函数或脚本的所有参数，不被双引号(" ")包含时，都以"$1" "$2" … "\$n" 的形式输出所有参数。
 
-当被引号包含时，`"$*"`会将所有的参数当做一个字符串，不再是数组
+当被引号包含时，`"$*"`会将所有的参数当做一个字符串，不再是数组; `"$@"`还是数组
 
 ```bash
 for v in $*
@@ -453,8 +453,8 @@ echo "Total value : $val"
 | `/`    | 除法   | `expr $b / $a` 结果为 2。                                                   |
 | `%`    | 取余   | `expr $b % $a` 结果为 0。                                                   |
 | `=`    | 赋值   | a=\$b 将把变量 b 的值赋给 a。                                               |
-| `==`   | 相等   | 用于比较两个数字，相同则返回 true。 [ $a == $b ] 返回 false。               |
-| `!=`   | 不相等 | 用于比较两个数字，不相同则返回 true。 [ $a != $b ] 返回 true。              |
+| `==`   | 相等   | 用于比较两个字符串，相同则返回 true。 [ $a == $b ] 返回 false。               |
+| `!=`   | 不相等 | 用于比较两个字符串，不相同则返回 true。 [ $a != $b ] 返回 true。              |
 
 **关系运算符**
 关系运算符只支持数字，不支持字符串，除非字符串的值是数字。
@@ -493,7 +493,7 @@ fi
 | =      | 检测两个字符串是否相等，相等返回 true。    | [ $a = $b ] 返回 false。 |
 | !=     | 检测两个字符串是否相等，不相等返回 true。  | [ $a != $b ] 返回 true。 |
 | -z     | 检测字符串长度是否为 0，为 0 返回 true。   | [ -z $a ] 返回 false。   |
-| -n     | 检测字符串长度是否为 0，不为 0 返回 true。 | [ -z $a ] 返回 true。    |
+| -n     | 检测字符串长度是否为 0，不为 0 返回 true。 | [ -n $a ] 返回 true。    |
 | str    | 检测字符串是否为空，不为空返回 true。      | [ $a ] 返回 true。       |
 
 **文件测试运算符**
@@ -676,19 +676,15 @@ a=10
 b=20
 
 # 方括号([ ])之间必须有空格，否则会有语法错误
+echo "a = $a"
+echo "b = $b"
+echo -n ' $a == $b ? '
 if [ $a == $b ]
 then
-   echo "a is equal to b"
+   echo yes
+else 
+    echo no
 fi
-
-if [ $a == $b ]
-then
-   echo "a is equal to b"
-else
-   echo "a is not equal to b"
-fi
-
-
 
 if [ $a == $b ]
 then
@@ -710,11 +706,12 @@ if test $[2*3] -eq $[1+5]; then echo 'The two numbers are equal!'; fi;
 # test 命令用于检查某个条件是否成立，与方括号([ ])类似。
 num1=$[2*3]
 num2=$[1+5]  # 同 num2=`epxr 1 + 5`
+echo -n 'test $[num1] -eq $[num2] : '
 if test $[num1] -eq $[num2]
 then
-    echo 'The two numbers are equal!'
+    echo yes
 else
-    echo 'The two numbers are not equal!'
+    echo no
 fi
 ```
 
@@ -736,11 +733,12 @@ Shell 中的 test 命令用于检查某个条件是否成立，它可以进行�
 ```bash
 num1=100
 num2=100
+echo -n 'test $[num1] -eq $[num2] is: '
 if test $[num1] -eq $[num2]
 then
-    echo 'The two numbers are equal!'
+    echo yes
 else
-    echo 'The two numbers are not equal!'
+    echo no
 fi
 ```
 
@@ -749,17 +747,18 @@ fi
 | --------- | -------------------- |
 | =         | 等于则为真           |
 | !=        | 不相等则为真         |
-| -z 字符串 | 字符串长度伪则为真   |
-| -n 字符串 | 字符串长度不伪则为真 |
+| -z 字符串 | 字符串长度为0 则为真   |
+| -n 字符串 | 字符串长度不为0 则为真 |
 
 ```bash
-num1=100
-num2=100
-if test num1=num2
+str1=100
+str2=100
+echo -n 'test $str1 = $str2 is: '
+if test $str1 = $str2
 then
-    echo 'The two strings are equal!'
+    echo yes
 else
-    echo 'The two strings are not equal!'
+    echo no
 fi
 ```
 
@@ -855,9 +854,17 @@ done
 in 列表是可选的，如果不用它，for 循环使用命令行的位置参数。
 
 ```bash
-for loop in 1 2 3 4 5
+for n in 1 2 3 4 5
 do
-    echo "The value is: $loop"
+    echo "The value is: $n"
+done
+
+# 默认用 位置参数 作为列表，进行遍历
+# > bash fortest.sh hello world
+# fortest.sh:
+for arg
+do
+  echo "arg is $arg"
 done
 
 for FILE in $HOME/.bash*
@@ -982,22 +989,25 @@ Hello
 
 ```bash
 #!/bin/bash
-funWithReturn(){
+add(){
     echo "The function is to get the sum of two numbers..."
     echo -n "Input first number: "
-    read aNum
+    read numA
     echo -n "Input another number: "
-    read anotherNum
-    echo "The two numbers are $aNum and $anotherNum !"
-    return $(($aNum+$anotherNum))
+    read numB
+    echo "The two numbers are $numA and $numB !"
+    
+    # 等同 return $[ $numA + $numB ]
+    # return `expr $numA + $numB`
+    return $(($numA + $numB))  
 }
-funWithReturn
+add
 # Capture value returnd by last command
 ret=$?
 echo "The sum of two numbers is $ret !"
 ```
 
-函数返回值在调用该函数后通过 \$? 来获得
+函数返回值在调用该函数后通过 `\$?` 来获得
 
 ```bash
 # 函数调函数
@@ -1016,14 +1026,15 @@ number_one
 删除函数也可以使用 unset 命令，不过要加上 .f 选项
 
 ```bash
-unset .f function_name
+unset .f function_name # 实际上不需要 .f
+unset function_name # 和删除变量一样
 ```
 
 如果你希望直接从终端调用函数，可以将函数定义在主目录下的 .profile 文件
 
 ## shell 函数参数
 
-在 Shell 中，调用函数时可以向其传递参数。在函数体内部，通过 $n 的形式来获取参数的值，例如，$1 表示第一个参数，\$2 表示第二个参数...
+在 Shell 中，调用函数时可以向其传递参数。在函数体内部，通过 `$n` 的形式来获取参数的值，例如，`$1` 表示第一个参数，`$2` 表示第二个参数...
 
 ```bash
 #!/bin/bash
@@ -1139,7 +1150,7 @@ source filename
 ## shell 常见问题总结
 ```bash
 # 批量创建文件夹
-mkdir {foo,bar}
+mkdir {foo,bar}  # 注意 逗号两边不能有空格
 mkdir {0,1,2,3}{a,b,c}
 
 即可批量创建名字为0a,0b,0c,1a,1b,1c,2a,2b,2c,3a,3b,3c的文件夹。

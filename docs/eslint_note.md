@@ -1,5 +1,12 @@
 # eslint notes
 
+[文档](http://eslint.cn/)
+
+## 简介
+
+ESLint 是一个开源的 JavaScript 代码检查工具，由 Nicholas C. Zakas 于2013年6月创建.  
+ESLint使用 Node.js 编写  
+
 ## 常用设置
 
 1. 代码段禁用 eslint

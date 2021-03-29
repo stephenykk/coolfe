@@ -134,6 +134,8 @@ git rm
     git revert <commitid> # 恢复某次提交的状态，恢复动作本身也创建次提交对象
 
     git revert HEAD # 恢复最后一次提交的状态
+
+    git revert -m 1 <merge_commit_id> # 用新的提交 取消分支合并效果
 ```
 
 ## git clean

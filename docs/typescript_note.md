@@ -76,6 +76,11 @@ tsc hello.ts
 ## 基础类型
 基本类型的批注是number, string和boolean。而弱或动态类型的结构则是any类型
 
+> any 完全不做类型检查，可以进行任意运算  
+> unkown 只能进行有限的操作和运算  
+> object 表示非原始类型  
+> {} Object 表示null undefined之外的类型，差别 Object 会对 Object.prototype 原型上的方法做检查
+
 例子
 ```ts
 function add(left:number, right: number): number {
@@ -145,7 +150,7 @@ console.log(x.hello().slice(1));
 let count; // 推断为任意类型 同 let count: any
 ```
 
-变量如果在声明的时候，未指定其类型， 也没有赋值， 那么它会被推断(类型推论)为任意值类型而完全不被类型检查
+变量如果在声明的时候，未指定其类型， 也没有赋值， 那么它会被推断(*类型推导*)为任意值类型而完全不做类型检查
 
 ## 数组
 
@@ -174,8 +179,6 @@ console.log(tup[0])
 
 // 越界访问元组元素，会重复已知类型去做推断 ::不会推导后面元素类型，不确定是否可配置
 // tup: [string, number, string, number, ...]
-tup[2] = 'zoro'
-tup[3] = true // 报错，该位置推断为 number
 
 ```
 
@@ -357,7 +360,7 @@ interface IFood {
 function getFood2({name, color}: IFood): string {
     return `this ${name} color is ${color}`
 }
-
+// 对象字面量做额外属性检查 导致类型报错
 getFood2({name: 'alice', color: 'red', age: 12}) // error 包含额外字段 age
 getFood2({name: 'alice', color: 'red', age: 12} as IFood) // ok
 // 或者 修改接口 支持其他字段
@@ -379,13 +382,16 @@ rolist[1] = 10 // error readonly
 // const 定义的变量不可重新赋值，但是其属性值是可改变的，而 readonly 定义的属性不可改变。
 ```
 
+> 索引签名 和 调用签名  
+> 接口可以用来描述 函数类型 数组类型和对象类型  
+
 使用接口表示函数类型时，需要给接口定义一个调用签名，用来描述函数的参数和返回值的类型。如下：
 ```ts
-interface FuncInterface {
+interface SumFn {
   (num1: number, num2: number): number
 }
 
-let add: FuncInterface = (n1, n2) => {
+let add: SumFn = (n1, n2) => {
   return n1 + n2
 }
 add(2, 5)
@@ -411,11 +417,11 @@ interface BaseInfo {
   age: number
 }
 
-interface AddressInfo extends BaseInfo {
+interface UserInfo extends BaseInfo {
   address: string
 }
 
-const userInfo: AddressInfo = {
+const userInfo: UserInfo = {
   name: 'jack',
   age: 12,
   address: 'shanghai'
@@ -444,7 +450,7 @@ interface Counter {
   // 函数属性及类型
   count: number;
   // 函数方法及返回值
-  rest(): void;
+  reset(): void;
 }
 
 // 定义一个函数，该函数返回Counter类型的函数
@@ -453,7 +459,7 @@ function getCounter(): Counter {
     getCount.count++
   }
   getCount.count = 0
-  getCount.rest = function () {
+  getCount.reset = function () {
     this.count = 0
   }
   return getCount
@@ -462,7 +468,7 @@ function getCounter(): Counter {
 const getCount = getCounter()
 getCount()        // 1
 getCount()        // 2
-getCount.rest()   // 0
+getCount.reset()   // 0
 ```
 
 ## 箭头函数表达式（lambda表达式）

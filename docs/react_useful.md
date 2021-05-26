@@ -8,3 +8,4 @@
 ## react hooks
 
 [React Hooks 系列](https://segmentfault.com/a/1190000023923059)
+[React Hook快速入门](https://segmentfault.com/a/1190000019438921)

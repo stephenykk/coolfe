@@ -85,8 +85,8 @@
 
 ### yarn cache
 
-    # Yarn 会在用户目录下创建缓存文件夹，保存下载过的包, `yarn cache ls` 列出所有缓存的包
-    yarn cache ls
+    # Yarn 会在用户目录下创建缓存文件夹，保存下载过的包, `yarn cache list` 列出所有缓存的包
+    yarn cache list
 
     # 打印当前yarn的全局缓存文件夹
     yarn cache dir

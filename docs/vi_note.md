@@ -16,7 +16,7 @@ vimtutor
 # 在vi/vim中 按冒号(:) 进入末行命令模式
 # s 代表替换 substitute  [范围]/from/to/[所有]
 # g 代表查找 grep
-# 选项 /gci  global confirm ignoreCase 
+# 选项 /gci  global confirm ignoreCase
 
 :s/vivian/sky/ # 替换当前行第一个 vivian 为 sky
 :s/vivian/sky/g # 替换当前行所有 vivian 为 sky
@@ -29,6 +29,7 @@ vimtutor
 ```
 
 ## 删除
+
 ```bash
 :3d # 删除第3行
 :1,10d # 删除第1-10行
@@ -50,13 +51,16 @@ dL # 删除从当前行到屏幕末行的内容
 ```
 
 ## 其他命令
+
 ```bash
 :set ic   # 忽略大小写 (ic 是 ignore case 的缩写)
 :set noic  # 不忽略大小写
 :set nu # 显示行号
 :set nonu # 不显示行号
 ```
+
 ## 多个文件编辑和切换
+
 ```bash
 # 打开多个文件
 vim file1 file2 ... filen
@@ -85,4 +89,6 @@ ctrl + w , j / k / h / l
 :wqa  # 保存所有窗口 并退出
 :qa!  # 强制退出所有窗口
 
+# 重复上一条命令
+`.`
 ```

@@ -76,6 +76,13 @@ git d hashid
 
     # 添加公钥到github后台后，验证秘钥可用
     ssh -T git@github.com
+
+    # pem 转换为 crt 格式证书
+    openssl x509 -outform der -in your-cert.pem -out your-cert.crt
+
+    # 生成证书
+    openssl genrsa > cert.key
+    openssl req -new -x509 -days 365 -key cert.key > cert.pem     #生成证书,需要输入信息
 ```
 
 ## git remote

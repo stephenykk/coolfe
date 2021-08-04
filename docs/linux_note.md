@@ -190,8 +190,8 @@ alias # 查看别名
 su - <user> # 切换用户 工作目录也切换到目标用户的home目录
 su <user> # 只切换用户
 
-
-tar -zxvf demo.tar.gz -C /home/pan # 解压到指定路径下
+tar -cvzf demo.tgz demoDir # 压缩文件夹
+tar -zxvf demo.tar.gz -C /home/pan # 解压到指定路径下(该路径需要真实存在)
 
 ```
 

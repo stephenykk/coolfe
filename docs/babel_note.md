@@ -110,3 +110,46 @@ module.exports = {
 ```
 
 ##
+
+Babel 配置文件
+一、配置文件
+
+在前面几小节，我们已经简单使用过 Babel 的配置文件了。现在我们来深入学习它。
+
+无论是通过命令行工具 babel-cli 来进行编译，还是 webpack 这类的构建工具，通常情况下，我们都需要建立一个 Babel 配置文件来指定编译的规则。
+
+Babel 的配置文件是 Babel 执行时默认会在当前目录寻找的文件，主要有.babelrc，.babelrc.js，babel.config.js 和 package.json。它们的配置项都是相同，作用也是一样的，只需要选择其中一种。
+
+对于.babelrc，它的配置是这样子
+{
+"presets": ["es2015", "react"],
+"plugins": ["transform-decorators-legacy", "transform-class-properties"]
+}
+
+对于 babel.config.js 和.babelrc.js，它的配置是一样的，通过 module.exports 输出配置项
+
+```nodejs
+  module.exports = {
+    "presets": ["es2015", "react"],
+    "plugins": ["transform-decorators-legacy", "transform-class-properties"]
+  }
+```
+
+对于 package.json，就是在 package.json 中增加一个 babel 属性和值，它的配置是这样子
+
+```json
+{
+  "name": "demo",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "babel": {
+    "presets": ["es2015", "react"],
+    "plugins": ["transform-decorators-legacy", "transform-class-properties"]
+  }
+}
+```

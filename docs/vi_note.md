@@ -1,6 +1,6 @@
 # vi notes
-
-[Linux vi/vim 入门教程](https://www.runoob.com/linux/linux-vim.html)
+[Linux vi/vim入门教程](https://www.runoob.com/linux/linux-vim.html)  
+[linux使用文本编辑器vi常用命令](https://www.cnblogs.com/yaohong/p/7498998.html)
 
 `vimtutor` 是很好的入门教程
 

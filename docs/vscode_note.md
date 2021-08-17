@@ -195,6 +195,12 @@ ctrl + k, ctrl + t 选择主题
 },
 ```
 
+### 连续输入.点符号时，自动提示并采用默认建议值，与扩展运算符冲突 关闭这个功能
+
+1. ctrl + , 打开设置
+2. 搜索 acceptSuggestionOnCommitCharacter， 取消勾选
+
+
 ## 调试代码 
 [vscode debug 教程](https://www.php.cn/tool/vscode/434674.html)
 

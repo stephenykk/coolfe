@@ -192,6 +192,7 @@ su <user> # 只切换用户
 
 tar -cvzf demo.tgz demoDir # 压缩文件夹
 tar -zxvf demo.tar.gz -C /home/pan # 解压到指定路径下(该路径需要真实存在)
+tar -tvf demo.tar  # 查看压缩包内容
 
 ```
 

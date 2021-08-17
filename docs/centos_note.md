@@ -74,7 +74,8 @@ service sshd start
    ```bash
    systemctl get-default
    # graphical-target 位于 /etc/systemd/system
-   systemctl set-default graphical-target
+   # centos 7 graphic.target 位于 /usr/lib/systemd/system 
+   systemctl set-default graphical.target
    ```
 4. 重启 `sudo init 6`
 

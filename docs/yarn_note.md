@@ -83,6 +83,12 @@
 
 查看当前目录下的 `yarn bin` 目录(可执行文件的存放目录), 同 `npm bin`
 
+```bash
+yarn bin  # 当前目录下的bin文件夹
+yarn global bin # 全局安装包的bin文件夹 eg: yarn global add lerna 会状态 global bin文件夹中
+
+```
+
 ### yarn cache
 
     # Yarn 会在用户目录下创建缓存文件夹，保存下载过的包, `yarn cache list` 列出所有缓存的包
@@ -105,3 +111,14 @@
 校验当前项目的 `package.json` 文件里的依赖版本和 `yarn.lock`文件中列出的版本是否匹配
 
 `yarn check --integrity` 检验包是否被篡改..
+
+
+### yarn config
+
+```bash
+yarn config list
+yarn config set hello alice
+yarn config get hello
+yarn config delete hello  # yarn config list 确认
+
+```

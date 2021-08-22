@@ -475,3 +475,9 @@ reset 的其他用法
 
 
     > git config 有三个作用域system，globe，local。优先级是local>globe>system。
+- 解决github上传ssh-key后仍须输入密码的问题
+    因为 git clone 时，用的不是git@github.com:username/reponame.git 这种格式，用的是https; 所以修改一下git配置即可
+    在项目根目录下执行 `vi .git/config`, `url=https://xxx` 改为 `git@github.com:<userName>/<repoName>.git`
+
+    
+

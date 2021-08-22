@@ -29,7 +29,7 @@
 查找会话
 
 - `ctrl + f`
-- quickExec box `? keyword` , `select image`, `@targetHostnmae`, `=304`
+- quickExec box `? keyword` , `select image`, `@target Hostnmae`, `=304`
 
 会话对比
 选择两个会话，点击右键-compare(**需安装对比工具 winMerge**), 这很有用(_两个请求，1 个成功返回， 1 个报错或被重定向了，这时可以对比两个 session_)

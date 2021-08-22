@@ -434,6 +434,8 @@ reset 的其他用法
 - remote origin 用 git 协议的 url, push 操作时，提示 _Connection reset by 13.229.188.59 fatal: Could not read from remote repository._  
   `git config --global credential.helper store` 记录上次的密码 不用每次都输入啦！
 
+    > 删除存储的账号密码 vim ~/.git-credentials
+
 - 遇到 warning: LF will be replaced by CRLF 警告  
 
     > 首先问题出在不同操作系统所使用的换行符是不一样的，下面罗列一下三大主流操作系统的换行符：

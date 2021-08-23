@@ -9,3 +9,8 @@
 ## 常用插件
 
 [Webpack 插件: webpackbar & progress-bar-webpack-plugin 进度条插件](https://blog.csdn.net/weixin_44691608/article/details/117558101)
+
+[html-webpack-plugin详解](https://www.cnblogs.com/wonyun/p/6030090.html)
+
+## 常见问题
+[webpack配置typescript项目 - 独角兕大王](https://www.cnblogs.com/double-W/p/13038799.html)

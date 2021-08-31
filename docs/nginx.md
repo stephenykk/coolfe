@@ -46,6 +46,34 @@ Nginx 是一个高性能且开源的 HTTP 和反向代理 Web 服务器，同时
 
 ![server 块配置](https://upload-images.jianshu.io/upload_images/658641-02caaa1bc69a795f.png)
 
+配置示例
+
+```js
+user nobody nobody;
+worker_processes 2;
+err_log logs/error.log notice;
+pid logs/nginx.pid;
+
+events {
+  use epoll;
+  worker_connections 1000; # 每个nginx进程的最大连接数
+}
+
+http {
+  include mime.types;
+  default_type application/octest-stream;
+  sendfile on;
+  keepalive_timeout 60; # 长连接的超时时间
+
+  server {
+    listen 88;
+    server_name localhost;
+    location / {
+      root html;
+    }
+  }
+}
+```
 ### location 块
 
 URL 地址匹配是进行 Nginx 配置中最灵活的部分。 location 支持正则表达式匹配，也支持条件判断匹配，用户可以通过 location 指令实现 Nginx 对动、静态网页进行过滤处理。使用 location URL 匹配配置还可以实现反向代理，用于实现 PHP 动态解析或者负载负载均衡。
@@ -66,6 +94,7 @@ alias 与 root 的区别
     # curl localhost/blogs/a.html -> /home/jie/blogs/a.html
     # curl localhost/blogs 显示文件列表
     # localhost/blogshaha 也会匹配到 只要root下有对应目录即可
+    # curl localhost/lastyear/blogs 即使root下有对应目录也不会匹配到 `location /blogs`只匹配url以`/blogs`开头的情况
 
     location /comics {
       alias /home/pan/manhua; # alias值替代/comics,
@@ -78,6 +107,8 @@ alias 与 root 的区别
     }
     # curl localhost/docs/hello.txt 会查找 /home/pan/docs/hello.txt
 
+    # curl localhost/documents/a.jpg -> 会匹配 configuration E
+    # 以 /documents/ 开头这个专指度比较低，所以会继续查找 正则匹配 规则
     location /documents/ {
       # matches any query beginning with /documents/ and continues searching,
       # so regular expressions will be checked. This will be matched only if
@@ -103,19 +134,19 @@ alias 与 root 的区别
 
 `location [=|~|~*|^~] /uri/ { … }`
 
-- = 开头表示精确匹配
+- `=` 表示精确匹配
 
-- ^~ 开头表示 uri 以某个常规字符串开头，理解为匹配 url 路径即可。nginx 不对 url 做编码，因此请求为/static/20%/aa，可以被规则^~ /static/ /aa 匹配到（注意是空格）。
+- `^~` 表示区分大小写的正则匹配uri的开始位置
 
-- ~ 开头表示区分大小写的正则匹配
+- `~` 表示区分大小写的正则匹配
 
-- ~\* 开头表示不区分大小写的正则匹配
+- `~*` 表示不区分大小写的正则匹配
 
-- !~和!~\*分别为区分大小写不匹配及不区分大小写不匹配 的正则
+- `!~` 和 `!~*` 分别为区分大小写不匹配及不区分大小写不匹配 的正则 *不用在 location 后面*
 
-- / 通用匹配，任何请求都会匹配到。
+- `/` 通用匹配，任何请求都会匹配到。
 
-首先匹配 =，其次匹配^~, 其次是按文件中顺序的正则匹配，最后是交给 / 通用匹配。当有匹配成功时候，停止匹配，按当前匹配规则处理请求。
+首先匹配 `=`，其次匹配 `^~` , 其次是按文件中顺序的正则匹配，最后是交给 `/` 通用匹配。当有匹配成功时候，停止匹配，按当前匹配规则处理请求。
 
 ```js
 // http://localhost/ 将匹配规则A
@@ -138,7 +169,7 @@ location ~ \.(gif|jpg|png|js|css)$ {
 location ~* \.png$ {
    # 规则E
 }
-// http://localhost/a.XHTML
+// http://localhost/a.XHTML 不确定是否有效
 location !~ \.xhtml$ {
    # 规则F
 }
@@ -154,30 +185,30 @@ location / {
 
 ### ReWrite 语法
 
-- last – 基本上都用这个 Flag。
-- break – 中止 Rewirte，不再继续匹配
-- permanent – 返回永久重定向的 HTTP 状态 301
-- redirect – 返回临时重定向的 HTTP 状态 302
+- `last`  基本上都用这个 Flag。
+- `break`  中止 Rewirte，不再继续匹配
+- `permanent`  返回永久重定向的 HTTP 状态 301
+- `redirect`  返回临时重定向的 HTTP 状态 302
 
 **last 和 break 关键字的区别**
 
 - last 和 break 当出现在 location 之外时，两者的作用是一致的没有任何差异
 
 - last 和 break 当出现在 location 内部时：
-  - last 使用了 last 指令，rewrite 后会跳出 location 作用域，重新开始再走一次刚才的行为
-  - break 使用了 break 指令，rewrite 后不会跳出 location 作用域，它的生命也在这个 location 中终结
+  - `last` 使用了 last 指令，rewrite 后会跳出 location 作用域，重新开始再走一次刚才的行为
+  - `break` 使用了 break 指令，rewrite 后不会跳出 location 作用域，它的生命也在这个 location 中终结
 
 **permanent 和 redirect 关键字的区别**
 
-- permanent 永久性重定向，请求日志中的状态码为 301
-- redirect 临时重定向，请求日志中的状态码为 302
+- `permanent` 永久性重定向，请求日志中的状态码为 301
+- `redirect` 临时重定向，请求日志中的状态码为 302
 
 ### 下面是可以用来判断的表达式：
 
-- -f 和!-f 用来判断是否存在文件
-- -d 和!-d 用来判断是否存在目录
-- -e 和!-e 用来判断是否存在文件或目录
-- -x 和!-x 用来判断文件是否可执行
+- `-f` 和 `!-f` 用来判断是否存在文件
+- `-d` 和 `!-d` 用来判断是否存在目录
+- `-e` 和 `!-e` 用来判断是否存在文件或目录
+- `-x` 和 `!-x` 用来判断文件是否可执行
 
 ### 下面是可以用作判断的全局变量
 
@@ -243,22 +274,116 @@ location ~* \.(txt|doc)${
 $args;
 $content_length;
 $content_type;
+
 $document_root;
 $document_uri;
+
 $host;
+$query;
+
+// header 可加上http_前缀访问
+$http_origin;
 $http_user_agent;
 $http_cookie;
+
 $limit_rate;
+
 $request_body_file;
 $request_method;
+$request_uri;
+$request_filename;
+
 $remote_addr;
 $remote_port;
 $remote_user;
-$request_filename;
-$request_uri;
-$query;
 ```
 
 ## 负载均衡配置
 
 [负载均衡的 5 种策略](https://www.cnblogs.com/andashu/p/6377323.html)
+
+nginx的upstream目前支持的5种方式的分配
+
+
+1、轮询（默认）
+每个请求按时间顺序逐一分配到不同的后端服务器，如果后端服务器down掉，能自动剔除。
+
+```js
+upstream backserver {
+  server 192.168.0.14;
+  server 192.168.0.15;
+}
+```
+
+2、指定权重
+指定轮询几率，weight和访问比率成正比，用于后端服务器性能不均的情况。
+
+```js
+upstream backserver {
+  server 192.168.0.14 weight=10;
+  server 192.168.0.15 weight=10;
+}
+
+```
+
+3、IP绑定 ip_hash
+每个请求按访问ip的hash结果分配，这样*每个访客固定访问一个后端服务器，可以解决session的问题*。
+```js
+upstream backserver {
+  server 192.168.0.14:88;
+  server 192.168.0.15:80;
+  ip_hash;
+}
+```
+4、fair（第三方）
+按后端服务器的响应时间来分配请求，响应时间短的优先分配。
+```js
+upstream backserver {
+  server 192.168.0.14:88;
+  server 192.168.0.15:80;
+  fair;
+}
+```
+5、url_hash（第三方）
+按访问url的hash结果来分配请求，使*每个url定向到同一个后端服务器，后端服务器为缓存时比较有用*。
+
+```js
+upstream backserver {
+  server squid1:3128;
+  server squid2:3128;
+  hash $request_uri;
+  hash_method crc32;
+}
+```
+
+### 配置举例
+
+```js
+// 在需要使用负载均衡的server中增加
+events {
+  // todo
+}
+
+http {
+  upstream backserver{
+    ip_hash;
+    server 127.0.0.1:9090 down;  # (down 表示当前的server暂时不参与负载)
+    server 127.0.0.1:8080 weight=2; # (weight 默认为1.weight越大，负载的权重就越大)
+    server 127.0.0.1:6060;
+    server 127.0.0.1:7070 backup; # (其它所有的非backup机器down或者忙的时候，请求backup机器)
+  }
+
+  server {
+    listen 88;
+    server_name localhost;
+
+    proxy_pass http://backserver/;
+
+    location / {
+      root html;
+      autoindex on;
+    }
+  }
+}
+
+```

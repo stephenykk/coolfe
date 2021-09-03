@@ -274,6 +274,12 @@ rmdir -p hello/world/folderA # 删除
 mv <src> <dest> # dest为文件夹则把 src 移入; dest为文件或不存在则移动
 mv srcDir destDir # 把 srcDir 移入 destDir; 若 destDir 不存在，则重命名 srcDir 为 destDir
 mv srcDir/* destDir # 把 srcDir 的内容移入 destDir
+
+# 移动时排除某个文件或文件夹
+mv !(child1|child2) child1
+# 若提示 !: event not found 则扩展模式匹配操作符
+shopt -s extglob
+
 ```
 
 ### cp

@@ -1,5 +1,6 @@
 # npm note
 
+[npm scripts 使用指南 - 阮一峰的网络日志](http://www.ruanyifeng.com/blog/2016/10/npm_scripts.html)
 ## 发布包(publish)
 
 1. npm adduser  

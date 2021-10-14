@@ -18,18 +18,20 @@
 openssl genrsa -des3 -out rootCA.key 2048
 
 # 使用生成的密钥创建新的根SSL证书。将它保存到一个名为rootCA.pem的文件中。
-# 本证书有效期为1024天 你可以随意把它改成你想要的天数
+# 本证书有效期为1024天 你可以随意把它改成你想要的天数kk
 # x509表示自签名的证书
+# 需要输入一些基本信息 Common Name 比较关键，可以先输入 localhost 因为这个是根证书
 openssl req -x509 -new -nodes -key rootCA.key -sha256 -days 1024 -out rootCA.pem
+
 
 # 2. 信任根SSL证书
 # windows
-# win + r , 输入 certlm.msc
+# win + r , 输入 certlm.msc  (或者 certmgr.msc 用这个好一点)
 # 右键 受信任的根证书颁发机构/证书 -- 所有任务 -- 导入 选择上面创建的 rootCA.pem
 
 
 # 3. 创建域SSL证书
-# 现在可以使用根SSL证书专门为位于localhost（或指定的域名）的本地开发环境颁发证书
+# 现在可以使用根SSL证书专门为位于localhost（或指定的域名 *.hello.com）的本地开发环境颁发证书
 
 # 创建 openssl配置文件 server.csr.cnf 避免在命令行输入的不便
 
@@ -49,7 +51,7 @@ emailAddress=hello@example.com
 CN = localhost
 
 # CN 为common name, 关键参数，指定为证书将使用的域名（最终提供web服务的域名）
-
+# CN = *.hello.com
 
 # 创建一个v3.ext文件以创建一个X509 v3证书。注意这里是如何指定subjectAltName的
 
@@ -60,6 +62,8 @@ subjectAltName = @alt_names
  
 [alt_names]
 DNS.1 = localhost
+
+# DNS.1 = *.hello.com
 
 
 # 使用server.csr.cnf中存储的配置设置为本地主机创建证书密钥。此密钥存储在server.key中

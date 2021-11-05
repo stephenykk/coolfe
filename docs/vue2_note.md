@@ -1,5 +1,9 @@
 # vue2.x notes
 
+## 有用的文章
+- [通过 v-bind=“$props“ 以及v-bind=“$attrs“ 实现属性透传_无声的code的博客-CSDN博客](https://blog.csdn.net/weixin_40542544/article/details/108598970)
+
+- [手摸手，带你优雅的使用 icon - 掘金](https://juejin.cn/post/6844903517564436493)
 我们不仅可以把数据绑定到 DOM 文本`{{msg}}` 或 attribute `v-bind:show="true"`，还可以绑定到 DOM 结构 `v-if`
 
 Vue 也提供一个强大的过渡效果系统，可以在 Vue 插入/更新/移除元素时自动应用过渡效果。

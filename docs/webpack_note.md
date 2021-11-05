@@ -16,3 +16,6 @@
 [webpack配置typescript项目 - 独角兕大王](https://www.cnblogs.com/double-W/p/13038799.html)
 
 (配置babel-loader处理JSX语法 - 半忧夏 - 博客园)https://www.cnblogs.com/banyouxia/p/12169430.html
+
+## 有用文章
+- [https://www.jianshu.com/p/c894ea00dfec](使用require.context实现前端工程自动化 - 简书)

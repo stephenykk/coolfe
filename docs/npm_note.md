@@ -336,3 +336,10 @@ npm explore  lodash
 
 - pm2 : node 应用进程管理及状态监测
 - n : node 版本管理
+
+
+## 常见问题
+
+1. node-sass安装或编译失败：MSBUILD : error MSB3428: 未能加载 Visual C++ 组件“VCBuild.exe”
+   > 错误原因：缺少windows构建插件
+   > 解决方法：npm install --global --production windows-build-tools  （如果目录在C盘下，需要管理员权限运行，全局安装windows构建工具）

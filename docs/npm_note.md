@@ -78,10 +78,72 @@
     cd ../foo
     npm i ../bar
     npm ls # 本地包链接到了当前项目 类似 npm link, 修改本地包代码，在当前项目能立即看到效果
+
   ```
 
 - npm i -g express # 全局安装
 
+### package-lock.json 锁版本效果测试
+1. package.json依赖项
+   ```json
+   {
+     "name": "my-packages",
+     "version": "1.0.0",
+     "main": "index.js",
+     "dependencies": {
+       "sunice": "^4.0.4"
+     },
+   }
+   ```
+2. package-lock.json 已有锁版本记录
+   ```json
+      {
+        "name": "my-packages",
+        "version": "1.0.0",
+        "lockfileVersion": 1,
+        "requires": true,
+        "dependencies": {
+          "sunice": {
+            "version": "4.0.4",
+            "resolved": "https://registry.npmjs.org/sunice/-/sunice-4.0.4.tgz",
+            "integrity": "sha512-C7qkUg9yGmiuxqxOfNhQ11db9HgrE1vKHZmt9OsjOnATaVJG16mc9QaPOXVXwhWPnVrDzLTYqRk+F64z1nwSPA=="
+          }
+        }
+      }
+   ```
+3. `sunice` 升级到 `4.0.5`, 在my-packages项目下，直接 `npm i`, 并不会安装新版本
+4. 在my-packages项目下 `npm i sunice` 安装新版本，并更新 `package.json` 和 `package-lock.json`
+5. 回退到旧版本 
+   `npm i sunice@4.0.3` 会安装旧版本，并更新 `package.json` 和 `package-lock.json`
+6. `npm i sunice` 只会安装最新的正式包 `4.0.5` 而不会安装 更新的 `4.0.6-beta.1`
+7. `npm i sunice@beta` 会安装最新的beta版 `4.0.6-beta.1` 并且更新 `package.json`和`package-lock.json`
+8. 修改`package.json` sunice 改为旧版本 `4.0.4`, `package-lock.json`不改动, `npm i` 会安装旧版本，并更新 `package-lock.json`
+
+
+### 为什么需要 lockfiles？
+
+   > npm install 的输入是 package.json，它的输出是一棵 node_modules 树。理想情况下，npm install 应该像纯函数一样工作，对于同一个 package.json 总是生成完全相同的 node_modules 树。在某些情况下，确实如此。但在其他很多情况中，npm 无法做到这一点。有以下原因：
+
+   - 不同版本的 npm 的安装算法不同。 
+   - 某些依赖项自上次安装以来，可能已发布了新版本，因此将根据 package.json 中的 semver-range version 更新依赖。  
+     某个依赖项的依赖项可能已发布新版本，即使您使用了固定依赖项说明符（1.2.3 而不是 ^1.2.3），它也会更新。比如 packageA 的依赖项是 packageB，packageA 在 package.json 中写死成 1.2.3，它的依赖项 packageB 的版本写的是 ^3.4.5，假定此时 packageB 的最新版本是 3.4.5，那么运行 npm install，下载的 packageB 是 3.4.5，一段时间之后，如果 packageB 的最新版本变成 3.8.3，那么，此时团队其他成员运行 npm install，下载的 packageB 就是 3.8.3。所以，对于同一份 package.json，会生成不同 node_modules tree。为了解决这个问题，需要 lockfiles
+
+   > 为了在不同的环境下生成相同的 node_modules，npm 使用 package-lock.json 或 npm-shrinkwrap.json。这两个文件都被称为 lockfiles。无论何时运行 npm install，npm 都会生成或更新 lockfiles。
+   > package-lock.json不会被发布，npm-shrinkwrap.json可以被发布
+
+### 发布beta包
+发布 beta 版或 alpha 版和发布最终版非常相似。唯一的区别是 publish 命令中的 —tag 标志。
+```sh
+npm version 4.0.6-beta.1 # 修改 package.json version 字段，git commit and  git tag
+npm publish --tag beta
+
+# 安装beta版本
+npm i sunice@beta
+
+# npm i sunice  
+# 等同于 npm i sunice@latest
+# beta, latest 都是 npm 的 dist-tags
+```
 ## 查看已安装的包(list , ls)
 
 - npm ls vue

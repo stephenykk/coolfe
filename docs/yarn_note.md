@@ -122,3 +122,13 @@ yarn config get hello
 yarn config delete hello  # yarn config list 确认
 
 ```
+
+
+### yarn 升级 yarn 3
+
+1. 升级的好处和操作指南
+[升级Yarn 2，大规模瘦身node_modules](https://mp.weixin.qq.com/s/_Xz9dhf77ngz8CnGzk8thw)
+
+2. unsafe http whitelist 
+
+[yarn 2 berry 配置 http白名单](https://keqingrong.cn/blog/2021-02-19-proxy-and-pac/)

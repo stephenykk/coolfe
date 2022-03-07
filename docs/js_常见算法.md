@@ -370,10 +370,7 @@ console.log('depth is:', getTreeDepth(tree))
 
 // 生成二叉树
 function btree(n = 10) {
-  var arr = Array.from({ length: n }).map((val, i) => i + 1);
-  function node(val) {
-    return { val, left: null, right: null };
-  }
+  var nodes = Array.from({ length: n }).map((val, i) => ({val: i + 1, left: null, right: null));
 
   function branch(pnode, side, nodeList) {
     if (!arr.length) return;
@@ -382,18 +379,18 @@ function btree(n = 10) {
   }
 
   // 创建分支, 为每层级的父节点分配2个子节点
-  function makeBranches(pnodes) {
-    if (!pnodes.length) return;
-    const nextPnodes = [];
-    pnodes.forEach((pnode) => {
-      branch(pnode, "left", nextPnodes);
-      branch(pnode, "right", nextPnodes);
-    });
-    makeBranches(nextPnodes);
+  function mkBtree(layer) {
+    if (!layer.length) return;
+    const nextLayer = layer.reduce((newLayer, pnode) => {
+      pnode.left = nodes.shift()
+      pnode.right = nodes.shift()
+      newLayer.push(pnode.left, pnode.right)
+    }, []);
+    mkBtree(next);
   }
 
   const root = node(arr.shift());
-  makeBranches([root]);
+  mkBtree([root]);
   return root;
 }
 
@@ -491,5 +488,81 @@ function walkBtree2(n) {
 // walkBtree(10);
 // console.log("------------------");
 // walkBtree2(10);
+
+```
+
+promise简单实现
+
+```js
+
+function MyPromise(callback) {
+  this.state = 'pending'
+  this.resolveVal = null
+  this.rejectVal = null
+  this.resolveListeners = []
+  this.rejectListeners = []
+
+  const resolve = (val) => {
+    if (this.state === 'pending') {
+      this.state = 'resolved'
+      this.resolveVal = val
+      this.resolveListeners.forEach(listener => listener(val))
+    }
+  }
+
+  const reject = (val) => {
+    if(this.state === 'pending') {
+      this.state = 'rejected'
+      this.rejectVal = val
+      this.rejectListeners.forEach(listener => listener(val))
+    }
+  }
+
+  try {
+    callback(resolve, reject)
+  }catch(err) {
+    reject(err)
+  }
+}
+
+MyPromise.prototype.then = function(resolveFn, rejectFn) {
+  if (this.state === 'resolved' && typeof resolveFn === 'function') {
+    resolveFn(this.resolveVal)
+  }
+  if (this.state === 'rejected' && typeof rejectFn === 'function') {
+    rejectFn(this.rejectVal)
+  }
+
+  if(typeof resolveFn === 'function') {
+    this.resolveListeners.push(resolveFn)
+  }
+
+  if(typeof rejectFn === 'function') {
+    this.rejectListeners.push(rejectFn)
+  }
+
+  // return new promise, which will resolve/reject by last promise
+  return new MyPromise((resolve, reject) => {
+    this.resolveListeners.push(resolve)
+    this.rejectListeners.push(reject)
+  })
+}
+
+MyPromise.prototype.catch = function(rejectFn) {
+  return this.then(null, rejectFn)
+}
+
+MyPromise.prototype.finally = function(callback) {
+  return this.then(callback, callback)
+}
+
+const promise = new MyPromise((resolve, reject) => {
+  // setTimeout(() => resolve('success'), 1000)
+  setTimeout(() => reject('fail'), 1000)
+});
+const nextPromise = promise.then(console.log.bind(console, 'suc::'), console.log.bind(console, 'fail::'))
+nextPromise.then(console.log.bind(console, 'next succ::'), console.log.bind(console, 'next fail::'))
+  .catch(console.log.bind(console, 'next err:'))
+  .finally(console.log.bind(console, 'finally cb:'))
 
 ```

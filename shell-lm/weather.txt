@@ -1,0 +1,5 @@
+rainy
+windy
+sunny
+cloundy
+stormy

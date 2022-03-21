@@ -72,7 +72,8 @@ git d hashid
 
 ```bash
     # 生成秘钥对
-    ssh-keygen -t rsa -C "yourname@example.com"
+    ssh-keygen -t rsa -C "yourname@example.com" # -t rsa 方式会提示安全算法不再支持
+    ssh-keygen -t ed25519 -C "stephenykk@163.com"
 
     # 添加公钥到github后台后，验证秘钥可用
     ssh -T git@github.com
@@ -333,7 +334,7 @@ git d hashid
 
     # 找出包含指定 tag/commit 的分支
     git branch --contains tags/<tag>
-    git branch --contains< commit> 
+    git branch --contains< commit>
 ```
 
 ## git pull

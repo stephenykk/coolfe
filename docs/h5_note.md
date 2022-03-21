@@ -127,3 +127,17 @@ HTML5 新版本特性
 - 新的表单控件，比如 `calendar` `date` `time` `email` `url` `search`
 - drag & grop
 - 提供外部应用和浏览器内部数据之间的开放接口
+
+## localStorage遍历
+
+```js
+const len = localStorage.length
+let i = 0;
+while(i++ < len) {
+  const curKey = localStorage.key(i) // 获取当前key
+  const curVal = localStorage.getItem(key)
+  console.log(`${curKey}: ${curVal}`)
+}
+
+// sessionStorage的遍历同上
+```

@@ -143,9 +143,37 @@ console.log(yamldoc);
 ```
 
 ## chalk
+文本着色
 
+```js
+console.log(require('chalk').green('hello world'))
+```
 ## minimist
+解析命令行参数
 
+### 文档
+`npm home minimist`
+
+### 使用
+```js
+var argv = require('minimist')(process.argv.slice(2))
+console.log(argv);
+```
+示例
+```shell
+$ node example/parse.js -a beep -b boop
+{ _: [], a: 'beep', b: 'boop' }
+
+$ node example/parse.js -x 3 -y 4 -n5 -abc --beep=boop foo bar baz
+{ _: [ 'foo', 'bar', 'baz' ],
+  x: 3,
+  y: 4,
+  n: 5,
+  a: true,
+  b: true,
+  c: true,
+  beep: 'boop' }
+```
 ## prompt
 
 ## commander

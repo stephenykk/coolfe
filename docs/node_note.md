@@ -1,5 +1,7 @@
 # nodejs note
 
+[Node.js 简介](http://nodejs.cn/learn)
+
 ```shell
 node [options] [V8 options] [script.js | -e "script" | - ] [arguments]
 ```

@@ -6,6 +6,8 @@
 - [webpack 中文文档](https://webpack.docschina.org/)
 - [webpack 中文文档 2](https://www.webpackjs.com/concepts/)
 - [typescript 教程](http://ts.xcatliu.com/)
+- [网道](https://wangdoc.com)
+- [廖雪峰](https://www.liaoxuefeng.com/wiki/1252599548343744)
 
 | 综合类                                        | 地址                                                                                               |
 | --------------------------------------------- | -------------------------------------------------------------------------------------------------- |
@@ -39,4 +41,3 @@
 [前端基础进阶](https://segmentfault.com/a/1190000012646488) _很好很系统的文章_
 
 [浏览器的强缓存和协商缓存](https://segmentfault.com/a/1190000021661656)
-f

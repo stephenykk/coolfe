@@ -41,9 +41,10 @@ line
 
 dir=${dir%/}
 
-for f in `ls "$dir"`
+for f in `ls -A "$dir"`
 do
-  if [[ ! "$f" =~ ^note ]]
+  # if [[ ! "$f" =~ ^note ]]
+  if [ "$f" != "note.md" ]
   then
     echo "$dir/$f"
     rm -rf "$dir/$f"

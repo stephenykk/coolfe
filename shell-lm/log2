@@ -1,0 +1,8 @@
++ echo hello world
+hello world
++ ls not-this-file
+ls: cannot access 'not-this-file': no such file or directory
++ echo hello world
+hello world
++ ls not-this-file
+ls: cannot access 'not-this-file': no such file or directory

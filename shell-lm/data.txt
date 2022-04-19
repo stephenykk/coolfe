@@ -1,0 +1,3 @@
+windows  linux
+winxp    ubuntu
+win10    centos

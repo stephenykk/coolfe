@@ -1,0 +1,4 @@
+23	today
+24	grown
+25	SEE-YOU
+26	why xterm-256color

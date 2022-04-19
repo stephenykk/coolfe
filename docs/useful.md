@@ -6,6 +6,8 @@
 - [webpack 中文文档](https://webpack.docschina.org/)
 - [webpack 中文文档 2](https://www.webpackjs.com/concepts/)
 - [typescript 教程](http://ts.xcatliu.com/)
+- [网道](https://wangdoc.com)
+- [廖雪峰](https://www.liaoxuefeng.com/wiki/1252599548343744)
 
 | 综合类                                        | 地址                                                                                               |
 | --------------------------------------------- | -------------------------------------------------------------------------------------------------- |

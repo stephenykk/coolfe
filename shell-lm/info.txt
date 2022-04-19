@@ -1,0 +1,8 @@
+Linux - Sysadmin
+
+Databases - Oracle, MySQL etc.
+Security - Firewall, Network, Online Securit
+
+Cool - Websites
+Storage - NetApp, EMC etc.
+Productivity - Too many technologies

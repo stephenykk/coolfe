@@ -1895,7 +1895,9 @@ ES6 提供了 Map 数据结构。它类似于对象，也是键值对的集合�
 // map.size
 // map.set(key, val)  map.get(key)
 // map.has(key)  map.delete(key) map.clear()
-// map.keys() map.values()  map.entries()  map.forEach()
+// map.keys() map.values()  map.entries() //注意: 返回 MapIterator 对象 非数组  
+// keysIt = map.keys()  keysIt.next() // => {value: xxx, done: false}
+// map.forEach((val, key) => { .... })
 
 const m = new Map();
 const o = {p: 'Hello World'};

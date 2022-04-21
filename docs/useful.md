@@ -47,3 +47,5 @@
 [前端工程师的编译原理指南](https://zhuanlan.zhihu.com/p/465510312)
 
 [带你在Babel的世界中畅游](https://juejin.cn/post/7025237833543581732)
+
+[babel-handbook/plugin-handbook.md](https://github.com/jamiebuilds/babel-handbook/blob/master/translations/zh-Hans/plugin-handbook.md)

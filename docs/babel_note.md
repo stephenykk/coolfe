@@ -2,6 +2,8 @@
 
 [Babel 快速入门](https://www.jiangruitao.com/babel/quick-start/)
 
+Babel 是一个工具集，主要用于将 ES6 版本的 JavaScript 代码转为 ES5 等向后兼容的 JS 代码，从而可以运行在低版本浏览器或其它环境中。
+
 ## 配置文件
 
 - babel.config.js

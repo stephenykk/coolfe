@@ -54,15 +54,15 @@ Windows 的命令列模式下有个非常好用的命令叫做 Control。这个�
 
 `dir /s | findStr ".*.json"`
 
+`dir /s | findStr /I "Serv"`  不区分大小写
+
 
 ## 查看所有 `*.cpl` `*.msc`文件
 - 开始运行 %systemroot%\system32
 - 右键选择 `git bash here`
 - ls -1 *.{cpl,msc}`
 
-## 遇到的问题
-
-### 80端口被谁占用
+## 80端口被谁占用
 
 [win10，7 80端口被占用的检测和解决方法](https://www.cnblogs.com/sheng518/p/11989171.html)
 
@@ -71,6 +71,26 @@ Windows 的命令列模式下有个非常好用的命令叫做 Control。这个�
 3. taskkill /F /PID <pid>
 
 
-### git-bash不支持交互式命令
+## git-bash不支持交互式命令
 [Gitbash如何支持交互式命令？如何让gitbash的命令不乱码？winpty是什么鬼？干嘛用的？ - 冒雨ing - 博客园](https://www.cnblogs.com/saysmy/p/9970247.html)
 
+
+## 设置bat程序自动启动
+
+1. 打开启动文件夹: 开始 -- 运行 shell:startup
+2. 粘贴 your.bat 到启动文件夹
+
+## 查看服务
+
+```bash
+net start  # 查看目前启动的服务
+net stop {serverName}
+```
+
+## 创建系统服务
+
+1. 管理员身份打开cmd
+2. sc create ServiceName start= auto binpath= D:\service\Test.exe
+3. sc delete ServiceName
+4. sc start ServiceName
+5. sc stop ServiceName

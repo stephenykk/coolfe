@@ -41,3 +41,11 @@
 [前端基础进阶](https://segmentfault.com/a/1190000012646488) _很好很系统的文章_
 
 [浏览器的强缓存和协商缓存](https://segmentfault.com/a/1190000021661656)
+
+[Webapck5核心打包原理全流程解析](https://zhuanlan.zhihu.com/p/464885853)
+
+[前端工程师的编译原理指南](https://zhuanlan.zhihu.com/p/465510312)
+
+[带你在Babel的世界中畅游](https://juejin.cn/post/7025237833543581732)
+
+[babel-handbook/plugin-handbook.md](https://github.com/jamiebuilds/babel-handbook/blob/master/translations/zh-Hans/plugin-handbook.md)

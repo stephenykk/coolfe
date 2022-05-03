@@ -6,23 +6,23 @@
 
 开始运行里面，敲一遍，就知道它们是做什么的了
 
-- appwiz.cpl
-- ncpa.cpl
-- sysdm.cpl
+- appwiz.cpl # 程序和功能面板
+- ncpa.cpl # 网络连接面板 同 `control netconnections`
+- sysdm.cpl # 系统属性面板
 - desk.cpl # 修改屏幕分辨率 设置双屏
-- timedate.cpl
-- powercfg.cpl
+- timedate.cpl # 系统时间，可更改时间和时区
+- powercfg.cpl # 电源选项面板
 - inetcpl.cpl # internet 选项
 - intl.cpl # 区域语言设置
-- nusrmgr.cpl # win7 无这个面板 ont
-- devmgmt.msc
-- compmgmt.msc
-- lusrmgr.msc
-- gpedit.msc
-- regedit
-- control system
+- devmgmt.msc # 查看硬件设备
+- compmgmt.msc # 计算机管理
+- lusrmgr.msc # 本地用户和组
+- gpedit.msc # 打开组策略
+- regedit # 打开注册表
+- control system # 系统信息面板，*相当于【我的电脑】点击右键，选属性*
 - control userpasswords2 # 高级帐户管理
 - control userpasswords # 用户帐户管理 **同 nusrmgr.cpl**
+- mmsys.cpl # 声音控制面板
 
 > 注：\*.cpl 文件还可接受参数 eg: sysdm.cpl ,3 打开系统属性面板第 3 个 tab
 
@@ -54,17 +54,43 @@ Windows 的命令列模式下有个非常好用的命令叫做 Control。这个�
 
 `dir /s | findStr ".*.json"`
 
+`dir /s | findStr /I "Serv"`  不区分大小写
 
-## 遇到的问题
 
-### 80端口被谁占用
+## 查看所有 `*.cpl` `*.msc`文件
+- 开始运行 %systemroot%\system32
+- 右键选择 `git bash here`
+- ls -1 *.{cpl,msc}`
+
+## 80端口被谁占用
 
 [win10，7 80端口被占用的检测和解决方法](https://www.cnblogs.com/sheng518/p/11989171.html)
 
 1. netstat -ano | findstr :80  # 找到监听80端口的进程id
 2. tasklist | findstr <pid> # 查看进程名称
+3. taskkill /F /PID <pid>
 
 
-### git-bash不支持交互式命令
+## git-bash不支持交互式命令
 [Gitbash如何支持交互式命令？如何让gitbash的命令不乱码？winpty是什么鬼？干嘛用的？ - 冒雨ing - 博客园](https://www.cnblogs.com/saysmy/p/9970247.html)
 
+
+## 设置bat程序自动启动
+
+1. 打开启动文件夹: 开始 -- 运行 shell:startup
+2. 粘贴 your.bat 到启动文件夹
+
+## 查看服务
+
+```bash
+net start  # 查看目前启动的服务
+net stop {serverName}
+```
+
+## 创建系统服务
+
+1. 管理员身份打开cmd
+2. sc create ServiceName start= auto binpath= D:\service\Test.exe
+3. sc delete ServiceName
+4. sc start ServiceName
+5. sc stop ServiceName

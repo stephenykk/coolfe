@@ -161,7 +161,7 @@ window 下远程登录客户端有 `secureCRT`, `Putty`, `SSH Secure Shell`, `Xs
 - 文件属组 所有者的同组用户
 - 其他用户
 
-> 文件所有者以外的用户又可以分为文件所有者的同组用户和其他用户。 对于 root 用户来说，一般情况下，文件的权限对其不起作用。
+> 文件所有者,文件所有组和其他用户的权限。 对于 root 用户来说，一般情况下，文件的权限对其不起作用。
 
 ```bash
 cat /etc/group | sort  # 查看用户组 (sort表示按字母排序) group_name:passwd:GID:user_list (passwd 为 x 表示加密)

@@ -36,7 +36,7 @@
 + [cmder note](./docs/cmder_note.html)<time>2021-7-26 14:55:33</time>
 + [coffeeScript 入门教程](./docs/coffeeScript_note.html)<time>2021-7-26 14:55:33</time>
 + [create-react-app notes](./docs/create-react-app.html)<time>2021-7-26 14:55:33</time>
-+ [css notes](./docs/css_note.html)<time>2021-7-26 14:55:33</time>
++ [css notes](./docs/css_note.html)<time>2022-5-9 14:50:28</time>
 + [curl_notes](./docs/curl_notes.html)<time>2021-7-26 14:55:33</time>
 + [devicePixelRatio notes](./docs/css_设备像素比.html)<time>2021-7-26 14:55:33</time>
 + [docker 入门](./docs/docker_note.html)<time>2021-7-26 14:55:33</time>
@@ -62,7 +62,7 @@
 + [less notes](./docs/less_note.html)<time>2021-7-26 14:55:33</time>
 + [lightProxy notes](./docs/lightProxy_note.html)<time>2021-12-21 16:36:30</time>
 + [linux 命令行](./docs/linux命令行.html)<time>2022-4-18 17:52:50</time>
-+ [linux_note](./docs/linux_note.html)<time>2022-4-18 17:52:50</time>
++ [linux_note](./docs/linux_note.html)<time>2022-5-9 10:10:0</time>
 + [linux系统命令及shell脚本实践指南](./docs/linux系统命令及shell脚本实践指南_note.html)<time>2021-7-26 14:55:33</time>
 + [macbook notes](./docs/macbook_note.html)<time>2021-7-26 14:55:33</time>
 + [markdown note](./docs/markdown_note.html)<time>2021-7-26 14:55:33</time>
@@ -101,7 +101,7 @@
 + [vuex2.x](./docs/vuex_note.html)<time>2021-7-26 14:55:33</time>
 + [web components notes](./docs/webComponents.html)<time>2021-7-26 14:55:33</time>
 + [webpack note](./docs/webpack_note.html)<time>2021-10-18 18:42:38</time>
-+ [window 常用 cmd 命令](./docs/windows_note.html)<time>2022-3-18 21:38:56</time>
++ [window 常用 cmd 命令](./docs/windows_note.html)<time>2022-4-28 11:15:40</time>
 + [windows 命令行](./docs/cmd_note.html)<time>2021-7-26 14:55:33</time>
 + [yaml 教程](./docs/yaml_note.html)<time>2021-7-26 14:55:33</time>
 + [yarn notes](./docs/yarn_note.html)<time>2021-12-31 14:38:37</time>

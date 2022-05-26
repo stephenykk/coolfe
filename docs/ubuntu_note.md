@@ -324,14 +324,19 @@ deb 包是预编译包, 包名约定: softwareName_version_revVersion_arch eg: h
   ```
 
 ## 使用总结
+
 ### 查看版本信息
+
 - cat /etc/issue
 - uname -a
 - lsb_release -a
+
 ### 命令行下打开图片
+
 - `xdg-open <imgfile>`
 
 ### 家目录常规文件夹换回英文名(方便输入)
+
 1.使用命令
 
       export LANG=en_US
@@ -344,11 +349,15 @@ deb 包是预编译包, 包名约定: softwareName_version_revVersion_arch eg: h
 
       epxort LANG=zh_CN
 
-4.重启Ubuntu，下次进入系统后，会提示是否把目录转化为中文，选择不许并选择不再提示，并取消修改 
+4.重启 Ubuntu，下次进入系统后，会提示是否把目录转化为中文，选择不许并选择不再提示，并取消修改
 
+### win7 安装 ubuntu 后没有 win7 启动项
 
-### win7安装ubuntu后没有win7启动项
-重新生成GRUB的启动菜单配置文件
+重新生成 GRUB 的启动菜单配置文件
 sudo update-grub
 然后重启
 
+### 登出命令
+
+logout # for login shell
+sudo pkill Xorg

@@ -17,6 +17,7 @@ npm home chai
 
 `expect` 直接指向 `chai.expect`，而 `should` 则是 `chai.should()`。
 
+
 ```jsjs
 var chai = require("chai");
 expect = chai.expect;

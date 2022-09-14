@@ -1,10 +1,11 @@
 const exceljs = require("exceljs");
 const path = require("path");
+const fs = require('fs')
 const workbook = new exceljs.Workbook();
-const excelFile = path.resolve(__dirname, "demo.xlsx");
-// const outExcelFile = excelFile.replace("demo", "demo-done")
-const outExcelFile = excelFile;
+const { excelFile, outExcelFile } = getExcelFiles()
+// const outExcelFile = excelFile;
 // const sheet = workbook.addWorksheet('my-new-sheet')
+
 
 const dataRowStartIndex = 3; // 数据从哪行开始
 
@@ -16,11 +17,32 @@ function log(...args) {
   } else {
     args.push(last);
   }
-  console.log("[excel-stat] :", ...args);
+  console.log("\n[excel-stat] :", ...args, '\n');
 
   if (isError) {
     throw new Error(args[0]);
   }
+}
+
+function getExcelFiles() {
+  const files = fs.readdirSync('.')
+  const excelFiles = files.filter(fname => /\.xlsx$/.test(fname))
+  let excelName = ''
+  if (excelFiles.length) {
+    excelName = excelFiles[0]
+  } else {
+    const xlsFiles = files.filter(fname => /\.xls$/.test(fname))
+    if (xlsFiles.length) {
+      const xlsName = xlsFiles[0]
+      log(`不支持 *.xls 文件格式，请打开 ${xlsName} 文件，另存为 ${xlsName.replace(/\.xls$/, '.xlsx')}`, 'throwError')
+    } else {
+      log(`在当前文件夹未找到excel文件，请复制花名册excel文件到当前文件夹`, 'throwError')
+    }
+  }
+
+  const excelFile = path.resolve(__dirname, excelName)
+  const outExcelFile = path.resolve(__dirname, excelName.replace(/\.xlsx$/, '统计表.xlsx'))
+  return { excelFile, outExcelFile }
 }
 
 const getYear = (sheet) => {
@@ -160,8 +182,9 @@ function setStyle(statSheet, statCols) {
   })
 }
 
+let statSheet = ''
 function startStat() {
-  let statSheet = workbook.worksheets[workbook.worksheets.length - 1];
+  statSheet = workbook.worksheets[workbook.worksheets.length - 1];
 
   const year = getYear(statSheet);
   if (year) {
@@ -197,11 +220,22 @@ function startStat() {
     fillStatRow(year, data);
     rowIndex++;
   });
+  // remove data sheets
+  removeDataSheets()
 
   function fillStatRow(year, data) {
     statCols.forEach((col, i) => {
       setColValue(col, i + 1, year, data);
     });
+  }
+  
+  function removeDataSheets() {
+    workbook.eachSheet(sheet => {
+      if (sheet.name !== statSheet.name) {
+        workbook.removeWorksheet(sheet.name)
+      }
+    })
+    log('成功删除名册数据工作表')
   }
 
   function setColValue(col, colIndex, year, data) {
@@ -260,7 +294,7 @@ async function main() {
   startStat();
   try {
     const res = await workbook.xlsx.writeFile(outExcelFile);
-    console.log("成功完成数据统计!");
+    log("成功完成数据统计!", outExcelFile);
   } catch (err) {
     log(`FAIL: 输出excel文件失败, 请检查文件 ${outExcelFile} 是否已打开`, err);
   }

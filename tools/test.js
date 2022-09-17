@@ -16,8 +16,8 @@ const app  = express()
 
 const log = (...args) => console.log(':::log:', ...args)
 function spawnChild(cmd, args = [], dataCb = console.log, doneCb=console.log) {
-
-    const child = spawn(cmd, args)
+    const shell = 'C:\\Program Files\\Git\\git-bash.exe'
+    const child = spawn(cmd, args, {shell})
     const chunks = []
     const errChunks = []
     const cons = []
@@ -47,7 +47,7 @@ function spawnChild(cmd, args = [], dataCb = console.log, doneCb=console.log) {
         const errCon = Buffer.concat(errChunks).toString()
         log('stderr-end-->', 'data finish:: \n\n', errCon)
         // cons.push(errCon)
-        dataCb(err.message + err.stack)
+        // dataCb()
     })
 
     // child.stderr.on('data', log.bind(console, 'stderr-data-->'))
@@ -55,9 +55,10 @@ function spawnChild(cmd, args = [], dataCb = console.log, doneCb=console.log) {
     child.on('error', (err) => {
         log('child got error:', err)
         log('err.stack:', err.stack, typeof err.stack)
-        error = err
+        // error = err
         // cons.push(error)
-        cons.push(err.message, err.stack)
+        // cons.push(err.message, err.stack)
+        doneCb(err.message + err.stack)
     })
     
     // child.on('close', (code) => {
@@ -68,7 +69,8 @@ function spawnChild(cmd, args = [], dataCb = console.log, doneCb=console.log) {
 
     child.on('exit', (code) => {
         log('cmd exit', code)
-        cb(cons)
+        // cb(cons)
+        doneCb('exit code:' + code)
     })
 
     return child
@@ -99,14 +101,24 @@ function runCmd(cmd, cb) {
 // console.log("🚀 ~ file: test.js ~ line 4 ~ r", r)
 
 app.get('/', (req, res, next) => {
+    const preHtml = `<html><body><pre>`
+    const postHtml = `</pre></body></html>`
     res.setHeader('content-type', 'text/html; charset=utf-8')
-    const cb = (cons) => {
-        const html = `<html><body><pre>${cons.join('\n')}</pre></body></html>`
-        res.end(html)
+    res.write(preHtml)
+
+    const dataCb = (data) => {
+        res.write(data)
+    }
+    const doneCb = (data) => {
+        data && res.write(data)
+        res.write(postHtml)
+        res.end()
     }
 
     // spawnChild('xping', ['-n', '10', 'www.baidu.com'], cb)
-    spawnChild('ping', ['-n', '10', 'www.baidu.com'], cb)
+    // spawnChild('ping', ['-n', '10', 'www.baidu.com'], dataCb, doneCb)
+    spawnChild('./a.sh', [], dataCb, doneCb)
+    // spawnChild('echo', ['foo', 'good/z'], dataCb, doneCb)
 })
 
 app.listen(3000, () => {

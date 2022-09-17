@@ -3,22 +3,15 @@ const app = express()
 const path = require('path')
 const resolve = (file) => path.resolve(__dirname, file)
 
-const os = require('os')
-function getIP() {
-    const cardInfos = os.networkInterfaces()
-    for (card in cardInfos) {
-        if (['WLAN', '本地连接', '以太网'].includes(card)) {
-            const infos = cardInfos[card]
-            const info =infos.find(info => info.family === 'IPv4')
-            return info.address
-        }
-    }
-    return 'localhost'
-}
+const { getIP } = require('../utils/common')
 
-
-app.get('/', (req, res, next) => {
+app.use(express.static('public'))
+app.post('/merge', (req, res, next) => {
     res.sendFile(resolve('index.html'))
+})
+
+app.post('/build', (req, res) => {
+
 })
 
 app.listen(3000, () => {

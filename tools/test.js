@@ -3,8 +3,12 @@ const path = require('path')
 const spawn = require('child_process').spawn
 const child_process = require('child_process')
 
+const { createLog, spawnChild } = require('../utils/common')
+
 const express = require('express')
 const app  = express()
+
+const log = createLog('test')
 
 // const buf = child_process.spawnSync('ping', ['-n', '10', 'wwww.baidu.com'])
 // const buf = child_process.spawnSync('ping', ['cn.bing.com'])
@@ -14,67 +18,6 @@ const app  = express()
 
 // return
 
-const log = (...args) => console.log(':::log:', ...args)
-function spawnChild(cmd, args = [], dataCb = console.log, doneCb=console.log) {
-    const shell = 'C:\\Program Files\\Git\\git-bash.exe'
-    const child = spawn(cmd, args, {shell})
-    const chunks = []
-    const errChunks = []
-    const cons = []
-    let error = ''
-    child.stdout.on('data', data => {
-        log('stdout-->', data.toString())
-        // chunks.push(data)
-        dataCb(data.toString())
-    })
-
-    
-    child.stderr.on('data', (data) => {
-        log('stderr-data-->', data.toString())
-        // errChunks.push(data)
-        dataCb(data.toString())
-    })
-
-    child.stdout.on('end', () => {
-        const outCon = Buffer.concat(chunks).toString()
-        log('stdout-end-->', 'data finish:: \n\n', outCon)
-        // cons.push(outCon)
-        // doneCb()
-
-    })
-
-    child.stderr.on('end', () => {
-        const errCon = Buffer.concat(errChunks).toString()
-        log('stderr-end-->', 'data finish:: \n\n', errCon)
-        // cons.push(errCon)
-        // dataCb()
-    })
-
-    // child.stderr.on('data', log.bind(console, 'stderr-data-->'))
-
-    child.on('error', (err) => {
-        log('child got error:', err)
-        log('err.stack:', err.stack, typeof err.stack)
-        // error = err
-        // cons.push(error)
-        // cons.push(err.message, err.stack)
-        doneCb(err.message + err.stack)
-    })
-    
-    // child.on('close', (code) => {
-    //     log('cmd close', code)
-    //     cb(cons)
-    // })
-
-
-    child.on('exit', (code) => {
-        log('cmd exit', code)
-        // cb(cons)
-        doneCb('exit code:' + code)
-    })
-
-    return child
-}
 
 // const child = spawnChild('ls', ['-hl', 'xxss'])
 // const child = spawnChild('date', ['+%Y%m%d'])

@@ -868,6 +868,205 @@ rsync -avz source dest
 rsync -av images/ ~/imgback/ # 复制 images 文件夹下的内容到目标路径
 rsync -av images ~/imgback # 复制 images文件夹到目标路径
 
+# --exlude pattern 排除文件
+# --exlude-from filePath
+rsync -avz ~/codes /mnt/disk/back --exclude *.txt
+
+# --delete 在目标端，删除那些在源端不存在的文件
+rsync -avz source dest --delete
+
+
+# git  版本管理
+git init --bare
+git config --global user.name alice
+git config --global user.email alice@123.com
+git commit --allow-empty -am "first commit"
+git remote add origin https://github.com/alice/cool
+git add fileOrDir
+git rm file1
+git commit -m "msg"
+git log
+git checkout branchName
+git checkout commitId
+
+
+dd 能够克隆任何类型的磁盘，包括分区表，引导记录等信息，基本上算是一个比特流复制工具
+dd if=source of=target bs=blockSize count=n # 如没有指定count,dd会对输入文件一直复制，直到遇到文件结束标记(EOF)
+
+# 分区复制到文件中
+dd if=/dev/sda1 of=sda1_partition.img
+# 用备份恢复分区
+dd if=sda1_partition.img of=/dev/sda1
+# 永久擦除一个分区的所有数据
+dd if=/dev/zero of=/dev/sda2
+# 在容量相同的硬盘间进行克隆
+dd if=/dev/sda of=/dev/sdb
+# 制作cd rom的镜像文件
+dd if=/dev/cdrom of=cdrom.iso
+# 用loopback的方式可以将任何dd生成的文件镜像进行挂载
+mkdir /mnt/books
+mount -o loop file.img /mnt/books
+
+# 网络
+tcp/ip 子网掩码 网关 路由 端口 dns
+相关命令：ifconfig route nslookup host
+
+网络接口用来连接网络。通常类UNIX系统都用 eth0 eth1 usb0 wlan0 这样的命名习惯
+
+ifconfig 显示网络接口，子网掩码等信息
+# 打印网络接口
+ifconfig | cut -c-10 | tr -d ' ' | tr -s '\n'
+ifconfig ifaceName
+
+# 提取ip地址
+ifconfig ens33 | grep -o "inet addr:[^ ]*" | tr -d "[[:alpha:] :]"
+ifconfig ens33 | grep -o "inet addr:[^ ]*" | cut -d: -f2
+
+# 设置网络接口的ip地址
+ifconfig ifaceName ip
+ifconfig wlan0 192.168.1.1
+
+# 设置ip地址的子网掩码
+ifconfig wlan0 192.168.1.1 netmask 255.255.255.0
+
+# 设置mac地址
+ifconfig eth0 hw ether 00:1c:bf:87:23:d5
+
+# 查看本地dns设置
+cat /etc/resolv.conf
+
+ping www.baidu.com # 一个域名可以配置多个ip地址，dns只会返回其中一个
+
+# dns查找工具 nslookup host
+host www.baidu.com # 列出域名对应的所有ip地址
+
+# nslookup 查询dns解析的详细信息
+
+# 本地hosts文件 /etc/hosts
+echo 192.168.0.9 hi.com >> /etc/hosts
+nsloopup www.baidu.com
+
+# 操作系统都维护着一个路由表
+route # 查看路由表
+route -n # 主机名以ip显示
+
+# 设置默认网关
+route add default gw ipAddr ifaceName
+route add default gw 192.168.1.1 wlan0
+
+# traceroute 显示报文经过的所有网关地址  hop 跳,  metric 节点间距离的度量
+traceroute www.baidu.com
+
+# 连通性测试 ping
+ping www.baidu.com -c 3 # RTT（Round Trip Time) 还可以得到往返时间 判断网速
+
+# 根据ping命令的返回状态 判断主机是否活动
+ping www.baidu.com -c2
+if [ $? -eq 0 ];
+then
+  echo active
+else
+  echo fail
+fi
+
+# 判断一组ip是否连通
+
+for ip in 192.168.0.{1..255};
+do
+  ping $ip -c3 &> /dev/null;
+  if [ $? -eq 0 ];
+  then
+    echo $ip is alive
+  fi
+done
+
+# 安装fping工具
+fping -a 192.168.1/24 -g 2> /dev/null
+
+# 文件传输
+ftp sftp rsync scp
+ftp需要安装服务端和客户端
+yum install -y vsftpd
+yum install -y ftp
+# 查看服务是否启动
+pgrep vsftpd
+sudo systemctl status vsftpd
+# 启动服务
+sudo systemctl start vsftpd
+# 添加用户用于登录ftp
+sudo useradd alice -g ftp -s /bin/bash
+sudo passwd alice # 设置密码
+ 
+ftp localhost/ip
+!ls # 查看本地目录文件列表
+lcd dir # 修改本地文件夹
+ls # 查看服务器文件列表
+get hello.txt
+put world.txt
+
+# sftp是类似ftp的文件传输系统，它运行在ssh连接之上. sftp利用ssh模拟ftp接口，不需要在远端安装并启动ftp服务器, 只需要运行openSSH服务器
+# 查看openSSH是否启动
+pgrep sshd
+
+sftp user@ip # 连接远程主机，进行文件传输 内部命令和ftp基本相同
+# 若ssh服务器不是运行在默认的22端口, 用 -oPort指定端口
+sftp -oPort=223 user@ip
+
+# rsync
+rsync my.sh pan@remoteHost:/home/pan/
+
+# scp (secure copy) 通过ssh加密通道传输文件数据
+scp filename user@remoteHost:/home/target/path
+scp user@remoteHost:/home/alice/zhongmo.txt ./mytest/
+# -oPort指定端口 -r 递归复制目录 -p 保留文件的模式和权限
+
+# 用脚本设置网络
+ifconfig $iface down # 关闭接口
+ifconfig $iface hw ether $hwAddr # 设置mac
+ifconfig $iface $ip netmask $mask # 设置ip
+route add default gw $gwip $iface # 设置网关
+
+iwconfig 命令设置无线网卡
+iwlist 扫描无线网络
+iwlist scan
+
+ssh自动登录
+ssh采用基于公钥和私钥的加密技术进行认证
+ssh-keygen -t rsa -C "some comment"
+把生成的公钥放到服务器的 ～/.ssh/authorized_keys文件中
+ssh user@remoteHost "cat >> ~/.ssh/authorized_keys" < ~/.ssh/id_rsa.pub
+# 验证自动登录
+ssh user@remoteHost ls
+# 若ssh服务不是用默认端口22, 则连接时 -p 指定端口
+ssh -p 224 user@remoteHost
+# 在远程主机执行命令
+ssh user@remoteHost "commands"
+ssh pan@192.168.1.1 'whoami'
+# 执行多条命令
+ssh user@remoteHost "cmd1 ; cmd2; cmd3" > output.txt 2> err.log
+echo "commands" | ssh user@remoteHost 
+
+ssh pan@$myserver "echo user: $(whoami); echo OS: $(uname)"
+$cmds="echo user: $(whoami); echo OS: $(uname)"
+ssh pan@$myserver $cmds
+# 获取服务器的运行时间
+ssh pan@$myserver | awk '{ print $3 $4 $5 }'
+
+# -C 启动数据压缩传输
+ssh -C user@remoteHost cmd
+
+# 数据重定向到远程shell命令
+echo "hello" | ssh user@remoteHost cmd
+ssh user@remoteHost cmd < local.file
+
+# sshfs 本地挂载远程服务器的目录
+sudo apt-get install sshfs -y
+mkdir /mnt/server
+sudo sshfs pan@$myserver:/home/pan /mnt/server
+su - root
+cd /mnt/server
+umount /mnt/server # 取消挂载
+
 
 
 

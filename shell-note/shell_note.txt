@@ -1067,7 +1067,357 @@ su - root
 cd /mnt/server
 umount /mnt/server # 取消挂载
 
+# zenity 脚本化的GUI工具
+sudo apt-get install zenity -y
+# 消息弹窗
+zenity --info --text "hello, kk"
 
+# 在一组主机上执行命令，并发执行 &后台运行
+ip_list="192.168.0.1 192.168.0.2"
+user="alice"
+command='export DISPLAY=:0; zenity --info --text "hi"
+for host in $ip_list;
+do
+  ssh $user@$host "$command" &
+done
+
+
+# 网络流量和端口
+端口侦听  端口连接 开放端口列表
+lsof netstat
+lsof 列出所有被活动进程打开的文件列表
+lsof -i  # 列出所有打开的internet and network files 其中包含端口号
+
+# 查看21端口和它的服务
+sudo netstat -anp | grep 21
+
+# -t 显示tcp端口 -n 主机以ip显示 -p 显示相关程序
+netstat 需要root权限才能查看所有进程, 否则只能查看属于当前用户的进程
+
+日志记录系统程序的运行情况
+
+统计磁盘的使用情况
+df (disk free)
+du (disk usage)
+
+# 查看文件占用多少磁盘空间
+du file1 file2...
+du -h data.txt
+du -m data.txt # 以 Mb为单位
+du -h . # 当前目录 和 它的子目录的空间占用统计
+du -ah . # 当前目录 和 子目录所有文件大小统计
+du -ah . | sort -k2 # 按文件名排序
+du -ah . | sort -hr # 按文件大小倒序
+# -s 只显示摘要信息, 统计指定文件夹的大小 没有明细文件的大小
+du -sh . # 统计当前文件夹的大小
+du -h . # 统计当前文件夹 和 它的子文件夹的大小
+# -c 总计 显示总计行
+du -ch file1 file2..
+du -ch .
+du -ch *.txt
+
+用特定的单位打印文件
+-b -k -m -B NByte 指定的块大小
+
+--exclude 排除部分文件不统计
+du -ah . --exclude "*.sh" # 注意要加双引号
+
+--exclude-from file.txt 用文件指定要排除哪些文件不统计
+
+--max-depth n 指定统计遍历的目录深度
+-x 只统计单一的文件系统，若子目录为其他文件系统的挂载点，则不进行统计
+
+使用du需要确保用户对目录由读取权限
+
+# 找出指定目录中最大的10个文件
+du -ak dir | sort -nrk 1 | head
+# 上述方法包含列文件夹，排除掉
+find . -type f -exec du -k {} \; | sort -nrk 1 | head
+
+磁盘可用空间
+du -h
+
+计算命令的执行时间
+time yourCmd # time命令会将执行时间输出到stderr
+time bash my.sh
+real时间： 真正从开始到结束的时间(包括被阻塞的等待时间)
+user时间: 真正执行程序的时间,进程花费在用户模式的CPU时间
+sys时间: 进程花费在内核模式的CPU时间
+
+# -o 将执行时间输出文件
+/usr/bin/time -o time.log bash my.sh # 用绝对路径指定time命令
+# -a 追加方式输出执行时间到文件
+/usr/bin/time -a -o time.log bash my.sh
+# -f 指定输出格式
+/usr/bin/time -f "耗时: %U" uname
+
+time命令可以查看很多进程的信息，具体看 man time
+/usr/bin/time -f "page size: %z bytes" ls > /dev/null
+
+
+当前登录用户
+who w whoami
+w 最详细
+TTY是与文本终端相关联的设备文件
+
+users 列出当前登录的用户列表
+同一个用户通过不同的伪终端登录，会重复显示
+users | tr ' ' '\n' | sort -u
+
+# 查看系统开机多久
+uptime
+
+# 获取上一次启动，用户的登录会话信息
+last # 数据来源为 /var/tmp/wlog
+last alice # 获取上次启动，指定用户的信息
+last reboot # 获取上次启动，重启会话的信息
+sudo lastb # 获取失败的用户登录会话信息
+
+# 列出最常用的10条命令
+cat ~/.bash_history | awk '{ list[$1]++; }
+END{
+ for (i in list) {
+   printf("%s\t%d\n", i, list[i]);
+ }
+}' | sort -nrk2 | head
+
+
+# watch 监视命令的输出
+watch ls # 每2秒更新一次输出
+watch -n 10 ls # 指定每10秒 更新一次输出
+watch -d ls # 突出显示差异部分
+
+
+logrotate (日志轮转替换) 日志管理，将日志的大小限制在指定的size内
+日志内容超过大小，则把较旧的内容，存入logfile.1，若logfile.1也超大小，则将logFile.1的最旧内容，存入logfile.2,如此类推
+
+logrotate配置文件所在目录 /etc/logrotate.d
+
+
+用syslog记录日志
+日志目录 /var/log
+守护进程syslogd，负责往/var/log写入统一格式的日志
+
+logger命令，写系统日志
+logger hello kk # 日志会被写入 /var/log/syslog 中
+# -t 打标签
+logger -t mydebug  starting my shell
+tail /var/log/syslog # 查看最近写入的日志
+logger -f my.log # 把文件的内容写入日志文件syslog
+
+收集进程信息
+进程是程序的运行实例
+进程的属性：
+进程id , pid
+进程对应的程序
+所有者，拥有该进程的用户
+内存占用
+CPU占用
+进程所属终端（TTY）
+
+进程管理相关命令： ps top pgrep
+
+# 不带其他参数，只显示属于当前终端的进程，用处不大
+ps
+# -f full-format 更多列输出
+ps -f
+
+# -e every 获取系统所有进程的信息
+ps -ef
+ps -axf
+
+# -o 选择需要输出的列
+ps -e -o comm,pcpu
+ps -u pan
+
+# --sort 进程输出排序 +升序 -降序
+ps -eo comm,pcpu --sort -pcpu,+comm
+
+# 显示占用CPU最多的10个进程
+ps -eo comm,pcpu --sort -pcpu | head
+
+# 用grep从ps的输出查找进程
+ps -eo comm,pid,pcpu,pmem | grep nginx
+
+# 找出命令对应进程的pid
+pgrep nginx
+# = 移除列头
+ps -C nginx -o pid= 
+
+# -d 指定输出定界符
+pgrep bash -d :
+
+# -u 指定进程的所有者
+pgrep -u root,alice  bash
+
+# -c count 匹配的进程总数
+pgrep -c bash
+
+# 返回指定用户的进程
+ps -u alice -o user,pcpu | head
+
+# 用tty过滤ps输出
+ps -t pts/0,pts/1
+
+# -L 显示进程相关的线程信息
+ps -eLf
+ps -eLf --sort -nlwp | head
+
+# 指定输出格式
+ps -ef
+ps -e u
+ps -e w
+
+# 显示进程的环境变量
+ps -eo pid,cmd e | tail
+
+终结进程 kill killall
+信号是进程间的一种通信机制，我们可以用特定信号来中断进程，进程收到信号，会执行对应的信号处理程序来响应
+
+kill 发送信号
+trap 设置信号处理程序
+
+# 列出可用信号
+kill -l
+
+# 默认信号是TERM
+kill `pgrep gedit`
+kill pidList
+
+# 发信号
+kill -s signal pid
+常用信号:
+SIGHUP 1 挂起检测
+SIGINT 2 中断进程, Ctrl + C 发送该信号
+SIGNKILL 9 强行杀死进程
+SIGTERM 15 默认值，终止进程
+SIGSTP 20 后台运行 Ctrl + Z 发送该信号
+
+# 强行杀死进程
+kill -9 pid
+kill -s SIGKILL pid
+
+# 以命令名作为参数,杀死相关的一组进程
+killall gedit
+
+# -u 指定进程所有者
+killall -u alice gedit
+
+# -i 杀死进程前确认
+killall -i gedit
+
+# pkill 和 kill 类似，不过它的参数是命令名
+pkill -9 gedit
+kill -9 4839
+
+pkill -s singal processName
+
+捕捉并响应信号 trap
+trap 'functionName' singalList
+function handler() {
+ echo hello, got singal
+}
+echo my process id is $$
+# ctrl + c 发送信号 SIGINT
+trap 'handler' SIGINT
+
+while true;
+do
+  sleep 1
+done
+
+
+top是一个极为重要的命令，会显示占用CPU最多的进程列表
+
+which 找出可执行命令的位置
+which gedit
+PATH环境变量
+export PATH=$PATH:/home/alice/bin
+
+whereis 类似which，额外返回命令手册和源码的路径
+whereis gedit
+
+file 查看文件的类型
+file /bin/bash
+
+获取系统运行时间和平均负载
+uptime
+
+linux中，终端是作为设备存在的，所有打开的终端都在/dev/pts下由对应的设备文件
+
+wall 向当前登录的所有用户发送广播消息
+先用其他电脑远程登录当前主机
+ssh pan@192.168.117.1
+然后执行消息广播，ssh登录的用户就能收到消息
+cat hi.txt | wall
+
+# 设置允许往当前终端写入消息
+mesg y
+mesg n # 禁止写入
+mesg # 查看选项值
+
+系统信息查看:
+主机名
+系统内核
+linux发行版
+cpu信息
+内存信息
+磁盘分区
+
+hostname
+uname --help
+uname -a
+
+# 查看cpu信息
+cat /proc/cpuinfo
+# 查看内存信息
+cat /proc/meminfo
+
+# 查看分区信息
+cat /proc/partitions
+sudo fdisk -l /dev/sda
+
+# 查看系统硬件信息
+sudo lshw
+
+/proc是一个位于内存的伪文件系统，能够让用户读取各种系统信息
+每个运行的进程都在/proc下有对应的目录，目录名为进程id
+
+pgrep bash
+ls /proc
+
+readlink 读取符号链接的目标文件
+readlink /proc/$(pgrep bash)/exe
+
+cron 定时任务调度
+crontab -l
+crontab -e # 编辑文件包含 条目配置说明
+以分钟为例：
+* 表示每分钟都执行一次
+5,10 表示第5和第10分钟执行
+*/5 表示每隔5分钟执行一次
+
+# 每天的5，6，7点，都执行一次
+00 5,6,7 * * * /home/alice/hi.sh
+
+# 每天凌晨2点 关机
+00 02 * * * /sbin/shutdown -h
+
+cron作业中指定的命令需要用完整路径，因为cron作业执行的环境和终端的环境不同。
+
+# 查看指定用户的定时任务
+crontab -u alice -l
+
+# 设置环境变量
+chmod a+x /home/pan/cron_test.sh
+myname=lufy
+* * * * * /home/pan/cron_test.sh
+
+# 删除当前用户的定时任务
+crontab -r
+sudo crontab -u alice -r # 删除指定用户的
+
+CVS(Comma Seperate Value)文件 以逗号分隔为格式的
 
 
 

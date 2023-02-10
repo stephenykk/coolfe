@@ -11,7 +11,7 @@ configs = {
             'host': '127.0.0.1',
             'port': 3306,
             'user': 'www-data',
-            'password': 'pan',
+            'password': 'pan2023',
             'db': 'awesome'
             },
         'session': {

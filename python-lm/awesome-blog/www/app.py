@@ -10,6 +10,8 @@ from datetime import datetime
 from aiohttp import web
 from jinja2 import Environment, FileSystemLoader
 
+from config import configs
+
 import orm
 from coroweb import add_route, add_routes, add_static
 
@@ -164,7 +166,8 @@ def index(request):
 # 
 
 async def init(loop):
-    await orm.create_pool(loop=loop, host='127.0.0.1', port=3306, user='www-data', password='pan', db='awesome')
+    print(configs, '--------------')
+    await orm.create_pool(loop=loop, host=configs.db.host, port=configs.db.port, user=configs.db.user, password=configs.db.password, db=configs.db.db)
 
     app = web.Application(loop=loop, middlewares=[logger_factory, auth_factory, response_factory])
     init_jinja2(app, filters=dict(datetime=datetime_filter))
@@ -172,15 +175,16 @@ async def init(loop):
     add_static(app)
 
     # app.router.add_route('GET', '/', index)
-    
+    port=9100
     runner = web.AppRunner(app)
     await runner.setup()
-    site = web.TCPSite(runner, 'localhost', 9000)
+    # site = web.TCPSite(runner, 'localhost', port)
+    site = web.TCPSite(runner, '*', port)
     await site.start()
     
-    # server = await loop.create_server(app.make_handler(), '127.0.0.1', 9000)
+    # server = await loop.create_server(app.make_handler(), '127.0.0.1', port)
 
-    logging.info('server running at 9000..')
+    logging.info('server running at http://124.223.215.179:%s' % port)
 
     # return server
 

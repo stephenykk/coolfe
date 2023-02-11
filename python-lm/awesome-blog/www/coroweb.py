@@ -75,6 +75,7 @@ def has_var_kw_arg(fn):
             return True
 
 
+
 def has_request_arg(fn):
     sig = inspect.signature(fn)
     params = sig.parameters

@@ -15,7 +15,7 @@ class Student(object):
 
 s = Student('kk', Gender.Male)
 if s.gender == Gender.Male:
-    print('succ')
+    print('success')
 else:
     print('fail')
 

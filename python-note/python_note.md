@@ -20,7 +20,7 @@ python 有 2.x 和 3.x 两个版本，较多的应用都是基于 2.x 开发的;
 
 安装后将 python 安装目录，添加到环境变量, 然后打开命令行，输入 python ， 进去交互环境
 
-> 注意 windows 用户在 git bash 下，输入 python，不能进入到 python 交互环境
+> 注意 windows 用户在 git bash 下，输入 python，不能进入到 python 交互环境, 执行 winpty python 进入交互环境
 
 在命令行中输入 python 进入交互模式
 
@@ -84,12 +84,12 @@ python 有多种解释器:
 
 ### 语法
 
-python的语法比较简单:
+python 的语法比较简单:
 
 - 用缩进表示代码块; 不用括号,花括号划分代码块
 - 不用分号表示语句结束
 - 标识符大小写敏感
-- 声明变量不需要var等关键字
+- 声明变量不需要 var 等关键字
 
 ```python
     # print absolute value
@@ -113,7 +113,7 @@ python 的数据类型包括: 整数、浮点数、字符串、字节型、布�
     "what's your name"
     'I\'m "OK"'
 
-    # raw string 都做普通字符对待
+    # raw string 内部的特殊字符都做普通字符对待
     r'\the-school\n'
 
     # 三引号 可输出换回字符串
@@ -1106,7 +1106,7 @@ max2(5,6)
 
 > 包作为模块的命名空间，避免模块名冲突
 
-请注意，每一个包目录下面都会有一个``**init**.py`的文件，这个文件是必须存在的，否则，Python就把这个目录当成普通目录，而不是一个包。`**init**.py`可以是空文件，也可以有Python代码，因为`**init**.py`本身就是一个模块
+请注意，每一个包目录下面都会有一个``**init**.py`的文件，这个文件是必须存在的，否则，Python 就把这个目录当成普通目录，而不是一个包。`**init**.py`可以是空文件，也可以有 Python 代码，因为`**init**.py`本身就是一个模块
 
 包也可以有多级结构，如`mycompanry.web.util`
 

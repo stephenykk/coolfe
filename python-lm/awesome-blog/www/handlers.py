@@ -44,7 +44,7 @@ def user2cookie(user, max_age):
     return '-'.join(L)
 
 def text2html(text):
-    lines = map(lambda s: '<p>%s</p>' % s.replace('&', '&amp;')).replace('<', '&lt;').replace('>', '&gt;'), filter(lambda s: s.strip() != '', text.split('\n'))
+    lines = map(lambda s: '<p>%s</p>' % s.replace('&', '&amp;').replace('<', '&lt;').replace('>', '&gt;'), filter(lambda s: s.strip() != '', text.split('\n')))
     return ''.join(lines)
 
 @asyncio.coroutine
@@ -74,13 +74,17 @@ def cookie2user(cookie_str):
 
 
 @get('/')
+@asyncio.coroutine
 def index(request):
     summary = 'Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.'
-    blogs = [
-        Blog(id='1', name='Test Blog', summary=summary, created_at=time.time()-120),
-        Blog(id='2', name='Something New', summary=summary, created_at=time.time()-3600),
-        Blog(id='3', name='Learn Swift', summary=summary, created_at=time.time()-7200)
-    ]
+    # blogs = [
+    #     Blog(id='1', name='Test Blog', summary=summary, create_at=time.time()-120),
+    #     Blog(id='2', name='Something New', summary=summary, create_at=time.time()-3600),
+    #     Blog(id='3', name='Learn Swift', summary=summary, create_at=time.time()-7200)
+    # ]
+    
+    blogs = yield from Blog.findAll()
+
     return {
         '__template__': 'blogs.html',
         'blogs': blogs
@@ -90,7 +94,7 @@ def index(request):
 @asyncio.coroutine
 def get_blog(id):
     blog = yield from Blog.find(id)
-    comments = yield from Comment.findAll('blog_id=?', [id], orderBy='create_at_desc')
+    comments = yield from Comment.findAll('blog_id=?', [id], orderBy='create_at')
     for c in comments:
         c.html_content = text2html(c.content)
     blog.html_content = markdown2.markdown(blog.content)

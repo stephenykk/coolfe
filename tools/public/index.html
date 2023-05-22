@@ -4,18 +4,39 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Excel统计</title>
+    <title>hello</title>
+    <script src="common.js"></script>
+    <style>
+        .output {
+            min-height: 500px;
+            margin: 50px;
+            border: 1px solid coral;
+            border-radius: 4px;
+            padding: 20px;
+        }
+    </style>
 </head>
 <body>
-    <h1>hihi</h1>
+    <h1>hihi nice</h1>
+    <button id="test">test</button>
+    <div class="output"></div>
+    
     <input type="file" id="file" />
-
+    
     <script>
         const fInput = document.querySelector('#file')
         fInput.addEventListener('change', (event) => {
             console.log("🚀 ~ file: index.html ~ line 16 ~ fInput.addEventListener ~ event", event)
             
         })
-        </script>
+
+
+        const testBtn = $('#test')
+        testBtn.addEventListener('click', () => {
+            const response = SRequest.get('/mytest', {}, outputChunk)
+            console.log("🚀 ~ file: index.html ~ line 36 ~ testBtn.addEventListener ~ response", response)
+
+        })
+    </script>
 </body>
 </html>

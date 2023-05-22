@@ -3,7 +3,7 @@ echo '------------ start -------------'
 shopt -s expand_aliases
 shopt expand_aliases
 
-alias hi="echo hello everyone, i am alice"
+alias hi="echo hello everyone, i am alice, see me???"
 type echo 
 type alias
 

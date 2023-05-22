@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>统计预览</title>
+  </head>
+  <body>
+    <script src="https://cdn.bootcdn.net/ajax/libs/antv-g2/4.2.8/g2.min.js"></script>
+    <div id="container"></div>
+
+    <script>
+      async function getData() {
+        const data = await fetch("./stat.json").then((res) => res.json());
+        console.log("🚀 ~ file: index.html ~ line 21 ~ main ~ data", data);
+        const fieldMap = data.statCols.reduce((obj, col) => {
+          obj[col.name] = col;
+          return obj;
+        }, {});
+
+        return { fieldMap, data: data.data };
+      }
+
+      async function main() {
+        const { fieldMap, data } = await getData();
+        const years = Object.keys(data);
+        const vdata = years.map((year) => {
+          const item = { year, fullTimeTeacher: data[year]["fullTimeTeacher"] };
+          return item;
+        });
+
+        render(vdata);
+      }
+
+      function render(data) {
+        const chart = new G2.Chart({
+          container: "container",
+          data,
+          autoFit: true,
+          height: 500,
+        });
+
+        chart.data(data);
+
+        chart.scale("fullTimeTeacher", {
+          nice: true,
+        });
+
+        chart.interaction("active-region");
+
+        chart.interval().position("year*fullTimeTeacher");
+
+        chart.render();
+      }
+
+      main();
+    </script>
+  </body>
+</html>

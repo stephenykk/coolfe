@@ -73,7 +73,7 @@ echo -e 'hello\nworld'
 printf "%s\n" $curdir
 
 
-# 用 ${} 知名变量名边界，避免歧义
+# 用 ${} 指定变量名边界，避免歧义
 language=java
 echo "i like ${language}script"
 
@@ -170,6 +170,8 @@ cd ~
 echo ~alice # 打印用户alice的主目录
 echo ~+  # 当前目录 同 echo $PWD
 echo ~- # 上一个目录 同 echo $OLDPWD
+echo ~/.bashrc # 波浪号扩展不能用引号包裹
+echo "~/.bashrc" # 只是输出字符串 ~/.bashrc
 ```
 命令替换
 

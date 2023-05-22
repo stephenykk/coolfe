@@ -1,6 +1,7 @@
 const os = require('os')
 const child_process = require('child_process')
 const shell = 'C:\\Program Files\\Git\\git-bash.exe'
+// const shell = '/usr/bin/bash'
 
 
 function getIP() {
@@ -21,7 +22,7 @@ function createLog (prefix = 'LOG') {
 
 function spawnChild(cmd, args = [], dataCb = console.log, doneCb=console.log) {
     const log = createLog('spawn child')
-    const child = child_process.spawn(cmd, args, {shell, maxBuffer: 10 * 1024 * 1024})
+    const child = child_process.spawn(cmd, args, { /* shell, */ maxBuffer: 10 * 1024 * 1024})
  
     child.stdout.on('data', data => {
         log('stdout-data >>', data.toString())
@@ -58,7 +59,7 @@ function spawnChild(cmd, args = [], dataCb = console.log, doneCb=console.log) {
     child.on('exit', (code) => {
         log('cmd exit', code)
         // cb(cons)
-        doneCb('EXIT CODE IS :' + code)
+        doneCb(`EXIT CODE IS :` + code)
     })
 
     return child

@@ -1,0 +1,252 @@
+{
+  "statCols": [
+    {
+      "name": "year",
+      "text": "年份",
+      "value": "{year}"
+    },
+    {
+      "name": "fullTimeTeacher",
+      "text": "专任教师",
+      "data": {
+        "col": {
+          "text": "岗位",
+          "name": "pos"
+        }
+      }
+    },
+    {
+      "name": "undergraduteCount",
+      "text": "本科学历人数",
+      "data": {
+        "col": {
+          "text": "学历",
+          "name": "education"
+        }
+      }
+    },
+    {
+      "name": "undergradutePercent",
+      "text": "占专任教师总数%",
+      "formula": "{undergraduteCount} / {fullTimeTeacher}"
+    },
+    {
+      "name": "juniorCollegeCount",
+      "text": "大专学历人数",
+      "data": {
+        "col": {
+          "text": "学历",
+          "name": "education"
+        }
+      }
+    },
+    {
+      "name": "juniorCollegePercent",
+      "text": "占专任教师总数%",
+      "formula": "{juniorCollegeCount} / {fullTimeTeacher}"
+    },
+    {
+      "name": "aboveCollegeCount",
+      "text": "大专或以上学历人数",
+      "formula": "{undergraduteCount} + {juniorCollegeCount}"
+    },
+    {
+      "name": "aboveCollegePercent",
+      "text": "占专任教师总数%",
+      "formula": "{aboveCollegeCount} / {fullTimeTeacher}"
+    },
+    {
+      "name": "teacherLicenseCount",
+      "text": "持有教师资格证人数",
+      "data": {
+        "col": {
+          "text": "从业资格证",
+          "name": "license"
+        }
+      }
+    },
+    {
+      "name": "teacherLicensePercent",
+      "text": "占专任教师总数%",
+      "formula": "{teacherLicenseCount} / {fullTimeTeacher}"
+    },
+    {
+      "name": "preschoolEduCount",
+      "text": "学前教育专业毕业人数",
+      "data": {
+        "col": {
+          "text": "所学专业",
+          "name": "major"
+        }
+      }
+    },
+    {
+      "name": "preschoolEduPercent",
+      "text": "占专任教师总数%",
+      "formula": "{preschoolEduCount} / {fullTimeTeacher}"
+    },
+    {
+      "name": "above3YearsCount",
+      "text": "入职三年以上教师人数",
+      "data": {
+        "col": {
+          "text": "入职时间",
+          "name": "joinTime"
+        }
+      }
+    },
+    {
+      "name": "above3YearsPercent",
+      "text": "占专任教师总数%",
+      "formula": "{above3YearsCount} / {fullTimeTeacher}"
+    },
+    {
+      "name": "youngTeacherCount",
+      "text": "青年教师人数",
+      "data": {
+        "col": {
+          "text": "出生日期",
+          "name": "birthDate"
+        }
+      }
+    },
+    {
+      "name": "youngTeacherCountPercent",
+      "text": "占专任教师总数%",
+      "formula": "{youngTeacherCount} / {fullTimeTeacher}"
+    },
+    {
+      "name": "midYearTeacherCount",
+      "text": "中年教师人数",
+      "data": {
+        "col": {
+          "text": "出生日期",
+          "name": "birthDate"
+        }
+      }
+    },
+    {
+      "name": "midYearTeacherPercent",
+      "text": "占专任教师总数%",
+      "formula": "{midYearTeacherCount} / {fullTimeTeacher}"
+    },
+    {
+      "name": "oldTeacherCount",
+      "text": "老年教师人数",
+      "data": {
+        "col": {
+          "text": "出生日期",
+          "name": "birthDate"
+        }
+      }
+    },
+    {
+      "name": "oldTeacherPercent",
+      "text": "占专任教师总数%",
+      "formula": "{midYearTeacherCount} / {fullTimeTeacher}"
+    },
+    {
+      "name": "firstLevelTeacherCount",
+      "text": "一级教师人数",
+      "data": {
+        "col": {
+          "text": "职称",
+          "name": "jobTitle"
+        }
+      }
+    },
+    {
+      "name": "firstLevelTeacherPercent",
+      "text": "占专任教师总数%",
+      "formula": "{firstLevelTeacherCount} / {fullTimeTeacher}"
+    },
+    {
+      "name": "secondLevelTeacherCount",
+      "text": "二级教师人数",
+      "data": {
+        "col": {
+          "text": "职称",
+          "name": "jobTitle"
+        }
+      }
+    },
+    {
+      "name": "secondLevelTeacherPercent",
+      "text": "占专任教师总数%",
+      "formula": "{firstLevelTeacherCount} / {fullTimeTeacher}"
+    },
+    {
+      "name": "thirdLevelTeacherCount",
+      "text": "三级教师人数",
+      "data": {
+        "col": {
+          "text": "职称",
+          "name": "jobTitle"
+        }
+      }
+    },
+    {
+      "name": "thirdLevelTeacherPercent",
+      "text": "占专任教师总数%",
+      "formula": "{firstLevelTeacherCount} / {fullTimeTeacher}"
+    }
+  ],
+  "data": {
+    "2021": {
+      "year": "2021",
+      "fullTimeTeacher": 19,
+      "undergraduteCount": 13,
+      "undergradutePercent": "0.6842",
+      "juniorCollegeCount": 7,
+      "juniorCollegePercent": "0.3684",
+      "aboveCollegeCount": "20.0000",
+      "aboveCollegePercent": "1.0526",
+      "teacherLicenseCount": 19,
+      "teacherLicensePercent": "1.0000",
+      "preschoolEduCount": 17,
+      "preschoolEduPercent": "0.8947",
+      "above3YearsCount": 9,
+      "above3YearsPercent": "0.4737",
+      "youngTeacherCount": 15,
+      "youngTeacherCountPercent": "0.7895",
+      "midYearTeacherCount": 5,
+      "midYearTeacherPercent": "0.2632",
+      "oldTeacherCount": 20,
+      "oldTeacherPercent": "0.2632",
+      "firstLevelTeacherCount": 2,
+      "firstLevelTeacherPercent": "0.1053",
+      "secondLevelTeacherCount": 2,
+      "secondLevelTeacherPercent": "0.1053",
+      "thirdLevelTeacherCount": 4,
+      "thirdLevelTeacherPercent": "0.1053"
+    },
+    "2022": {
+      "year": "2022",
+      "fullTimeTeacher": 27,
+      "undergraduteCount": 19,
+      "undergradutePercent": "0.7037",
+      "juniorCollegeCount": 9,
+      "juniorCollegePercent": "0.3333",
+      "aboveCollegeCount": "28.0000",
+      "aboveCollegePercent": "1.0370",
+      "teacherLicenseCount": 27,
+      "teacherLicensePercent": "1.0000",
+      "preschoolEduCount": 23,
+      "preschoolEduPercent": "0.8519",
+      "above3YearsCount": 17,
+      "above3YearsPercent": "0.6296",
+      "youngTeacherCount": 17,
+      "youngTeacherCountPercent": "0.6296",
+      "midYearTeacherCount": 11,
+      "midYearTeacherPercent": "0.4074",
+      "oldTeacherCount": 28,
+      "oldTeacherPercent": "0.4074",
+      "firstLevelTeacherCount": 6,
+      "firstLevelTeacherPercent": "0.2222",
+      "secondLevelTeacherCount": 4,
+      "secondLevelTeacherPercent": "0.2222",
+      "thirdLevelTeacherCount": 5,
+      "thirdLevelTeacherPercent": "0.2222"
+    }
+  }
+}

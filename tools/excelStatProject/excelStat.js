@@ -6,10 +6,11 @@ const workbook = new exceljs.Workbook();
 const { excelFile, outExcelFile } = getExcelFiles()
 // const outExcelFile = excelFile;
 // const sheet = workbook.addWorksheet('my-new-sheet')
-const jsonFile = 'data.json'
+const dataFile = 'data.json'
+const statFile = 'stat.json'
 
-function outputData(data) {
-  const fpath = path.resolve(__dirname, jsonFile)
+function outputData(data, fname = dataFile) {
+  const fpath = path.resolve(__dirname, fname)
   fs.writeFileSync(fpath, JSON.stringify(data, null, 2))
   log('导出json成功', fpath)
 }
@@ -34,12 +35,12 @@ function log(...args) {
 
 function getExcelFiles() {
   const files = fs.readdirSync('.')
-  const excelFiles = files.filter(fname => /\.xlsx$/.test(fname))
+  const excelFiles = files.filter(fname => /\.xlsx$/.test(fname)).sort()
   let excelName = ''
   if (excelFiles.length) {
     excelName = excelFiles[0]
   } else {
-    const xlsFiles = files.filter(fname => /\.xls$/.test(fname))
+    const xlsFiles = files.filter(fname => /\.xls$/.test(fname)).sort()
     if (xlsFiles.length) {
       const xlsName = xlsFiles[0]
       log(`不支持 *.xls 文件格式，请打开 ${xlsName} 文件，另存为 ${xlsName.replace(/\.xls$/, '.xlsx')}`, 'throwError')
@@ -49,7 +50,7 @@ function getExcelFiles() {
   }
 
   const excelFile = path.resolve(__dirname, excelName)
-  const outExcelFile = path.resolve(__dirname, excelName.replace(/\.xlsx$/, '统计表.xlsx'))
+  const outExcelFile = path.resolve(__dirname, excelName.replace(/\.xlsx$/, '_统计表.xlsx'))
   return { excelFile, outExcelFile }
 }
 
@@ -367,6 +368,8 @@ function startStat() {
     statSheet = workbook.addWorksheet("统计结果");
     const row = statSheet.getRow(1);
     row.values = statCols.map((col) => col.text);
+  } else {
+    log(`最后的工作表(${statSheet.name})不是教师名单表, 请删除它再重试`, 'throwError')
   }
 
   setStyle(statSheet, statCols);
@@ -374,6 +377,7 @@ function startStat() {
   // collect datas
   const dataSheets = workbook.worksheets.slice(0, -1);
   const yearDataMap = {};
+  const yearStatData = {statCols, data: {}};
   for (const sheet of dataSheets) {
     const dyear = getYear(sheet);
     if (!dyear) {
@@ -388,16 +392,23 @@ function startStat() {
     yearDataMap[dyear] = normalize(data, dyear);
   }
 
-  outputData(yearDataMap)
+  outputData(yearDataMap) // output data.json
 
   // stat
   const yearList = Object.keys(yearDataMap).sort((a, b) => a * 1 - b * 1);
   let rowIndex = 2;
   yearList.forEach((year) => {
     const data = yearDataMap[year];
+    
+    yearStatData.data[year] = {}
+
     fillStatRow(year, data);
+
     rowIndex++;
   });
+
+  outputData(yearStatData, statFile);
+
   // remove data sheets
   removeDataSheets()
 
@@ -419,11 +430,17 @@ function startStat() {
   function setColValue(col, colIndex, year, data) {
     const row = statSheet.getRow(rowIndex);
     const cell = row.getCell(colIndex);
+    const statData = yearStatData.data[year]
+
     if (col.name === "year") {
       cell.value = year;
+
+      statData[col.name] = cell.value
     } else if (col.data) {
       const values = data.map((rs) => rs[col.data.col.name]);
       cell.value = values.filter(col.test).length;
+
+      statData[col.name] = cell.value
     } else if (col.formula) {
       let equation = col.formula.replace(/\{(\w+)\}/g, (m, key) => {
         const colName = varName(m)[0];
@@ -447,6 +464,9 @@ function startStat() {
 
       // equation = '= ' +  equation
       cell.value = { formula: equation, result };
+
+      statData[col.name] = (cell.value.result || 0).toFixed(4)
+
     }
   }
 

@@ -5,17 +5,10 @@ const workbook = new exceljs.Workbook();
 const { excelFile, outExcelFile } = getExcelFiles()
 // const outExcelFile = excelFile;
 // const sheet = workbook.addWorksheet('my-new-sheet')
-const jsonFile = 'data.json'
-
-function outputData(data) {
-  const fpath = path.resolve(__dirname, jsonFile)
-  fs.writeFileSync(fpath, JSON.stringify(data, null, 2))
-  log('导出json成功', fpath)
-}
 
 
 const dataRowStartIndex = 5; // 数据从哪行开始
-let dataRowEndIndex = 341; // 数据从哪行开始
+const dataRowEndIndex = 341;
 
 function log(...args) {
   const last = args.pop();
@@ -50,88 +43,33 @@ function getExcelFiles() {
 
   const excelFile = path.resolve(__dirname, excelName)
   const outExcelFile = path.resolve(__dirname, excelName.replace(/\.xlsx$/, '_OK.xlsx'))
+
   return { excelFile, outExcelFile }
 }
 
-const wanted = []
-const part1Rows = []
-const part2Rows = []
+
+const carLisenceList = []
+const matchedRows = []
+const missRows = []
+
 
 function start() {
-  const dataSheet = workbook.getWorksheet(1);
-  const sheet1 = workbook.addWorksheet('part1');
-  const sheet2 = workbook.addWorksheet('part2');
+  dataSheet = workbook.worksheets[0];
+  console.log(dataSheet.lastRow, 'lastRow')
+  return
 
   dataSheet.eachRow((row, rowIndex) => {
     // row.values is array start from 1
-    // rowIndex >= dataRowStartIndex && data.push(row.values);
-    if (rowIndex > dataRowEndIndex && row.getCell('H').value) {
-      wanted.push(row.getCell('H').value)
-    }
+    rowIndex >= dataRowStartIndex && data.push(row.values);
   });
-
-  let isFound = true
-  // while(isFound) {
-  //   isFound = false
-  //   dataSheet.eachRow((row, rowIndex) => {
-  //     if (isFound || !row.getCell('H').value) return
-  //     if (rowIndex >= dataRowStartIndex && rowIndex <= dataRowEndIndex) {
-  //       const value = row.getCell('H').value || ''
-  //       const matched = wanted.some(w => value.includes(w))
-  //       const rows = matched ? part1Rows : part2Rows
-  //       const values = row.values.map(val => val.formula ? val.result : val)
-  //       rows.push(values)
-  //       isFound = !!matched
-  //       if (isFound) {
-  //         dataSheet.spliceRows(rowIndex, 1)
-  //         console.log("🚀 ~ file: excelDiv.js ~ line 86 ~ dataSheet.eachRow ~ rowIndex", rowIndex, row.getCell('H').value)
-  //         dataRowEndIndex--;
-  //       }
-  //       // if(matched && rows.length < 5) {
-  //       //   // dataSheet.removeRow(rowIndex)
-  //       //   console.log("🚀 ~ file: excelDiv.js ~ line 79 ~ dataSheet.eachRow ~ row.values", row.values)
-          
-  //       // }
-  //     }
-  //   })
-
-  // }
-
-  dataSheet.eachRow((row, rowIndex) => {
-    if (rowIndex >= dataRowStartIndex && rowIndex <= dataRowEndIndex) {
-      const value = row.getCell('H').value || ''
-      const matched = wanted.some(w => value.includes(w))
-      const rows = matched ? part1Rows : part2Rows
-      const values = row.values.map(val => val.formula || val.sharedFormula ? val.result : val)
-      rows.push(values)
-      // if(matched && rows.length < 5) {
-      //   // dataSheet.removeRow(rowIndex)
-      //   console.log("🚀 ~ file: excelDiv.js ~ line 79 ~ dataSheet.eachRow ~ row.values", row.values)
-        
-      // }
-    }
-  });
-
-
-
-  sheet1.addRows(part1Rows)
-  // part1Rows.forEach(curRow => sheet1.addRow(curRow))
-
-  sheet2.addRows(part2Rows)
-  
-  console.log("🚀 ~ file: excelDiv.js ~ line 82 ~ start ~ part2Rows", part2Rows.length)
-  console.log("🚀 ~ file: excelDiv.js ~ line 82 ~ start ~ part1Rows", part1Rows.length)
-  console.log("🚀 ~ file: excelDiv.js ~ line 70 ~ sheet.eachRow ~ wanted", wanted)
-  
 
 }
+
 
 async function main() {
   await workbook.xlsx.readFile(excelFile);
 
   start();
-  // return
-
   try {
     const res = await workbook.xlsx.writeFile(outExcelFile);
     log("SUCCESS: ", outExcelFile);
@@ -149,7 +87,7 @@ async function mytest() {
   //   }
   // })
   // const sheet = workbook.getWorksheet('Sheet1')
-  const sheet = workbook.worksheets[workbook.worksheets.length - 1];
+  const sheet = workbook.worksheets[0];
   // sheet.columns.forEach((col, i) => {
   //   col.alignment = { horizontal: 'center', vertical: 'middle'}
   //   col.numFmt = '0.00%'

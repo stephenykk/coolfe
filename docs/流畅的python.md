@@ -293,3 +293,139 @@ a[:, 1]
 a[1, 2]
 a.transpose() # 矩阵转置
 ```
+
+双向队列 collections.deque
+
+列表可以模拟队列，append() 和 pop(0) 但是在列表开头增删元素是很耗时的，需要移动元素
+
+列表是线程安全的数据结构，可以在两端快速增删元素, 删除中间的元素会稍微慢一些
+
+```python
+from collection import deque
+dq = deque(range(10), maxlen=10)
+dq.append(val)
+dq.appendleft(val)
+dq.rotate(n)
+dq.extend(ls)
+dq.extendleft(ls)
+```
+
+其他队列类型: Queue LifoQueue PriorityQueue
+都是线程安全的，队列满，则会被锁住
+
+
+multiprocessing.queue  multiprocessing.JoinableQueue
+
+asyncio 提供了 Queue LifoQueue PriorityQueue JoinableQueue
+
+heapq.heappush() heapq.heappop()
+
+字典和集合
+
+dict是python语言的基石 *模块命名空间* ,*实例属性* , *关键字参数*
+
+REPL 查看内置函数 `__builtins__.__dict__`
+
+字典和集合都依赖散列表算法
+
+```python
+from collections.abc import Mapping, MutableMapping
+# 抽象基类
+dir(Mapping)
+dir(MutableMapping)
+d = {}
+isinstance(d, Mapping)
+
+```
+
+什么是可散列对象  
+实现 `__hash__`和`__eq__`方法，并且两对象相等，散列值一定也要相等
+
+原子数据类型都是可散列的(*hashable*): int float str bool bytes
+
+frozenset也是可散列的, 元组不一定是可散列的
+
+```python
+# 能被 hash 方法调用而不报错，就认为是可散列的
+hash(1)
+hash('hi')
+tt = (1, 2, ('a', 'b'))
+hash(tt)
+tl = (1, 2, ['a', 'b'])
+hash(tl) # error
+d = {}
+hash(d) # error
+l = []
+hash(l) # error
+
+type(l) == list # 获取对象的类型/构造函数
+```
+
+创建字典的不同方式
+```python
+# 字面量
+lufy = {'name': 'lufy', 'age': 11}
+# 构造函数
+lufy2 = dict(name='lufy', age=11)
+lufy3 = dict(zip(['name', 'age'], ['lufy', 11]))
+lufy4 = dict([('name', 'lufy'), ('age', 11)])
+lufy5 = dict(lufy)
+
+lufy == lufy2 == lufy3 == lufy4 == lufy5 # True
+id(lufy), id(lufy2) # 内存地址不同，但是却判断相等，所以是按值进行比较的, 字典具有相同的键值则认为相等
+
+```
+
+列表推导和生成器表达式的概念移植到字典，则有了字典推导
+
+```python
+lufy = {'name': 'lufy', age: 13}
+# 遍历dict, 默认迭代器是keyIterator
+# 等同 for v in lufy.keys():
+for v in lufy:
+  print(v) # name  age
+
+students = [(12, 'alice'), (31, 'lucy')]
+stuCodes = {student: code for code, student in students}
+
+Upstuds = {code: stud.upper() for code, stud in students if code > 20}
+```
+
+其他的映射类型
+
+```python
+from collections import defaultdict, OrderedDict
+role = {'name': 'lufy', age: 12}
+home = role.get('home', 'little village')
+
+```
+
+字典处理键可能不存在的情况
+
+```python
+role = {'name': 'lufy', age: 12}
+role.get('skill', 'strench')
+role.setdefault('skill', 'strench')
+
+# 映射的弹性键查询 defaultdict 或自定义dict子类实现__missing__
+from collections import defaultdict
+dd = defaultdict(list)
+dd['good'] // []
+dd['food'].append('apple')
+dd['food'] // ['apple']
+
+# collections.OrderedDisct
+# collections.ChainMap
+import builtins
+pylookup = ChainMap(locals(), globals(), vars(builtins))
+
+
+# collections.Counter
+counter = collections.Counter('abcacdwdwos')
+counter.most_common(2)
+
+# collections.UserDict 让用户定义自己的dict类型的
+# UserDict不是dict的子类，但是 UserDict的data属性的值是dict的子类
+
+
+```

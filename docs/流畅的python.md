@@ -427,5 +427,372 @@ counter.most_common(2)
 # collections.UserDict 让用户定义自己的dict类型的
 # UserDict不是dict的子类，但是 UserDict的data属性的值是dict的子类
 
+# 不可变映射类型 types.MappingProxyType
+from types import MappingProxyType
+d = {'name': 'lucy', 'age': 11}
+dp = MappingProxyType(d) # dp 是视图，能观察到d的最新数据
+dp['name'] # lucy
+dp['name'] = 'lii' # error
+d['skill'] = 'sing'
+dp['skill'] # sing
+
+```
+
+集合  set frozenset
+
+集合的作用是去重，很多对象的聚合，对象必须是可散列的(*hashable*)
+
+set本身不可散列
+fronzenset本身可散列
+
+```python
+s = set(['foo', 'bar', 'foo'])
+hash(s) # error not hashable
+fs = frozenset(['hi', 'wo'])
+hash(fs) # id
+
+s.add('hi')
+s & fs # { 'hi' }
+# 集合字面量
+s2 = {'hi', 'some', 'cool'}
+s3 = { 1 }
+type(s2) # set
+# 空集合
+s4 = set()
+d = {} # 创建的是空字典
+# 方法
+s2.add('go')
+s2.pop()
+s2.remove('cool')
+
+# 反汇编
+from dis import dis
+dis('{1}')
+dis('set([1])')
+
+# 集合推导
+myset = { c for c in 'hello' }
+
+from collections import Set, MutableSet
+dir(MutableSet)
+
+```
+散列表算法
+- 散列表是一个稀疏数组(小于1/3空闲 则扩容)
+- 表元(键值对对应一个表元，大小相同 可通过偏移访问)
+- 对键求hash值，用hash值的最低几位作为散列表索引, 查找表元
+- 没找到表元，抛出KeyError; 找到表元，则看表元的键是否等于查找的键，相等则返回表元的键值；若不相等，则发生散列冲突；对键的hash值，取更多的低位数重新查找
+- 根据散列表的拥挤程度进行扩容，散列表增大，hash值所占位数和用作索引的位数也随之增大，以减少散列冲突的发生
+- 所有用户自定义对象默认可散列，hash(yourObj) === id(yourObj)
+- 散列表是稀疏数组，比较占空间，元组和具名元组会比较节约空间
+- 键查询非常快，dict是典型的空间换时间，无视数据量大小的快速访问
+- 通常地，键的顺序和添加的顺序一致
+- 两个字典包含的键和键值相同，则认为它们相等 `{'a': 1, 'b': 2} == {'b': 2, 'a': 1}`
+- 不要在遍历字典的同时修改字典
+
+字典和集合的查找是高效的
+字典和集合的键是无序的且不稳定的
+
+```python
+# keys() values() items() 方法返回的是字典视图, 视图具有动态性
+d = {'name': 'Lili', 'age': 11}
+keys = d.keys()
+list(keys)
+d['fav'] = 'smile'
+list(keys)
+
+```
+
+
+文本和字节序列
+
+> 人类使用文本，计算机使用字节序列
+
+字符 码位和字节序列
+
+python3中，str对象中获取到的元素是unicode字符
+python2中，str对象中获取到的元素是字节序列
+
+码位: 字符在编码表中对应的数值  (*编码表 = 字符编码*)
+
+字符编码和解码
+
+```python
+s = 'hello'
+b = s.encode('utf8') # 得到字节序列
+len(b)
+ns = b.decode('utf8') # 返回字符串
+# python3的str类型 相当于python2的unicode类型
+```
+
+- bytes类型不可变
+- bytearray类型可变
+
+> bytes和bytearray对象的每个元素都是介于0-255之间的整数
+
+```python
+hibytes = bytes('hi', encoding='utf8')
+hibytes[0] # 整数
+hibytes[:1] # 切片还是bytes
+hibarr = bytearray(hibytes)
+hibarr[0] # 整数
+hibarr[:1] # 切片还是bytearray
+
+```
+
+str对象的方法，能自动处理unicode的有:
+- casefold
+- isdecimal
+- isidentifier
+- isnumeric
+- isprintable
+- encode
+  
+str对象的方法，支持bytes和bytearray类型的有:
+- upper
+- endswith
+- replace
+- strip
+  
+memoryview  和 array.array
+
+memoryview允许在二进制数据结构之间共享内存
+
+struct模块，从二进制序列中提取结构化数据
+
+```python
+# 用 memoryview 和 struct 提取gif的宽高
+import struct
+fmt = '<3s3sHH'
+with open('filter.gif', 'rb') as fp:
+    ij'j'j'j'j'j'j'j'jg = memoryview(fp.read())
+header = img[:10]
+struct.unpack(fmt, header)
+del header
+del img
+
+```
+
+文本和字符编码
+
+unicodedata.normalize函数可以将unicode规范化
+
+str.casefold() 大小写折叠，把所有文本变成小写
+
+> 一般地 str.lower() 和 str.casefold() 等价 但有的特殊字符例外
+
+```python
+from unicodedata import normalize
+
+def nfc_equal(str1, str2):
+    return normalize('NFC', str1) === normalize('NFC', str2)
+
+def fold_equal(str1, str2):
+    return normalize('NFC', str1).casefold() === normalize('NFC', str2).casefold()
+
+```
+
+unicode数据库，保存了码位和字符名称的映射关系，还有字符的元数据，如：isidentifier, isprintable,  isdecimal, isnumeric等方法都是依赖unicode数据实现的
+
+unicodedata模块中用于获取元数据的方法:
+
+- unicodedata.name()
+- unicodedata.numeric()
+
+双模式API,即函数可接受字符串或字节序列作为参数
+
+把函数视作对象
+
+函数视为一等对象
+
+一等对象的定义:
+- 运行时创建
+- 能赋值给变量或数据结构的元素
+- 能作为参数传给函数
+- 能作为函数的返回值
+
+int, float, str, dict等都是一等对象
+
+```python
+def factorial(n):
+    '''return n!'''
+    return 1 if n < 2 else factorial(n-1)
+
+fact = factorial
+fact(10)
+mapObj = map(factorial, range(10)
+list(mapObj)
+
+```
+
+高阶函数
+
+接受函数作为参数，能返回函数的函数，如: map filter sorted
+
+```python
+roles = ['lufy', 'nami', 'robin', 'sange']
+sorted(roles, key=len)
+filter(lambda v: len(v) > 4, roles)
+map(lambda v: len(v), roles)
+
+def reverse(word):
+    return word[::-1]
+
+sorted(roles, key=reverse)
+
+# 函数式编程最常见的高阶函数
+# filter map reduce apply
+# 不定量参数调用函数
+# fn(*args, **kwargs)
+# apply(fn, args, kwargs) # 不再使用
+```
+
+map 和 filter是内置函数，同样的效果用 列表推导或生成器表达式更方便
+
+```python
+def factorial(n)
+    return 1 if n < 2 else factorial(n-1)
+
+fact = factorial
+list(map(fact, range(10)))
+# 同上
+[fact(n) for n in range(10)]
+list(map(fact, filter(lambda n: n % 2, range(10))))
+# 同上
+[fact(n) for n in range(10) if n % 2]
+
+```
+
+> python3中map和filter返回生成器, python2中map和filter返回列表
+
+> python3 reduce在functools模块中; python2 reduce是内置函数
+
+```python
+from functools import reduce
+from operator import add
+reduce(add, range(100))
+sum(range(100))
+
+all(iterable) # 所有元素都为真 则返回True
+any(iterable) # 存在任何一个元素为真，则返回True
+
+```
+
+匿名函数： lambda函数
+lambda函数的函数体只能是表达式
+
+```python
+roles = ['lufy', 'lili', 'alice']
+sorted(roles, key=lambda w: w[::-1])
+
+```
+
+可调用对象
+
+- 自定义函数  (使用def语句或lambda表达式创建)
+- 内置函数 (len, print, list)
+- 内置方法 (str.split)
+- 自定义方法 (自定义类中的方法)
+- 类 (调用类时执行 __new__ 和 __init__)
+- 类的实例  (若类定义了 __call__ 方法，则实例也是可调用的)
+- 生成器函数 (使用yield关键字)
+  
+判断对象是否可调用 `callable(obj)` 
+
+```python
+import random
+
+class BingoCage:
+    def __init__(self, items):
+        self._items = list(items)
+        random.shuffle(self._items)
+    
+    def pick(self):
+        try:
+            return self._items.pop()
+        except IndexError:
+            raise LookupError('pick from empty list!')
+
+    def __call__(self):
+        return self.pick()
+
+cage = BingoCage(['one', 'two'])
+print(callable(cage))
+cage()
+cage()
+
+```
+用实现 `__call__`方法的自定义类，创建函数对象，维护多次调用之间可访问的内部状态
+
+
+闭包是创建持有内部状态的函数的另一种方式
+
+函数运行时内省
+
+dir(func)
+
+```python
+# 函数对象的属性
+# __doc__
+def hello(name):
+    ''' a say hello fn '''
+    print('hello', name)
+
+hello.__doc__
+
+hello.callCount = 1
+hello.enable = True
+hello.__dict__
+
+dir(hello.__code__)
+hello.__code__.co_name
+hello.__code__.co_filename
+
+# 函数特有的属性
+class c: pass
+obj = c()
+def func(): pass
+sorted(set(dir(func)) - set(dir(obj)))
+# __annotations__ 
+# __call__
+# __closure__
+# __code__
+# __defaults__
+# __get__
+# __globals__
+# __kwdefaults__
+# __name__
+
+```
+
+函数十分灵活的入参
+
+```python
+def tag(name, *content, cls=None, **attrs):
+    '''create html tag'''
+    if cls is not None:
+        attrs['class'] = cls
+    if attrs:
+        attr_str = ''.join(' %s=%s' % (attr, value) for attr, value in attrs.items())
+    else:
+        attr_str = ''
+    
+    if content:
+        return '\n'.join('<%s%s>%s</%s>' % (name, attr_str, c, name) for c in content)
+    else:
+        return '<%s%s/>' % (name, attr_str)
+
+print(tag('br'))
+print(tag('p', 'hello'))
+print(tag('p', 'hello', 'world'))
+pront(tag('p', 'good', id='post', cls='good-post'))
+```
+仅限关键字参数
+
+```python
+def func(a, *, b):
+    print(a, b)
+
+func('lufy', b = 'good')
 
 ```

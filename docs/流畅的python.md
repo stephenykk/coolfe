@@ -298,10 +298,10 @@ a.transpose() # 矩阵转置
 
 列表可以模拟队列，append() 和 pop(0) 但是在列表开头增删元素是很耗时的，需要移动元素
 
-列表是线程安全的数据结构，可以在两端快速增删元素, 删除中间的元素会稍微慢一些
+双向队列是线程安全的数据结构，可以在两端快速增删元素, 删除中间的元素会稍微慢一些
 
 ```python
-from collection import deque
+from collections import deque
 dq = deque(range(10), maxlen=10)
 dq.append(val)
 dq.appendleft(val)
@@ -565,7 +565,7 @@ struct模块，从二进制序列中提取结构化数据
 import struct
 fmt = '<3s3sHH'
 with open('filter.gif', 'rb') as fp:
-    ij'j'j'j'j'j'j'j'jg = memoryview(fp.read())
+    img = memoryview(fp.read())
 header = img[:10]
 struct.unpack(fmt, header)
 del header
@@ -616,11 +616,11 @@ int, float, str, dict等都是一等对象
 ```python
 def factorial(n):
     '''return n!'''
-    return 1 if n < 2 else factorial(n-1)
+    return 1 if n < 2 else factorial(n-1) * n
 
 fact = factorial
 fact(10)
-mapObj = map(factorial, range(10)
+mapObj = map(factorial, range(10))
 list(mapObj)
 
 ```
@@ -796,3 +796,161 @@ def func(a, *, b):
 func('lufy', b = 'good')
 
 ```
+
+函数内省
+
+```python
+def foo(msg, size=10):
+    pass
+
+foo.__defaults__
+foo.__kwdefaults__
+foo.__name__
+foo.__code__.co_varnames
+foo.__code__.co_argcount
+foo.__code__.co_name
+foo.__code__.co_filename
+
+
+# inspect 模块
+from inspect import signature
+sig = signature(clip) 
+for name, param in sig.parameters.items():
+    print(param.kind, ':', name, param.default)
+
+# inspect.Paramter 包含属性: kind, name, default, annotation
+# inspect.Signature.bind 方法 绑定实参
+# inspect.BoundArguments 对象，有属性: arguments
+```
+
+python3 的函数注解
+
+```python
+def clip(text: str, max_len: 'int > 0' = 80) -> str:
+    pass
+
+# 注解表达式  str   'int > 0'
+# 注解最常用的类型是 类(str, int) 和 字符串
+```
+
+支持函数式编程常用的包
+
+operator 和 functools
+
+```python
+from functools import reduce
+from operator import mul
+def fact(n):
+    return reduce(mul, range(1, n+1))
+
+
+# operator itemgetter attrgetter
+# itemgetter(1) 等价 lambda fields: fields[1]
+from operator import itemgetter
+data = [
+    ('red', 'long'),
+    ('green', 'short'),
+    ('yellow', 'middle')
+]
+for color, hlen in sorted(data, key=itemgetter(1)):
+    print(color, hlen)
+
+# functools.partial 偏函数
+# functools.partialmethod
+# 偏函数，固定部分参数，返回需要更少参数的新函数
+
+```
+
+python中常用的高阶函数: map filter functools.reduce all any functools.partial mix max sorted
+
+
+> lambda map filter reduce 最早出现在Lisp中，最早的一门函数式编程语言
+> Haskell 同样是一门函数式编程语言，python从中借鉴了列表推导
+> python 不支持尾递归优化
+> python 不能算是一门函数式编程语言
+
+用函数实现设计模式
+
+用函数简化策略模式
+
+> 策略模式，定义一系列算法并封装起来，且它们可以互相替代，(*电商场景，不同的促销策略 或者说 折扣优惠策略*)
+
+命令模式
+
+命令模式可以通过把函数作为参数传递而简化
+
+> 命令模式的目的是解耦调用者和实现者
+
+函数装饰器和闭包
+
+装饰器是在源码中标记函数，以某种方式增强函数功能
+
+装饰器是基于闭包实现的
+
+nolocal关键字
+
+> 闭包还是回调式异步编程和函数式编程的基础
+
+简单装饰器和带参装饰器
+
+装饰器基础知识
+装饰器是可调用对象，它的参数是另一个函数(被装饰的函数)
+装饰器可能做一些前后处理，直接返回被装饰函数；也可能返回一个全新的功能增强函数
+
+functools模块的装饰器有: lru_cache 和 singledispatch functools.wraps 
+
+python内置的装饰器: property classmethod staticmethod
+
+> python 也支持类装饰器
+
+```python
+@demoDecorate
+def hello():
+    pass
+```
+> 严格来说，装饰器是一个语法糖，把被装饰的函数传入，返回新的函数
+> 装饰器在加载模块时，立即执行
+
+
+变量的作用域规则
+
+```python
+b = 10
+def hi():
+    a = 1
+    print(a)
+    print(b) # b是局部变量 因为下面有定义，这里报错了, 类似暂时性死区
+    b = 2
+
+def hi2():
+    global b
+    a = 1
+    print(a)
+    print(b) # ok
+    b = 2
+
+```
+
+闭包是延申了作用域的函数，能访问函数外部定义的非全变量(*自由变量*)
+```python
+def mkavg():
+    vals = []
+    def avg(val):
+        vals.append(val)
+        total = sum(vals)
+        return total/len(vals)
+
+    return avg
+
+if __name__ == '__main__':
+    avg = mkavg()
+    print(avg.__code__.co_vars)
+    print(avg.__closure__)
+    print(avg(10))
+    print(avg(21))
+    print(avg(33))
+
+```
+
+> 自由变量: 未在本地作用域中绑定的变量
+

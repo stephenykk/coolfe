@@ -1,5 +1,12 @@
 # mysql learning
 
+## 安装mysql
+[Windows安装mysql详细步骤（通俗易懂，简单上手）](https://blog.csdn.net/weixin_43423484/article/details/124408565)
+
+
+## 教程
+[菜鸟教程 mysql](https://www.runoob.com/mysql/mysql-tutorial.html)
+
 MySQL 变量的使用
 在 mysql 文档中，mysql 变量可分为两大类，即系统变量和用户变量。
 

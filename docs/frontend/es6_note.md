@@ -145,6 +145,9 @@ function constantize(obj) {
     })
 }
 
+// 默认是浅层冻结的，深层次的对象不会被冻结，所以需要递归处理
+// Object.freeze(bigObject) 
+
 ```
 
 ### ES6 声明变量的六种方法
@@ -622,7 +625,8 @@ re2.dotAll // true
 ```
 
 ### 后行断言
-> “先行断言”指的是，x只有在y前面才匹配，必须写成/x(?=y)/。
+> “先行断言”指的是，x只有在y前面才匹配，必须写成/x(?=y)/。    
+> 断言x(*目标字符串*)在y的前面，所以叫做先行断言; 后行断言, 以此类推
 ```js
 // 先行断言例子
 let str = '10 30% 40 50% numbers'
@@ -1116,7 +1120,7 @@ Array.of(1) // [1]
 Array.of(1, 2) // [1, 2]
 ```
 
-### Array.prototype.copyWithin(target, start = 0 , end = this.length)
+### Array.prototype.copyWithin(targetStart, sourceStart = 0 , sourceEnd = this.length)
 在当前数组内部，将指定位置的成员复制到其他位置（会覆盖原有成员），然后返回当前数组。也就是说，使用这个方法，会修改当前数组。
 
 ```js

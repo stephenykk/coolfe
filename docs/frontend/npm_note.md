@@ -19,6 +19,7 @@
 1. npm publish  
    `npm adduser` 后，就可以发布自己的包了
 
+
 ## 配置(config , c)
 
 - npm get registry
@@ -252,6 +253,16 @@ npm run myscript  # premyscript myscript postmyscript 都会被执行
 ```bash
 # 打开新的命令行，工作目录切换到依赖包根目录 _很方便_
 npm explore  lodash
+
+```
+
+## npm scope
+```bash
+# 初始化带有scope的包
+npm init --scope=@mycompany -y
+
+# 发布带有scope的包，scope包默认是发布为私有的，需要指定为pulic
+npm publish --access public
 
 ```
 

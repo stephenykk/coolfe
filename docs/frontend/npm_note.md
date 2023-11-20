@@ -261,6 +261,15 @@ npm explore  lodash
 # 初始化带有scope的包
 npm init --scope=@mycompany -y
 
+# 发布前测试 切换到包的根目录
+npm i `pwd`
+
+# 升级版本号
+npm version patch
+
+# 发布beta版本  dist-tage 默认为 latest
+npm publish --tag beta
+
 # 发布带有scope的包，scope包默认是发布为私有的，需要指定为pulic
 npm publish --access public
 

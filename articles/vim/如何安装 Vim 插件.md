@@ -4,6 +4,8 @@
 
 > 原文地址[如何安装 Vim 插件 - 知乎](https://zhuanlan.zhihu.com/p/108697739)
 
+[vim-plug使用教程](https://www.cnblogs.com/tcppdu/p/9789019.html)
+
 
 > 无论你是手动安装还是通过包管理器安装，插件都可以帮助你在工作流中打造一个完美的 Vim 。  
 > \-- Seth Kenlon（作者）

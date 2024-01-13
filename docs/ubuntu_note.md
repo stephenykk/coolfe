@@ -361,3 +361,19 @@ sudo update-grub
 
 logout # for login shell
 sudo pkill Xorg
+
+
+### 常用
+```shell
+# 更新镜像源 /etc/apt/sources.list
+sudo apt-get update
+# 安装gcc
+sudo apt-get install build-essential -y
+# 安装vim
+sudo apt-get install vim -y
+# 安装net-tools 支持 ifconfig
+sudo apt-get install net-tools -y
+
+# 安装nginx
+sudo apt-get install nginx -y
+```

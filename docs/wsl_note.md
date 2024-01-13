@@ -26,3 +26,8 @@ sudo apt-get install nginx -y
 [doc 2](https://blog.csdn.net/willingtolove/article/details/107494719)
 
 ```
+
+
+## 问题
+- wsl中进入vim字体和外部设置的字体不一致，一直是新宋体  
+    打开注册表添加 codepage 键值  [具体修改方法](https://blog.csdn.net/qq_42583206/article/details/108268871)

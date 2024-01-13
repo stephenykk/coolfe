@@ -1,10 +1,11 @@
 # mysql learning
 
-## 安装mysql
-[Windows安装mysql详细步骤（通俗易懂，简单上手）](https://blog.csdn.net/weixin_43423484/article/details/124408565)
+## 安装 mysql
 
+[Windows 安装 mysql 详细步骤（通俗易懂，简单上手）](https://blog.csdn.net/weixin_43423484/article/details/124408565)
 
 ## 教程
+
 [菜鸟教程 mysql](https://www.runoob.com/mysql/mysql-tutorial.html)
 
 MySQL 变量的使用
@@ -18,7 +19,7 @@ mysql 局部变量，只能用在 begin/end 语句块中，比如存储过程中
 
 其作用域仅限于该语句块。
 
-
+```sql
 -- declare 语句专门用于定义局部变量，可以使用 default 来说明默认值
 declare age int default 0;
 
@@ -30,7 +31,7 @@ select StuAge
 into age
 from demo.student
 where StuNo='A001';
-
+```
 
 二、用户变量
 
@@ -38,7 +39,7 @@ mysql 用户变量，mysql 中用户变量不用提前申明，在用的时候�
 
 其作用域为当前连接。
 
-
+```sql
 -- 第一种用法，使用 set 时可以用“=”或“:=”两种赋值符号赋值
 set @age=19;
 
@@ -51,7 +52,7 @@ select @age:=StuAge
 from demo.student
 where StuNo='A001';
 
-
+```
 
 三、会话变量
 
@@ -59,7 +60,7 @@ mysql 会话变量，服务器为每个连接的客户端维护一系列会话�
 
 其作用域仅限于当前连接，即每个连接中的会话变量是独立的。
 
-
+```sql
 -- 显示所有的会话变量
 show session variables;
 
@@ -76,7 +77,7 @@ show session variables like '%auto_increment_increment%'; -- session 关键字�
 -- 关键字 session 也可用关键字 local 替代
 set @@local.auto_increment_increment=1;
 select @@local.auto_increment_increment;
-
+```
 
 四、全局变量
 
@@ -84,7 +85,7 @@ mysql 全局变量，全局变量影响服务器整体操作，当服务启动�
 
 其作用域为 server 的整个生命周期。
 
-
+```sql
 -- 显示所有的全局变量
 show global variables;
 
@@ -96,3 +97,4 @@ set @@global.sql_warnings=OFF;
 select @@global.sql_warnings;
 show global variables like '%sql_warnings%';
 
+```

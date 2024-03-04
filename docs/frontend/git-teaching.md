@@ -376,8 +376,33 @@ git d hashid
 ## git submodule
 
 ```bash
-    git submodule add https://github.com/chaconinc/DbConnector
+    # 添加子模块
+    git submodule add https://github.com/chaconinc/DbConnector  <local_path>
+    git submodule add ../feshared.git <local_path>
 
+    # 更新子模块    
+    git submodule update --init --recursive
+
+    # 删除子模块      
+    git rm --cached <local_path>
+    rm -rf .git/modules/<local_path>
+    rm .gitmodules中相应条目
+    git commit -m "remove module <local_path>"
+
+    # 更新子模块
+    git submodule foreach git pull origin master
+
+    # 子模块更新后，需要更新父模块
+    git add .
+    git commit -m "update submodule"
+
+    # clone 包含子模块的项目
+    git clone --recursive https://github.com/chaconinc/MainProject
+
+    # 如果子模块文件夹为空，则需要先初始化
+    git submodule init
+    git submodule update
+    
 ```
 
 ## git push

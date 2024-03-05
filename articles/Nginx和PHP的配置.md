@@ -20,7 +20,7 @@ vim /etc/nginx/nginx.conf
 
 ### 配置文件分析
 
-```php
+```ini
 # nginx运行的用户名
 user nginx;
 # nginx启动进程,通常设置成和cpu的数量相等，这里为自动
@@ -131,7 +131,7 @@ tcp_nopush 只有在启用了 sendfile 时才起作用，
 
 在 vim 中点击‘i’进入编辑模式
 
-```php
+```ini
 server {
         listen       80 default_server;
         listen       [::]:80 default_server;
@@ -177,7 +177,7 @@ server {
 
 之后重启 Nginx 服务
 
-```php
+```bash
 service nginx restart
 ```
 
@@ -228,7 +228,7 @@ fastcgi_param SCRIPT_FILENAME fastcgi_script_name;
 
 配置文件详解：
 
-```php
+```ini
 server {
     listen       8011;
     server_name  test.cn;
@@ -254,7 +254,7 @@ server {
 
 外网 IP：[http://58.62.21.107](http://58.62.21.107/):8382 映射内网服务器 IP 192.168.17.56 的 82 端口，即：192.168.17.56:82,需要在`nginx.conf` 配置文件中开放 82 端口给 外网访问，即下面的配置：
 
-```php
+```ini
 [root@ceshi www]# cat /etc/nginx/nginx.conf
 # For more information on configuration, see:
 #   * Official English Documentation: http://nginx.org/en/docs/

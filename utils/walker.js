@@ -23,7 +23,7 @@ class Walker {
         return [ypart, npart]
     }
 
-    outBlockList(name, blockList) {
+    filterUnblocks(name, blockList) {
         return blockList.every(blockRe => {
             if(typeof blockRe === 'string') {
                 let blockName = blockRe
@@ -44,13 +44,13 @@ class Walker {
 
         let [dirnames, fnames] = this.divide(files, fname => fs.statSync(path.resolve(root, fname)).isDirectory())
 
-        fnames = fnames.filter(fname => this.outBlockList(fname, this.skipFileList))
+        fnames = fnames.filter(fname => this.filterUnblocks(fname, this.skipFileList))
         fnames.forEach(fname => {
             let fpath = path.resolve(root, fname)
             this.check(fname, fpath) && this.callback(fpath)
         })
 
-        dirnames = dirnames.filter(dirname => this.outBlockList(dirname, this.skipDirList))
+        dirnames = dirnames.filter(dirname => this.filterUnblocks(dirname, this.skipDirList))
 
         dirnames.forEach(dir => {
             let dpath = path.resolve(root, dir)

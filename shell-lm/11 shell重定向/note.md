@@ -189,7 +189,7 @@ grep world * 2>> grep-err.log
 ### 标准输出重定向
 
 ```bash
-awk -F: '{pring $1}' /etc/passwd | sort > users.txt
+awk -F: '{print $1}' /etc/passwd | sort > users.txt
 uname -a > host.txt
 d -s /home/* | sort -rn > dir-size.txt
 ```

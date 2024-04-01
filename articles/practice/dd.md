@@ -33,6 +33,51 @@ ps：这个授权码生成后一定要保存好，它生成一次后就不展示
 
 [python发送邮件554DT:SPM已解决](https://www.cnblogs.com/NolaLi/p/11098670.html)
 
+
+
+
+## 代码示例
+可以成功发送邮件的例子:
+
+```js
+const nodemailer = require("nodemailer");
+
+// !!! 用这个配置方式会报错: connect ECONNREFUSED 127.0.0.1:465
+// Create a transporter using the Gmail SMTP configuration
+// const transporter = nodemailer.createTransport({
+//   service: "smtp.163.com",
+//   port: 465,
+//   secure: true,
+//   auth: {
+//     user: "your-email@163.com",
+//     pass: "your-password",
+//   },
+// });
+
+const transporter = nodemailer.createTransport(
+  "smtps://stephenykk_pan@163.com:{邮箱开通SMTP服务后生成的授权码}@smtp.163.com"
+);
+
+// Compose the email
+const mailOptions = {
+  from: "stephenykk_pan@163.com",
+  to: "your-friend@163.com",
+  subject: "Temporary Password",
+  text: "Your temporary password is: 123456",
+};
+
+// Send the email
+transporter.sendMail(mailOptions, function (error, info) {
+  if (error) {
+    console.log("Error sending email:", error);
+  } else {
+    console.log("Email sent:", info.response);
+  }
+});
+
+```
+
+
  总结一下就是说在发送的时候也给自己抄送一份就可以不被识别成垃圾邮件，这样也可以解决554, DT:SPM这个错误代码的问题。
 
 ps:其实用了抄送的方法以后也没能够解决554这个问题，但感觉是自己设置的问题，最后一生气换成了QQ邮箱去发送，同样的发送内容QQ邮箱倒是没有识别成垃圾邮件。。。

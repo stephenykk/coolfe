@@ -1,7 +1,7 @@
 {
   "scripts": {
-    "pull": "git pull origin master:master",
-    "push": "git push origin master:master && git push gitee master:master",
+    "pull": "git pull origin master",
+    "push": "git push origin master && git push gitee master",
     "p": "npm run pull && npm run push"
   },
   "devDependencies": {

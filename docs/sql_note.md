@@ -97,4 +97,42 @@ set @@global.sql_warnings=OFF;
 select @@global.sql_warnings;
 show global variables like '%sql_warnings%';
 
+
+## mysql常用操作
+
+### 修改密码
+
 ```
+set password for root@localhost = 'newpwd';
+
+```
+
+## 远程连接mysql
+
+```
+mysql -uroot -h<IP> -p
+
+# 如连接报错，可试试关闭防火墙或允许mysql通过防火墙
+```
+
+### 导出数据库
+```
+# mysqldump [选项] 数据库名 [表名] > 脚本名
+mysqldump -uroot -proot learn > learnDB.sql
+
+```
+
+### 导入数据库
+
+```
+# 进入到 learnDB.sql 所在文件夹 打开bash
+winpty mysql -uroot -proot
+# 如果没有learn数据，则先创建
+show databases;
+create database learn;
+
+# 用source命令执行learnDB.sql里面的语句
+source learnDB.sql
+
+```
+

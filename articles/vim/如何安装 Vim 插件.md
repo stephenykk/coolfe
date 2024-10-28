@@ -151,12 +151,3 @@ vim-plug 还有许多其他的功能，所以请参考它的[项目页面](https
 
 当你整天都在做一个项目时，你希望每一个小细节都能为你提供最好的服务。了解 Vim 和它的许多插件，直到你为你所做的事情构建出一个完美的应用程序。
 
-有喜欢的 Vim 插件吗？请在评论中告诉我们吧!
-
-* * *
-
-via: [https://opensource.com/article/20/2/how-install-vim-plugins](https://opensource.com/article/20/2/how-install-vim-plugins)
-
-作者：[Seth Kenlon](https://opensource.com/users/seth) 选题：[lujun9972](https://github.com/lujun9972) 译者：[qianmingtian](https://github.com/qianmingtian) 校对：[wxy](https://github.com/wxy)
-
-本文由 [LCTT](https://github.com/LCTT/TranslateProject) 原创编译，[Linux中国](https://linux.cn/) 荣誉推出

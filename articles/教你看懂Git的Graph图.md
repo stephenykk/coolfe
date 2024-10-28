@@ -1,4 +1,4 @@
-# 教你看懂Git的Graph图_git graph怎么看-CSDN博客
+# 教你看懂Git的Graph图
 
 > 原文地址[教你看懂Git的Graph图_git graph怎么看-CSDN博客](https://blog.csdn.net/hao_yan_bing/article/details/121982541)
 

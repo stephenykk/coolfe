@@ -1166,3 +1166,13 @@ def greeting(name):
 `pip install Pillow`
 
 [更多内容](https://www.liaoxuefeng.com/wiki/1016959663602400/1017495723838528)
+
+
+---
+
+python环境变量
+
+- PYTHONPATH PYTHONPATH是Python搜索路径，默认我们import的模块都会从PYTHONPATH里面寻找。
+- PYTHONHOME 另一种模块搜索路径。它通常内嵌于的PYTHONSTARTUP或PYTHONPATH目录中，使得两个模块库更容易切换。
+- PYTHONSTARTUP Python启动后，先寻找PYTHONSTARTUP环境变量，然后执行此变量指定的文件中的代码。
+- PYTHONCASEOK 加入PYTHONCASEOK的环境变量, 就会使python导入模块的时候不区分大小写.

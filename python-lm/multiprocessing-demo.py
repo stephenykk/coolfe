@@ -4,7 +4,7 @@
 import os
 from multiprocessing import Process
 
-# hello gh-page , try build again
+# hello gh-page , try build again, test old theme
 def runProc(name):
     print('run child process %s (%s)' % (name, os.getpid()))
 

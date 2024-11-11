@@ -8,3 +8,5 @@
 
 ## 访问
 [https://stephenykk.github.io/coolfe/](https://stephenykk.github.io/coolfe/)
+
+git is cool

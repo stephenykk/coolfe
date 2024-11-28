@@ -1,80 +1,143 @@
+# web开发的趁手兵器Fiddler 
+
+## Fiddler 是什么
+
+Fiddler 是一个 http 调试代理工具，可以用来查看、修改、重发、保存客户端和服务器之间的 http 通讯，也可以用来测试网站性能，诊断网络问题。
+Fiddler 充当客户端和服务器之间的中间人，客户端和服务器之间的Http通信都经过 Fiddler，从而可以查看和修改通信内容。
+
+*中间人攻击也是采用相同的原理，即使是Https的请求，也可以被抓取和解密*  
+
+> Fiddler只能抓取应用层的Http通信，如果要查看更底层的通信细节，可以用 white sharps，wireshark 等工具。
 
 
-## fiddler 设置
+**Fiddler 可以抓取localhost域名下的网络请求**
 
-如果要手机抓包的话，需要设置 fiddler, 允许远程设备连接 **tools/fiddler options/connection/allow remote computers to connect**
+## 捕获 http 通讯
 
-## 手机安装 fiddler 证书
+- 打开 fiddler，点击 `file/capture traffic`，或者直接按 `F12`，开始捕获 http 通讯。
+- 在 `session list` 中可以看到捕获到的 http 通讯。
 
-浏览器打开 `yourIP:8888`
+## 查看请求和响应
 
-## 监控 http 通讯
+- 在 `session list` 中，双击一个 session，可以看到该 session 的请求和响应。
+- 在 `Inspectors` 中，可以看到请求和响应的详细信息，包括请求头、响应头、响应体等。
 
-开启/停止监控
+## 抓取手机上的 http 通讯
+1. 设置允许远程设备连接
 
-- `F12`
-- _file/Capture traffic_
-- quickExec box `start/stop`
+允许远程设备连接 `tools/fiddler options/connection/allow remote computers to connect`
 
-选择会话
+2. 手机安装 fiddler 证书
 
-- `ctrl + click` 多选
-- `shift + click` 选择连续的会话
-- `ctrl + up/down` 向上/向下选择
-- `ctrl + shfit + up/down` 向上/向下连续选择
-- `ctrl + i` 反选会话 //焦点先定位到 session list
-- `P` 选择当前会话的父会话 //对前端而言，比如选择一个 js, 按`P`，就会定位到 html 文件
-- `C` 选择子会话 //选择 html 文件，按`C`, 定位所有由该 html 发起的请求, 其实很有用
+手机浏览器打开 `yourIP:8888`
 
-查找会话
 
-- `ctrl + f`
-- quickExec box `? keyword` , `select image`, `@target Hostnmae`, `=304`
+## 选择会话
 
-会话对比
-选择两个会话，点击右键-compare(**需安装对比工具 winMerge**), 这很有用(_两个请求，1 个成功返回， 1 个报错或被重定向了，这时可以对比两个 session_)
+- 任意多选 `ctrl + click` 
+- 多选连续的会话 `shift + click`
+- 向上/向下单选 `ctrl + up/down`
+- 向上/向下连续多选 `ctrl + shfit + up/down`
+- 反选会话 `ctrl + i`  *焦点先定位到 session list*
+- 选择当前会话的父会话 `P`  *很实用的功能，比如选择一个 js, 按`P`，就会定位到触发该js请求的html请求*
+- 选择当前会话的子会话 `C`  *同样实用：选择 html 请求，按`C`, 定位所有由该 html 请求触发的静态资源请求*
 
-删除会话
+## 查找会话
+`ctrl + f` 打开查找对话框，可以设置只查找请求或只查找响应，查找内容可以指定header或body, 基本上可以满足大部分需求。
 
-- `delete` 删除选中会话
-- `shift + delete` 删除未选中会话
-  这个其实蛮实用，比如我选中了 所有的图片 session(select image) 然后想删掉其余的 session, 减少干扰, `shift + delete`就很方便了(当然也可以先反选再 delete)。
-- `ctrl + x` 删除所有会话
-- quickExec box `cls/clear` 删除所有会话
 
-会话列表添加列
+## 会话对比
 
-- quickExec `cols add accept @request.Accept`
-- 在列标题点击右键, 选择 custom column
+选择两个会话，右键 选择 `compare` 命令(*需安装对比工具 winMerge*),  对比成功和失败的两次请求，方便找出差异。
 
-## 构造 http 请求
+## 删除会话
 
-- compose 面板中，完全手动创建
+- 删除选中会话 `delete` 
+- 删除未选中会话 `shift + delete` *同先反选`ctrl+i`, 再删除*
+- 删除所有会话 `ctrl + x` 
+
+
+## 配置hosts
+可以通过Fiddler配置DNS映射，这样就不必在C盘的hosts文件中修改了。  
+
+Hosts配置位于菜单 `Tools/Hosts`
+
+## quickbox
+quickbox 是 fiddler 的一个工具栏，可以快速执行一些操作, 如: 查找会话，设置断点等。   
+
+`alt + q` 光标定位到 quickExec。
+
+- 查找会话  
+  + 在url根据关键字查找 `? keyword` 
+  + 根据content-type查找 `select image`, `select json`
+  + 根据hostname查找 `@target Hostname`
+  + 根据响应的status查找 `=304`
+  + 根据请求方法查找 `=post`
+  + 根据content-length查找 `>1000`
+  + 根据域名查找 `@google`
+  + 根据请求头查找`select @Request.Accept html`
+  + 根据响应头查找 `select @Response.set-cookie domain`
+
+- 高亮会话
+  + 设置高亮url包含关键字的会话 `bold /app.js` *实用功能: 后续捕获的匹配会话也会被高亮*
+  + 取消高亮  `bold`
+
+- 过滤会话
+  + 根据content-type过滤，`allbut image` 删除所有会话，image会话除外
+  + 根据content-type过滤 `keeponly image` 只保留image会话, 作用同上
+
+- 断点
+  + 设置断点，断点类型为 before request, url包含baidu的请求都会被中断 `bpu baidu` 
+  + 清除断点  `bpu` *bpu 不带参数，则表示清除断点*
+  + 设置断点，断点类型为 after response, url包含baidu的响应都会被中断 `bpafter baidu` 
+  + 清除断点  `bpafter` *bpafter 不带参数，则表示清除断点*
+  + 执行断点 `go`  *在 inspector 面板修改请求/响应内容后继续执行*
+  + 根据请求方法设置断点  `bpm POST`
+  + 清除 bpm 断点  `bpm`
+  + 根据响应状态码设置断点  `bps 404`
+  + 清除 bps 断点  `bps`
+
+- 修改请求url
+  可以把请求url的域名修改为本地ip，方便调试
+  + 设置url替换  `urlreplace www.dev.com localhost`
+  + 清除url替换  `urlreplace`
+
+- 删除所有会话
+  + 清除所有会话 `cls`
+  + 清除所有会话 `clear`
+
+## 构造请求
+可以全新创建请求，或基于现有session创建请求
+
+- compose 面板中，手动创建所有的请求参数
 - 拖一个 session 到 compose 面板中，修改并发送改请求
 - 按住`shift`, 点击 execute 按钮 , 会在请求发出前断点，允许再次修改
 
 ## autoResponder 自动响应
 
-从左侧拖一个 session 到 autoresponder 中，默认会自动创建规则 精确匹配(EXACT:the-url)，响应为该 session 的 response(\*200-SESSION-6) _如果什么都不改，就是 replay 的效果_；可以在 rule list 中选择该 rule, 按`enter`编辑响应内容, **非常实用的说**
+从左侧拖一个 session 到 autoresponder 中，默认会自动创建匹配规则和响应内容   
 
-自动响应的规则定义
+> 基于session创建的autoresponse, 默认规则精确匹配(EXACT:the-url)，默认响应为该 session 的 response(\*200-SESSION-6)   
 
-- 普通字符串 `hello.com` // 匹配 url 包含 hello.com 的
-- 通配符 `*` // 匹配所有 url
-- `NOT: hello` // 匹配 url 不包含 hello 的
-- `EXACT: http://localhost/test.php?foo=BAR` //精确匹配 包括大小写
-- 正则 `regex:(?inxs)http://localhost/\w+\.php`
-  如: `regex:.+`, `regex:.+jpg`, `regex:.+(gif|png|jpg)$`  
-   正则支持修饰符 `inxs`
-  - `i` _ignore case_ 忽略大小写
-  - `n` _requires explicit capture groups_ 要求明确的捕获组
-  - `s` _enables single-line syntax_ 单行
-  - `x` _enables comments after the #character_ 支持# 后加注释
+用户可修改匹配规则，亦可修改响应内容，在 rule list 中选择该 rule, 按`enter`编辑响应内容。
 
-自动响应的内容
+**自动响应的匹配规则**  
+
+- 普通字符串，匹配URL包含该字符串的请求 `hello.com`
+- NOT:普通字符串，匹配URL不包含该字符串的请求 `NOT: hello.com`
+- 通配符匹配所有请求 `*` 
+- 精确匹配，URL完全相同的请求 `EXACT: http://localhost/test.php?foo=BAR`
+- 正则匹配 `regex:(?inxs)http://localhost/\w+\.php` , `regex:.+(gif|png|jpg)$`
+  正则修饰符:  
+  + `i` _ignore case_ 忽略大小写
+  + `n` _requires explicit capture groups_ 要求明确的捕获组
+  + `s` _enables single-line syntax_ 单行
+  + `x` _enables comments after the #character_ 支持# 后加注释
+
+**自动响应的内容**  
 
 - 本地文件
-- `http://targetUrl` 重定向到目标 url(_原来的请求参数并无带过去_)
+- `http://targetUrl` 重定向到目标url
 - `*redir:http://targetUrl`
 - `*bpu` 请求前断点
 - `*bpafter` 响应前断点
@@ -85,51 +148,22 @@
 - `*drop` close the client connection
 - `*exit` 该规则什么都不做,让后续规则处理
 
-实例: 将正则规则捕获到的参数，应用到目标 url
-
+**自动响应示例**  
+将正则规则捕获到的参数，应用到目标 url
+```shell
     rule: regex:youdao\.com(.\*)
     action: http://localhost/test.php$1
+```
 
-## quickExec
 
-聚焦到 quickExec box 上: `ctrl + alt + f` 显示 fiddler, `alt + q` 光标定位到 quickExec, 此时如果 session list 中有选中，`ctrl + i` 可将选中会话的 url 粘贴到命令行中.
+## FiddlerScript
 
-- `? hello` 搜索 url 包含 hello 的会话
-- `> 2000` 查询 content-length > 2kb 的会话, 同 `>2k`
-- `< 2000`
-- `=301` 查询 statusCode=301 的会话
-- `=get` 查询 method=get 的会话
-- `@localhost` 查询 hostname=localhost 的会话
-- `bold hello` 若后续的 session 的 url 包含 hello,则加粗显示 **很实用**
-- `bold` 不带参数 则清除之前的设定
-- `bpafter api/get/user` 在匹配的 session 响应前断点
-- `bpafter` 清除之前 bpafter 的断点
-- `bps 302` 若 session 的 statusCode=302 则断点 `bps` 清除断点
-- `bpu hello` 若请求的 url 包含 hello，则断点； `bpu` 清除断点
-- `bpm post` 若 method 为 post, 则请求前断点; 同 `bpv post` `bpm` 清除断点
-- `cls or clear` 清除 session 列表
-- `g or go` 继续执行断点
-- `help` 打开帮助网页
-- `urlreplace findstr replacestr` 在 url 中找到匹配字符串，则替换；_似乎不支持正则_
-- `start` 开始监听 http 请求
-- `stop` 停止监听 http 请求
-- `select image` 查询 content-type，匹配关键字则选中响应 session, `select html` `select javascript`
-- `select ui-comments hello`
-- `select @Request.Accept html`
-- `select @Response.set-cookie domain`
-- `allbut html` 同 `keeponly html` 只保留 content-type 匹配 html 的会话 **实用**
-- `quit` 退出 fiddler
-- `!dns www.hello.com` 发起 dns 解析请求
 
-## fiddlerScript
+Fiddler Script 是用 JScript.NET 语言写的，可以自动修改 Request 和 Response. 这样我们就无需手动设置"断点"。
 
-### 简介
+> Fiddler Script实际上它是一个脚本文件 CustomRules.js ，保存在 C:\Users\sea\Documents\Fiddler2\Scripts\CustomRules.js
 
-Fiddler Script 是用 JScript.NET 语言写的。
-
-Fiddler 包含了一个脚本文件可以自动修改 Http Request 和 Response. 这样我们就不需要手动地下"断点"去修改了，实际上它是一个脚本文件 CustomRules.js ，位于: C:\Users\sea\Documents\Fiddler2\Scripts\CustomRules.js 下。
-
-> 打开 CustomRules.js 文件，点击菜单 Rules->Customize Rules 或者 ctrl + r
+打开 Fiddler Script， 点击菜单 `Rules->Customize Rules` 或者 `ctrl + r`
 
 ### 主要方法
 
@@ -242,7 +276,22 @@ fiddlerScript Editor 有智能提示
 ```js
     function OnBeforeResponse(oSession) {
         if(oSession.HostnameIs('www.test.com') && oSession.oResponse.headers.ExistsAndContains('Content-type', 'text/html')) {
+            var body = oSession.GetResponseBodyAsString();
+            body = body.replace('foo', 'bar');
+            oSession.utilSetResponseBody(body);
+        }
+    }
+```
 
+替换 json 文件的内容
+
+```js
+    function OnBeforeResponse(oSession) {
+        if(oSession.HostnameIs('www.test.com') && oSession.oResponse.headers.ExistsAndContains('Content-type', 'application/json')) {
+            var body = oSession.GetResponseBodyAsString();
+            var json = JSON.parse(body);
+            json.name = 'bar';
+            oSession.utilSetResponseBody(JSON.stringify(json));
         }
     }
 ```

@@ -1,10 +1,15 @@
 #!/usr/bin/env python3
 # coding: utf-8
 
+# use flask package to create a simple web server
+
 from flask import Flask, request, render_template
 
+# at first, create app object
 app = Flask(__name__)
 
+
+# use decorator @app.route() to bind a function to a url
 @app.route('/', methods=['GET', 'POST'])
 def home():
     return render_template('home.html')

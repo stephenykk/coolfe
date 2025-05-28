@@ -140,19 +140,19 @@ git rm
 
 ## git clean
 
-# 删除 untracked files
+删除 untracked files
 
 `git clean -f`
 
-# 连 untracked 的目录也一起删掉
+连 untracked 的目录也一起删掉
 
 `git clean -fd`
 
-# 连 gitignore 的 untrack 文件/目录也一起删掉 （慎用！一般这个是用来删掉编译出来的 .o 之类的文件用的）
+连 gitignore 的 untrack 文件/目录也一起删掉 （慎用！一般这个是用来删掉编译出来的 .o 之类的文件用的）
 
 `git clean -xfd`
 
-# 在用上述 git clean 前，建议加上 -n 参数来先看看会删掉哪些文件，防止重要文件被误删
+在用上述 git clean 前，建议加上 -n 参数来先看看会删掉哪些文件，防止重要文件被误删
 
 ```
     git clean -nxfd
@@ -163,7 +163,8 @@ git rm
 ## git reset
 
 把整个目录或指定文件恢复到指定版本
-repo->index->working directory
+
+`repo` -> `index` -> `working directory`
 
 ```bash
     #repo -> index 取消文件暂存
@@ -190,10 +191,11 @@ reset 的其他用法
 
 ```bash
     # 撤销working tree的修改
-    #HEAD, index和working tree都重置为最后一次commit的状态
+    # HEAD, index和working tree都重置为最后一次commit的状态
     git reset --hard HEAD
-# 撤销staged状态
-    #index tree回退到最后一次commit的状态  不影响工作目录的修改
+    
+    # 撤销staged状态
+    # index tree 回退到最后一次commit的状态  不影响工作目录的修改
     git reset HEAD
 
     # 撤销指定文件的staged状态
@@ -205,15 +207,17 @@ reset 的其他用法
 
 分支管理：查看 创建 删除 重命名
 
-- git branch # 列出本地分支
-- git branch -r # 查看所有远程分支
-- git branch -a # 查看所有分支 包括远端仓库的分支
-- git branch -a -v # 查看本地和远端仓库的所有分支，并显示最后一次提交
-- git branch new_branch # 基于当前分支创建分支
-- git branch -d merged_branch
-- git branch -D unmerged_branch
-- git branch -m oldBranch newBranch # 分支重命名
-- git branch --contains commitId  # 查看哪些分支包含指定commit
+```bash
+git branch # 列出本地分支
+git branch -r # 查看所有远程分支
+git branch -a # 查看所有分支 包括远端仓库的分支
+git branch -a -v # 查看本地和远端仓库的所有分支，并显示最后一次提交
+git branch new_branch # 基于当前分支创建分支
+git branch -d merged_branch
+git branch -D unmerged_branch
+git branch -m oldBranch newBranch # 分支重命名
+git branch --contains commitId  # 查看哪些分支包含指定commit
+```
 
 ## git diff
 

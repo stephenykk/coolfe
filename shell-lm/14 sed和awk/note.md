@@ -35,6 +35,7 @@ sed指令，命令行指定或抽离到文件中
 `sed [options]  'command' [file]..`  
 `sed [options] -f script.sed [file]..`
 
+command 是必须的，`sed data.txt` 会报错
 
 sed常用选项:
 
@@ -201,7 +202,7 @@ n
 
 ```bash
 # 所有txt文件末尾加上文本内容
-sed -i '$r the--end' *.txt
+sed -i '$r hi.txt' *.txt
 
 # 内容分类
 sed '/^window/w win.txt
@@ -233,7 +234,7 @@ sed -n -e '1w out.txt' -e '$w out.txt' data.txt
 
 ```bash
 # 只打印前10行
-sed -n '10q' data.txt
+sed  '10q' data.txt
 
 
 ```

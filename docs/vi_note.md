@@ -15,9 +15,9 @@ vimtutor
 
 ```bash
 # 在vi/vim中 按冒号(:) 进入末行命令模式
-# s 代表替换 substitute  [范围]/from/to/[所有]
+# s 代表替换 substitute  [范围]s/from/to/[修饰符]
 # g 代表查找 grep
-# 选项 /gci  global confirm ignoreCase
+# 修饰符 /gci  global confirm ignoreCase
 
 :s/vivian/sky/ # 替换当前行第一个 vivian 为 sky
 :s/vivian/sky/g # 替换当前行所有 vivian 为 sky
@@ -25,7 +25,7 @@ vimtutor
 :n,$s/vivian/sky/g # 替换第 n 行开始到最后一行中每一行所有 vivian 为 sky
 :%s/vivian/sky/ # 替换每一行的第一个 vivian 为 sky
 :%s/vivian/sky/gc # 替换每一行中所有 vivian 为 sky
-:g/vivian/s//sky/g # 同上 全局查找vivian 然后找到的行执行替换
+:g/vivian/s//sky/g # 范围通过g命令确定，全局查找vivian 然后找到的行把行内所有的vivian替换为sky
 :%s@vivian/@sky/@g # @作为分隔符 替换所有的 vivian/ 为 sky/
 ```
 
@@ -35,8 +35,8 @@ vimtutor
 :3d # 删除第3行
 :1,10d # 删除第1-10行
 :8,$d # 删除第8-末尾行
-:g/hello/d # 删除文档中含有字符 hello 的所有行
-:g/^$/d # 删除空白行
+:g/hello/d # 通过g命令查找目标行, 删除文档中含有字符 hello 的所有行
+:g/^$/d # 通过g命令查找目标行, 删除空白行
 :g/^\n/s///g # 删除空白行
 :g/.*/d # 删除全文
 x # 删除当前字符。
@@ -51,7 +51,7 @@ dM # 删除从当前行到屏幕中间行的内容。
 dL # 删除从当前行到屏幕末行的内容
 ```
 
-## 其他命令
+## 设置
 
 ```bash
 :set ic   # 忽略大小写 (ic 是 ignore case 的缩写)
@@ -109,3 +109,5 @@ ctrl + w , j / k / h / l
 ## 粘贴与系统剪贴板交互
 
 [vim寄存器和剪贴板](https://wenku.baidu.com/view/44d905e44328915f804d2b160b4e767f5bcf805b.html)
+
+[vim速查手册](https://www.jianshu.com/p/af14f639dadb)

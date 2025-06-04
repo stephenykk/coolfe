@@ -1,26 +1,62 @@
-# notes
+# 炼气技术栈 Shell 脚本：从基础启程
 
-## 用户登录时，如果用的是 bash, bash 将使用的初始化文件和启动脚本如下：
+Shell 是 Linux 系统中的命令行解释器，是我们与计算机"对话"的重要工具。就像学习任何新语言一样，掌握 Shell 需要了解它的基本语法、常用命令和运行环境。
 
--   `/etc/profile`
-    定义一些环境变量，系统级的初始化文件，由登录 shell 调用执行
--   `/etc/bash.bashrc` 或 `/etc/bashrc`
-    定义一些函数和别名, 交互式 shell 的系统级启动脚本
--   `/etc/bash.logout`
-    登录 shell 的清理脚本，登录 shell 退出时执行，_部分 linux 发行版没有该文件_
--   `$HOME/bash_profile`, `$HOME/.bash_login`, `$HOME/.profile`
-    用户个人的初始化脚本，按顺序查找，由登录 shell 执行，只执行一个
--   `$HOME/.bashrc`
-    用户个人交互式 shell 的启动脚本
--   `$HOME/.bash_logout`
-    用户个人的登录 shell 清理脚本
--   `$HOME/.inputrc`
-    用户个人的 readline 启动脚本，定义按键映射
+本文将介绍 Shell 的基础知识，包括：
 
-## 其他
+-   Shell 启动时如何加载配置文件
+-   变量的定义和使用方法
+-   命令历史和快捷操作技巧
+-   常见的命令行扩展功能
+
+无论你是第一次接触命令行，还是想系统性地复习 Shell 知识，这些内容都能帮助你更高效地使用终端.
+
+## Shell 启动时如何加载配置文件
+
+当我们打开终端使用 Shell 时，系统会自动读取一些配置文件来设置工作环境。这就像我们进入办公室时会打开灯、调整空调一样，Shell 也需要根据配置文件来准备一个舒适的工作环境。
+
+这些配置文件主要分为两类：
+
+1. **登录时加载的配置**
+
+    - 当你通过 SSH 登录或打开终端登录时，Shell 会读取：
+        - `/etc/profile`（全公司统一的办公环境设置）
+        - `~/.bash_profile` 或 `~/.profile`（你的个人办公桌布置）
+
+2. **交互时加载的配置**
+    - 当你打开新的终端窗口时，Shell 会读取：
+        - `/etc/bashrc`
+        - `~/.bashrc`
+
+重要配置文件的用途：
+
+-   `/etc/profile` → 全系统通用的环境设置
+-   `~/.bash_profile` → 你的个人登录设置
+-   `~/.bashrc` → 你的日常终端使用习惯
+-   `~/.bash_logout` → 退出登录时自动执行的清理工作
+
+小贴士：
+
+1. 修改配置文件后，可以运行 `source ~/.bashrc` 立即生效
+2. 个人配置文件通常在你的家目录下，文件名以点开头（隐藏文件）
+3. 不同 Linux 发行版可能有些文件名差异，比如有的用`.profile`而不是`.bash_profile`
+
+## Shell 类型: 登录 Shell 与交互式 Shell
+
+Shell 可以分为两种主要类型：
+
+1. **登录 Shell(Login Shell)**
+
+2. **交互式 Shell(Interactive Shell)**
+
+## 查看 Shell
+
+Shell 有很多种类，比如 bash、sh、csh、ksh 等，不同的 shell 有不同的特点，但它们都可以作为 linux 系统的 shell。
 
 ```bash
+# 查看当前用户的默认shell
 echo $SHELL
+# 查看系统支持的所有Shell
 cat /etc/shells
 ```
 
@@ -29,34 +65,44 @@ cat /etc/shells
 ### SHELL 变量的类型
 
 -   系统变量
-    由系统创建和维护，如: PS1, PATH, HISTSIZE, HOME, HOSTNAME, IFS, PWD, SHELL, 可修改系统变量配置 shell 的样式
+    由系统创建和维护，如: `PS1`, `PATH`, `HISTSIZE`, `HOME`, `HOSTNAME`, `IFS`, `PWD`, `SHELL`, 可修改系统变量配置 shell 的样式
 
-    > 查看所有系统变量 env 或 printenv
+    > 查看所有系统变量 `env` 或 `printenv`
 
 -   用户自定义变量
     由用户创建的变量
 
 ### 定义变量
 
-varname=varvalue
-
-_等号两边不能由空格_
+语法规则：变量名=变量值，变量名和变量值之间不能有空格
 
 ```bash
 color=blue
 color="light blue"
+```
 
-age=10 # 默认变量值都是字符串类型
+默认变量值都是字符串类型，如果需要使用数值计算，需要使用`let`命令
+
+```bash
+age=10
 let age=$age+1 # 使用let命令进行算术计算
 let age="$age + 1" # 同上
+```
 
-curdir=`pwd` # 将命令执行结果赋值给变量
+可以将命令输出内容赋值给变量, 使用反引号或`$()`包裹命令,这非常有用！  
+不同于其他高级语言，函数会返回各种类型的值，shell 函数通常只返回 0 或 1 表示成功或失败，返回值是函数的退出状态码，如果返回值是 0 表示成功，非 0 表示失败。如果要返回其他内容，就需要用 `echo` 命令输出，然后赋值给变量。
+
+```bash
+curDir=`pwd` #
 today=`date +%y%m%d`
 now=$(date +%y%m%d) # 同上
+```
 
+读取用户输入的内容赋值给变量
 
+```bash
 read -p "please input your name: ' username
-echo $username # 把用户输入的内容赋值给变量
+echo $username
 
 ```
 
@@ -65,15 +111,15 @@ shell 变量名区分大小写
 打印变量值
 
 ```bash
-curdir=`pwd`
-echo $curdir
+curDir=`pwd`
+echo $curDir
 
 # echo -e 开启支持转义符
 echo 'hello\nworld'
 echo -e 'hello\nworld'
 
 # printf <format> <arguments...>
-printf "%s\n" $curdir
+printf "%s\n" $curDir
 
 
 # 用 ${} 指定变量名边界，避免歧义
@@ -88,7 +134,7 @@ _导出变量 export_
 
 用户自定义的变量只在当前 shell 可用，要使自定义变量能被子 shell 使用，需要用 export 命令将变量导出
 
-export [-fnp] [变量名/函数名]=[值]
+`export [-fnp] [变量名/函数名]=[值]`
 
 ```bash
 girl=alice
@@ -178,14 +224,14 @@ echo "~/.bashrc" # 只是输出字符串 ~/.bashrc
 
 `$(cmd)` 或者 `cmd`
 
-```bash
+```
 echo $(uptime)
 echo `date`
 ```
 
-命令替换支持嵌套, 内层反引号需要\转义
+命令替换还可以嵌套
 
-````bash
+````
 function getDateFormat() {
   echo '+%Y-%m-%d %H:%M:%S'
 }
@@ -253,5 +299,4 @@ set +o feature-name # 关闭选项
 shopt # 显示选项列表
 shopt -s feature-name # 开启选项
 shopt -u feature-name # 关闭选项
-
 ```

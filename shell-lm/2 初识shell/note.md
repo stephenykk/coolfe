@@ -108,6 +108,12 @@ echo $username
 
 shell 变量名区分大小写
 
+```bash
+color=blue
+echo $color # blue
+echo $Color # print nothing
+```
+
 打印变量值
 
 ```bash

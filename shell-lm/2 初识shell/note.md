@@ -81,32 +81,7 @@ color=blue
 color="light blue"
 ```
 
-默认变量值都是字符串类型，如果需要使用数值计算，需要使用`let`命令
-
-```bash
-age=10
-let age=$age+1 # 使用let命令进行算术计算
-let age="$age + 1" # 同上
-```
-
-可以将命令输出内容赋值给变量, 使用反引号或`$()`包裹命令,这非常有用！  
-不同于其他高级语言，函数会返回各种类型的值，shell 函数通常只返回 0 或 1 表示成功或失败，返回值是函数的退出状态码，如果返回值是 0 表示成功，非 0 表示失败。如果要返回其他内容，就需要用 `echo` 命令输出，然后赋值给变量。
-
-```bash
-curDir=`pwd` #
-today=`date +%y%m%d`
-now=$(date +%y%m%d) # 同上
-```
-
-读取用户输入的内容赋值给变量
-
-```bash
-read -p "please input your name: ' username
-echo $username
-
-```
-
-shell 变量名区分大小写
+### 变量名区分大小写
 
 ```bash
 color=blue
@@ -114,72 +89,149 @@ echo $color # blue
 echo $Color # print nothing
 ```
 
-打印变量值
+### 打印变量值
+
+可以用 `$` 符号来引用变量，也可以用 `${}` 来引用变量，打印变量的命令有：`echo`、`printf`
 
 ```bash
 curDir=`pwd`
 echo $curDir
 
-# echo -e 开启支持转义符
-echo 'hello\nworld'
-echo -e 'hello\nworld'
-
 # printf <format> <arguments...>
 printf "%s\n" $curDir
 
-
 # 用 ${} 指定变量名边界，避免歧义
 language=java
-echo "i like ${language}script"
-
+echo "I like ${language}script"
 ```
 
-运行 shell 脚本时，系统会为该脚本创建子 shell，脚本执行完毕，子 shell 终止，环境返回到执行该脚本前的 shell
-
-_导出变量 export_
-
-用户自定义的变量只在当前 shell 可用，要使自定义变量能被子 shell 使用，需要用 export 命令将变量导出
-
-`export [-fnp] [变量名/函数名]=[值]`
+`echo` 默认不支持转义符
 
 ```bash
-girl=alice
-echo $girl
-export girl
-
-bash
-echo $girl
+# echo -e 开启支持转义符
+echo 'hello\nworld'
+echo -e 'hello\nworld' # 会换行
 ```
 
-_删除变量_
+### 变量运算
 
-unset [-fv] varname
+默认变量值都是字符串类型，如果需要使用数值计算，需要使用`let`命令
 
 ```bash
-captin=lufy
-echo $captin
-unset captin
-echo $captin
+age=10
+let age=$age+1 # 使用let命令进行算术计算
+let age="$age + 1" # 同上
+
+sport=football
+echo "I like $sport" # 字符串拼接
+```
+
+### 命令替换
+
+**命令替换**可以将命令输出内容赋值给变量,非常有用！
+
+语法：使用反引号或`$()`包裹命令
+
+> 不同于其他高级语言，函数会返回各种类型的值，shell 函数通常只返回 0 或 1 表示成功或失败，返回值是函数的退出状态码， 0 表示成功，非 0 表示失败。
+> 如果要返回其他内容，就需要用 `echo` 命令输出，然后赋值给变量。
+
+```bash
+curDir=`pwd`
+today=`date +%y%m%d`
+now=$(date +%y%m%d) # 同上
+```
+
+**命令替换支持嵌套**
+
+```bash
+function getFormat() {
+    echo '+%Y-%m-%d'
+}
+today=`date $(getFormat)`
+echo today is $today
+```
+
+### 读取用户输入
+
+读取用户输入的内容赋值给变量
+
+```bash
+read -p "please input your name: ' username
+echo $username
+```
+
+### 导出变量
+
+在交互式 Shell 下运行 shell 脚本时，系统会为该脚本创建子 shell，脚本执行完毕，子 shell 终止，环境返回到执行该脚本前的 shell；
+用户自定义的变量只在当前 shell 脚本可用，要使它能被子 shell 访问，则要用 `export` 命令将变量导出
+
+语法： `export [-fnp] [变量名/函数名]=[值]`
+
+> 可通过系统变量 `SHLVL` 查看当前 shell 嵌套层数
+
+父脚本 `main.sh`
+
+```bash
+friend=alice
+echo $friend # 当前脚本能访问自定义变量
+
+# 导出变量使子shell可访问它，
+# 注意只有读取变量值才需要加 $ 前缀，如 echo $friend
+export friend
+
+echo shell level is: $SHLVL
+bash child.sh
+```
+
+子脚本 `child.sh`
+
+```bash
+echo this is child script, output var: $friend
+echo shell level is: $SHLVL
+```
+
+### 删除变量
+
+语法: `unset [-fv] var_name`
+
+```bash
+captain=Lufy
+echo $captain
+unset captain
+echo $captain # print nothing
 
 # 不能删除只读变量
-readonly cook=sanji
-unset cook
-echo $?
+readonly learner=Robin
+unset learner
+echo $? # 查看上条命令的结果 0 or 1
 ```
 
-_检测变量是否存在_
+### 检测变量是否存在
+
+-   `${var_name?[message]}` 检测变量是否存在,如果不存在则输出 message 并退出
+-   `${var_name:?message}` 检测变量是否存在并且不为空,如果不存在则输出 message 并退出
+-   `${var_name:-default}` 检测变量是否存在,如果不存在则输出 default 值
 
 ```bash
-captin="" # var is empty
-echo ${captin? var not define yet}
-
-echo ${captin:? var not define or empty}
-
+captain="" # var is empty
+echo ${captain? var not define yet}
+echo ${captain:? var not define or empty}
 ```
 
 ## 历史命令
 
 历史命令保存在 `~/.bash_history` ，`$HISTSIZE`环境变量设置来历史命令缓冲区的大小
+
+常见用法：
+
+-   `history` - 显示所有历史命令列表
+-   `history 10` - 显示最后 10 条历史命令
+-   `history -c` - 清空当前会话的历史记录
+-   `history -d 123` - 删除第 123 条历史记录
+-   `history -a` - 将当前会话的历史记录追加到历史文件中
+-   `history -w` - 将当前历史记录写入历史文件并覆盖原有内容
+
+快捷操作：
 
 -   `ctrl + r` 搜索历史命令
 -   `!!` 执行上一条命令
@@ -188,9 +240,9 @@ echo ${captin:? var not define or empty}
 -   `!?keyword` 搜索匹配 keyword 的命令 并执行
 -   `$_` 上条命令的最后参数
 
-## shell 中的扩展
+## Shell 中的扩展
 
-大括号扩展
+### 大括号扩展
 
 ```bash
 echo a{b,c,d}color # 注意逗号两边不能由空格
@@ -214,7 +266,7 @@ echo file{a..z..3}
 echo file{001..100..5} # 固定宽度
 ```
 
-波浪号扩展
+### 波浪号扩展
 
 ```bash
 echo ~
@@ -226,26 +278,7 @@ echo ~/.bashrc # 波浪号扩展不能用引号包裹
 echo "~/.bashrc" # 只是输出字符串 ~/.bashrc
 ```
 
-命令替换
-
-`$(cmd)` 或者 `cmd`
-
-```
-echo $(uptime)
-echo `date`
-```
-
-命令替换还可以嵌套
-
-````
-function getDateFormat() {
-  echo '+%Y-%m-%d %H:%M:%S'
-}
-echo $(date $(getDateFormat))
-echo `date \`getDateFormat\``
-echo `date $(getDateFormat)`
-
-文件名扩展
+### 文件名扩展
 
 -   `*` 匹配任意个字符
 -   `?` 匹配任意单个字符
@@ -261,25 +294,33 @@ echo boo > fob
 echo coo > foc
 cat fo[a-c]
 cat fo[abc]  # 同上
-````
+```
 
-创建别名
+## 别名
 
-alias name='command'
-
-查看别名
-
-alias
-alias <name>
-
-> `~/.bashrc`中新建自己的别名，保存后，重新打开 bash 才生效
+### 创建别名
 
 ```bash
-alias echo='ls -a' # 别名和内置命令同名时，内置命令被屏蔽
+alias name='command'
+```
+
+### 查看别名
+
+```bash
+alias
+alias <name>
+```
+
+`~/.bashrc`中新建自己的别名，保存后，重新打开 bash 才生效
+
+别名和内置命令同名时，内置命令被屏蔽
+
+```bash
+alias echo='ls -a'
 \echo  hello # 不解析别名 执行内置命令echo
 ```
 
-删除别名
+### 删除别名
 
 ```bash
 unalias -a # 删除所有别名
@@ -287,14 +328,18 @@ unalias mydir # 删除具体某个别名
 
 ```
 
-修改命令行提示符
+## 修改命令行提示符
 
-修改 PS1 环境变量, echo $PS1
+修改 `PS1` 环境变量
+
+```bash
+echo $PS1
 export PS1="[\t] \u@\h\n\$"
+```
 
 ## 设置 shell 选项
 
-用 set 和 shopt 控制 bash 的行为
+用 `set` 和 `shopt` 控制 bash 的行为
 
 ```bash
 set -o  # 查看选项列表

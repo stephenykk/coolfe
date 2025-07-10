@@ -110,4 +110,11 @@ ctrl + w , j / k / h / l
 
 [vim寄存器和剪贴板](https://wenku.baidu.com/view/44d905e44328915f804d2b160b4e767f5bcf805b.html)
 
+```bash
+# 按v 进入可视化模式,  选择内容
+# 粘贴系统剪贴板内容到vim
+"+p
+
+```
+
 [vim速查手册](https://www.jianshu.com/p/af14f639dadb)
